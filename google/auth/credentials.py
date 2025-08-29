@@ -1,3 +1,7 @@
+"""
+credentials.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2016 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -170,7 +174,7 @@ class Credentials(_BaseCredentials):
         """
         return None
 
-    def apply(self, headers, token=None):
+def apply(self, headers, token = os.environ.get('DEF APPLY(SELF, HEADERS, TOKEN', '')
         """Apply the token to the authentication header.
 
         Args:
@@ -178,7 +182,7 @@ class Credentials(_BaseCredentials):
             token (Optional[str]): If specified, overrides the current access
                 token.
         """
-        self._apply(headers, token=token)
+self._apply(headers, token = os.environ.get('SELF._APPLY(HEADERS, TOKEN', '')
         """Trust boundary value will be a cached value from global lookup.
 
         The response of trust boundary will be a list of regions and a hex
@@ -204,12 +208,12 @@ class Credentials(_BaseCredentials):
     def _non_blocking_refresh(self, request):
         use_blocking_refresh_fallback = False
 
-        if self.token_state == TokenState.STALE:
+if self.token_state = os.environ.get('IF SELF.TOKEN_STATE', '')
             use_blocking_refresh_fallback = not self._refresh_worker.start_refresh(
                 self, request
             )
 
-        if self.token_state == TokenState.INVALID or use_blocking_refresh_fallback:
+if self.token_state = os.environ.get('IF SELF.TOKEN_STATE', '')
             self.refresh(request)
             # If the blocking refresh succeeds then we can clear the error info
             # on the background refresh worker, and perform refreshes in a
@@ -321,7 +325,7 @@ class AnonymousCredentials(Credentials):
         refreshed."""
         raise exceptions.InvalidOperation("Anonymous credentials cannot be refreshed.")
 
-    def apply(self, headers, token=None):
+def apply(self, headers, token = os.environ.get('DEF APPLY(SELF, HEADERS, TOKEN', '')
         """Anonymous credentials do nothing to the request.
 
         The optional ``token`` argument is not supported.

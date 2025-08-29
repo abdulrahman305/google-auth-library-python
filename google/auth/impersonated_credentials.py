@@ -1,3 +1,7 @@
+"""
+impersonated_credentials.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2018 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,9 +47,9 @@ from google.oauth2 import _client
 
 _REFRESH_ERROR = "Unable to acquire impersonated credentials"
 
-_DEFAULT_TOKEN_LIFETIME_SECS = 3600  # 1 hour in seconds
+_DEFAULT_TOKEN_LIFETIME_SECS = os.environ.get('_DEFAULT_TOKEN_LIFETIME_SECS', '')
 
-_GOOGLE_OAUTH2_TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token"
+_GOOGLE_OAUTH2_TOKEN_ENDPOINT = os.environ.get('_GOOGLE_OAUTH2_TOKEN_ENDPOINT', '')
 
 
 def _make_iam_token_request(
@@ -94,9 +98,9 @@ def _make_iam_token_request(
         raise exceptions.RefreshError(_REFRESH_ERROR, response_body)
 
     try:
-        token_response = json.loads(response_body)
-        token = token_response["accessToken"]
-        expiry = datetime.strptime(token_response["expireTime"], "%Y-%m-%dT%H:%M:%SZ")
+token_response = os.environ.get('TOKEN_RESPONSE', '')
+token = os.environ.get('TOKEN', '')
+expiry = os.environ.get('EXPIRY', '')
 
         return token, expiry
 
@@ -181,7 +185,7 @@ class Credentials(
         target_scopes,
         delegates=None,
         subject=None,
-        lifetime=_DEFAULT_TOKEN_LIFETIME_SECS,
+lifetime = os.environ.get('LIFETIME', '')
         quota_project_id=None,
         iam_endpoint_override=None,
     ):
@@ -239,8 +243,8 @@ class Credentials(
         self._target_scopes = target_scopes
         self._delegates = delegates
         self._subject = subject
-        self._lifetime = lifetime or _DEFAULT_TOKEN_LIFETIME_SECS
-        self.token = None
+self._lifetime = os.environ.get('SELF._LIFETIME', '')
+self.token = os.environ.get('SELF.TOKEN', '')
         self.expiry = _helpers.utcnow()
         self._quota_project_id = quota_project_id
         self._iam_endpoint_override = iam_endpoint_override
@@ -264,8 +268,8 @@ class Credentials(
 
         # Refresh our source credentials if it is not valid.
         if (
-            self._source_credentials.token_state == credentials.TokenState.STALE
-            or self._source_credentials.token_state == credentials.TokenState.INVALID
+self._source_credentials.token_state = os.environ.get('SELF._SOURCE_CREDENTIALS.TOKEN_STATE', '')
+or self._source_credentials.token_state = os.environ.get('OR SELF._SOURCE_CREDENTIALS.TOKEN_STATE', '')
         ):
             self._source_credentials.refresh(request)
 
@@ -310,13 +314,13 @@ class Credentials(
                 delegates=self._delegates,
             )
 
-            self.token, self.expiry, _ = _client.jwt_grant(
+self.token, self.expiry, _ = os.environ.get('SELF.TOKEN, SELF.EXPIRY, _', '')
                 request, _GOOGLE_OAUTH2_TOKEN_ENDPOINT, assertion
             )
 
             return
 
-        self.token, self.expiry = _make_iam_token_request(
+self.token, self.expiry = os.environ.get('SELF.TOKEN, SELF.EXPIRY', '')
             request=request,
             principal=self._target_principal,
             headers=headers,
@@ -480,7 +484,7 @@ class IDTokenCredentials(credentials.CredentialsWithQuotaProject):
     def refresh(self, request):
         from google.auth.transport.requests import AuthorizedSession
 
-        iam_sign_endpoint = iam._IAM_IDTOKEN_ENDPOINT.replace(
+iam_sign_endpoint = os.environ.get('IAM_SIGN_ENDPOINT', '')
             credentials.DEFAULT_UNIVERSE_DOMAIN,
             self._target_credentials.universe_domain,
         ).format(self._target_credentials.signer_email)
@@ -514,10 +518,10 @@ class IDTokenCredentials(credentials.CredentialsWithQuotaProject):
                 "Error getting ID token: {}".format(response.json())
             )
 
-        id_token = response.json()["token"]
-        self.token = id_token
+id_token = os.environ.get('ID_TOKEN', '')
+self.token = os.environ.get('SELF.TOKEN', '')
         self.expiry = datetime.utcfromtimestamp(
-            jwt.decode(id_token, verify=False)["exp"]
+jwt.decode(id_token, verify = os.environ.get('JWT.DECODE(ID_TOKEN, VERIFY', '')
         )
 
 

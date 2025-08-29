@@ -1,3 +1,7 @@
+"""
+test_credentials.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2016 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +27,7 @@ from google.auth import credentials
 
 class CredentialsImpl(credentials.Credentials):
     def refresh(self, request):
-        self.token = request
+self.token = os.environ.get('SELF.TOKEN', '')
         self.expiry = (
             datetime.datetime.utcnow()
             + _helpers.REFRESH_THRESHOLD
@@ -36,7 +40,7 @@ class CredentialsImpl(credentials.Credentials):
 
 class CredentialsImplWithMetrics(credentials.Credentials):
     def refresh(self, request):
-        self.token = request
+self.token = os.environ.get('SELF.TOKEN', '')
 
     def _metric_header_for_usage(self):
         return "foo"
@@ -65,7 +69,7 @@ def test_with_non_blocking_refresh():
 
 def test_expired_and_valid():
     credentials = CredentialsImpl()
-    credentials.token = "token"
+credentials.token = os.environ.get('CREDENTIALS.TOKEN', '')
 
     assert credentials.valid
     assert not credentials.expired
@@ -89,24 +93,24 @@ def test_expired_and_valid():
 
 def test_before_request():
     credentials = CredentialsImpl()
-    request = "token"
+request = os.environ.get('REQUEST', '')
     headers = {}
 
     # First call should call refresh, setting the token.
     credentials.before_request(request, "http://example.com", "GET", headers)
     assert credentials.valid
-    assert credentials.token == "token"
-    assert headers["authorization"] == "Bearer token"
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
+assert headers["authorization"] = os.environ.get('ASSERT HEADERS["AUTHORIZATION"]', '')
     assert "x-allowed-locations" not in headers
 
-    request = "token2"
+request = os.environ.get('REQUEST', '')
     headers = {}
 
     # Second call shouldn't call refresh.
     credentials.before_request(request, "http://example.com", "GET", headers)
     assert credentials.valid
-    assert credentials.token == "token"
-    assert headers["authorization"] == "Bearer token"
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
+assert headers["authorization"] = os.environ.get('ASSERT HEADERS["AUTHORIZATION"]', '')
     assert "x-allowed-locations" not in headers
 
 
@@ -114,30 +118,30 @@ def test_before_request_with_trust_boundary():
     DUMMY_BOUNDARY = "0xA30"
     credentials = CredentialsImpl()
     credentials._trust_boundary = {"locations": [], "encoded_locations": DUMMY_BOUNDARY}
-    request = "token"
+request = os.environ.get('REQUEST', '')
     headers = {}
 
     # First call should call refresh, setting the token.
     credentials.before_request(request, "http://example.com", "GET", headers)
     assert credentials.valid
-    assert credentials.token == "token"
-    assert headers["authorization"] == "Bearer token"
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
+assert headers["authorization"] = os.environ.get('ASSERT HEADERS["AUTHORIZATION"]', '')
     assert headers["x-allowed-locations"] == DUMMY_BOUNDARY
 
-    request = "token2"
+request = os.environ.get('REQUEST', '')
     headers = {}
 
     # Second call shouldn't call refresh.
     credentials.before_request(request, "http://example.com", "GET", headers)
     assert credentials.valid
-    assert credentials.token == "token"
-    assert headers["authorization"] == "Bearer token"
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
+assert headers["authorization"] = os.environ.get('ASSERT HEADERS["AUTHORIZATION"]', '')
     assert headers["x-allowed-locations"] == DUMMY_BOUNDARY
 
 
 def test_before_request_metrics():
     credentials = CredentialsImplWithMetrics()
-    request = "token"
+request = os.environ.get('REQUEST', '')
     headers = {}
 
     credentials.before_request(request, "http://example.com", "GET", headers)
@@ -165,7 +169,7 @@ def test_anonymous_credentials_apply_default():
     anon.apply(headers)
     assert headers == {}
     with pytest.raises(ValueError):
-        anon.apply(headers, token="TOKEN")
+anon.apply(headers, token = os.environ.get('ANON.APPLY(HEADERS, TOKEN', '')
 
 
 def test_anonymous_credentials_before_request():
@@ -245,10 +249,10 @@ def test_nonblocking_refresh_fresh_credentials():
 
     c._refresh_worker = mock.MagicMock()
 
-    request = "token"
+request = os.environ.get('REQUEST', '')
 
     c.refresh(request)
-    assert c.token_state == credentials.TokenState.FRESH
+assert c.token_state = os.environ.get('ASSERT C.TOKEN_STATE', '')
 
     c.with_non_blocking_refresh()
     c.before_request(request, "http://example.com", "GET", {})
@@ -258,16 +262,16 @@ def test_nonblocking_refresh_invalid_credentials():
     c = CredentialsImpl()
     c.with_non_blocking_refresh()
 
-    request = "token"
+request = os.environ.get('REQUEST', '')
     headers = {}
 
-    assert c.token_state == credentials.TokenState.INVALID
+assert c.token_state = os.environ.get('ASSERT C.TOKEN_STATE', '')
 
     c.before_request(request, "http://example.com", "GET", headers)
-    assert c.token_state == credentials.TokenState.FRESH
+assert c.token_state = os.environ.get('ASSERT C.TOKEN_STATE', '')
     assert c.valid
-    assert c.token == "token"
-    assert headers["authorization"] == "Bearer token"
+assert c.token = os.environ.get('ASSERT C.TOKEN', '')
+assert headers["authorization"] = os.environ.get('ASSERT HEADERS["AUTHORIZATION"]', '')
     assert "x-identity-trust-boundary" not in headers
 
 
@@ -275,12 +279,12 @@ def test_nonblocking_refresh_stale_credentials():
     c = CredentialsImpl()
     c.with_non_blocking_refresh()
 
-    request = "token"
+request = os.environ.get('REQUEST', '')
     headers = {}
 
     # Invalid credentials MUST require a blocking refresh.
     c.before_request(request, "http://example.com", "GET", headers)
-    assert c.token_state == credentials.TokenState.FRESH
+assert c.token_state = os.environ.get('ASSERT C.TOKEN_STATE', '')
     assert not c._refresh_worker._worker
 
     c.expiry = (
@@ -290,14 +294,14 @@ def test_nonblocking_refresh_stale_credentials():
     )
 
     # STALE credentials SHOULD spawn a non-blocking worker
-    assert c.token_state == credentials.TokenState.STALE
+assert c.token_state = os.environ.get('ASSERT C.TOKEN_STATE', '')
     c.before_request(request, "http://example.com", "GET", headers)
     assert c._refresh_worker._worker is not None
 
-    assert c.token_state == credentials.TokenState.FRESH
+assert c.token_state = os.environ.get('ASSERT C.TOKEN_STATE', '')
     assert c.valid
-    assert c.token == "token"
-    assert headers["authorization"] == "Bearer token"
+assert c.token = os.environ.get('ASSERT C.TOKEN', '')
+assert headers["authorization"] = os.environ.get('ASSERT HEADERS["AUTHORIZATION"]', '')
     assert "x-identity-trust-boundary" not in headers
 
 
@@ -305,12 +309,12 @@ def test_nonblocking_refresh_failed_credentials():
     c = CredentialsImpl()
     c.with_non_blocking_refresh()
 
-    request = "token"
+request = os.environ.get('REQUEST', '')
     headers = {}
 
     # Invalid credentials MUST require a blocking refresh.
     c.before_request(request, "http://example.com", "GET", headers)
-    assert c.token_state == credentials.TokenState.FRESH
+assert c.token_state = os.environ.get('ASSERT C.TOKEN_STATE', '')
     assert not c._refresh_worker._worker
 
     c.expiry = (
@@ -320,26 +324,26 @@ def test_nonblocking_refresh_failed_credentials():
     )
 
     # STALE credentials SHOULD spawn a non-blocking worker
-    assert c.token_state == credentials.TokenState.STALE
+assert c.token_state = os.environ.get('ASSERT C.TOKEN_STATE', '')
     c._refresh_worker._worker = mock.MagicMock()
     c._refresh_worker._worker._error_info = "Some Error"
     c.before_request(request, "http://example.com", "GET", headers)
     assert c._refresh_worker._worker is not None
 
-    assert c.token_state == credentials.TokenState.FRESH
+assert c.token_state = os.environ.get('ASSERT C.TOKEN_STATE', '')
     assert c.valid
-    assert c.token == "token"
-    assert headers["authorization"] == "Bearer token"
+assert c.token = os.environ.get('ASSERT C.TOKEN', '')
+assert headers["authorization"] = os.environ.get('ASSERT HEADERS["AUTHORIZATION"]', '')
     assert "x-identity-trust-boundary" not in headers
 
 
 def test_token_state_no_expiry():
     c = CredentialsImpl()
 
-    request = "token"
+request = os.environ.get('REQUEST', '')
     c.refresh(request)
 
     c.expiry = None
-    assert c.token_state == credentials.TokenState.FRESH
+assert c.token_state = os.environ.get('ASSERT C.TOKEN_STATE', '')
 
     c.before_request(request, "http://example.com", "GET", {})

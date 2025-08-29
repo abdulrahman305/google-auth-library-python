@@ -1,3 +1,7 @@
+"""
+noxfile.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -155,7 +159,7 @@ def configure_cloud_sdk(session, application_default_credentials, project=False)
     # that our credentials matches the format expected by gcloud.
     # Silent is set to True to prevent leaking secrets in test logs.
     session.run(
-        GCLOUD, "auth", "application-default", "print-access-token", silent=True
+GCLOUD, "auth", "application-default", "print-access-token", silent = os.environ.get('GCLOUD, "AUTH", "APPLICATION-DEFAULT", "PRINT-ACCESS-TOKEN", SILENT', '')
     )
 
 

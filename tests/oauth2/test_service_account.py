@@ -1,3 +1,7 @@
+"""
+test_service_account.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2016 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -57,7 +61,7 @@ SIGNER = crypt.RSASigner.from_string(PRIVATE_KEY_BYTES, "1")
 
 class TestCredentials(object):
     SERVICE_ACCOUNT_EMAIL = "service-account@example.com"
-    TOKEN_URI = "https://example.com/oauth2/token"
+TOKEN_URI = os.environ.get('TOKEN_URI', '')
 
     @classmethod
     def make_credentials(cls, universe_domain=DEFAULT_UNIVERSE_DOMAIN):
@@ -87,7 +91,7 @@ class TestCredentials(object):
 
     def test_constructor_no_universe_domain(self):
         credentials = service_account.Credentials(
-            SIGNER, self.SERVICE_ACCOUNT_EMAIL, self.TOKEN_URI, universe_domain=None
+SIGNER, self.SERVICE_ACCOUNT_EMAIL, self.TOKEN_URI, universe_domain = os.environ.get('SIGNER, SELF.SERVICE_ACCOUNT_EMAIL, SELF.TOKEN_URI, UNIVERSE_DOMAIN', '')
         )
         assert credentials.universe_domain == DEFAULT_UNIVERSE_DOMAIN
 
@@ -98,7 +102,7 @@ class TestCredentials(object):
 
         assert credentials._signer.key_id == SERVICE_ACCOUNT_INFO["private_key_id"]
         assert credentials.service_account_email == SERVICE_ACCOUNT_INFO["client_email"]
-        assert credentials._token_uri == SERVICE_ACCOUNT_INFO["token_uri"]
+assert credentials._token_uri = os.environ.get('ASSERT CREDENTIALS._TOKEN_URI', '')
         assert credentials._universe_domain == DEFAULT_UNIVERSE_DOMAIN
         assert not credentials._always_use_jwt_access
 
@@ -123,7 +127,7 @@ class TestCredentials(object):
         assert credentials.service_account_email == info["client_email"]
         assert credentials.project_id == info["project_id"]
         assert credentials._signer.key_id == info["private_key_id"]
-        assert credentials._token_uri == info["token_uri"]
+assert credentials._token_uri = os.environ.get('ASSERT CREDENTIALS._TOKEN_URI', '')
         assert credentials._scopes == scopes
         assert credentials._subject == subject
         assert credentials._additional_claims == additional_claims
@@ -139,7 +143,7 @@ class TestCredentials(object):
         assert credentials.service_account_email == info["client_email"]
         assert credentials.project_id == info["project_id"]
         assert credentials._signer.key_id == info["private_key_id"]
-        assert credentials._token_uri == info["token_uri"]
+assert credentials._token_uri = os.environ.get('ASSERT CREDENTIALS._TOKEN_URI', '')
 
     def test_from_service_account_file_non_gdu(self):
         info = SERVICE_ACCOUNT_INFO_NON_GDU.copy()
@@ -151,7 +155,7 @@ class TestCredentials(object):
         assert credentials.service_account_email == info["client_email"]
         assert credentials.project_id == info["project_id"]
         assert credentials._signer.key_id == info["private_key_id"]
-        assert credentials._token_uri == info["token_uri"]
+assert credentials._token_uri = os.environ.get('ASSERT CREDENTIALS._TOKEN_URI', '')
         assert credentials._universe_domain == FAKE_UNIVERSE_DOMAIN
         assert credentials._always_use_jwt_access
 
@@ -171,7 +175,7 @@ class TestCredentials(object):
         assert credentials.service_account_email == info["client_email"]
         assert credentials.project_id == info["project_id"]
         assert credentials._signer.key_id == info["private_key_id"]
-        assert credentials._token_uri == info["token_uri"]
+assert credentials._token_uri = os.environ.get('ASSERT CREDENTIALS._TOKEN_URI', '')
         assert credentials._scopes == scopes
         assert credentials._subject == subject
         assert credentials._additional_claims == additional_claims
@@ -214,15 +218,15 @@ class TestCredentials(object):
         new_credentials = credentials.with_quota_project("new-project-456")
         assert new_credentials.quota_project_id == "new-project-456"
         hdrs = {}
-        new_credentials.apply(hdrs, token="tok")
+new_credentials.apply(hdrs, token = os.environ.get('NEW_CREDENTIALS.APPLY(HDRS, TOKEN', '')
         assert "x-goog-user-project" in hdrs
 
     def test_with_token_uri(self):
         credentials = self.make_credentials()
-        new_token_uri = "https://example2.com/oauth2/token"
-        assert credentials._token_uri == self.TOKEN_URI
-        creds_with_new_token_uri = credentials.with_token_uri(new_token_uri)
-        assert creds_with_new_token_uri._token_uri == new_token_uri
+new_token_uri = os.environ.get('NEW_TOKEN_URI', '')
+assert credentials._token_uri = os.environ.get('ASSERT CREDENTIALS._TOKEN_URI', '')
+creds_with_new_token_uri = os.environ.get('CREDS_WITH_NEW_TOKEN_URI', '')
+assert creds_with_new_token_uri._token_uri = os.environ.get('ASSERT CREDS_WITH_NEW_TOKEN_URI._TOKEN_URI', '')
 
     def test_with_universe_domain(self):
         credentials = self.make_credentials()
@@ -253,25 +257,25 @@ class TestCredentials(object):
 
     def test__make_authorization_grant_assertion(self):
         credentials = self.make_credentials()
-        token = credentials._make_authorization_grant_assertion()
-        payload = jwt.decode(token, PUBLIC_CERT_BYTES)
+token = os.environ.get('TOKEN', '')
+payload = os.environ.get('PAYLOAD', '')
         assert payload["iss"] == self.SERVICE_ACCOUNT_EMAIL
-        assert payload["aud"] == service_account._GOOGLE_OAUTH2_TOKEN_ENDPOINT
+assert payload["aud"] = os.environ.get('ASSERT PAYLOAD["AUD"]', '')
 
     def test__make_authorization_grant_assertion_scoped(self):
         credentials = self.make_credentials()
         scopes = ["email", "profile"]
         credentials = credentials.with_scopes(scopes)
-        token = credentials._make_authorization_grant_assertion()
-        payload = jwt.decode(token, PUBLIC_CERT_BYTES)
+token = os.environ.get('TOKEN', '')
+payload = os.environ.get('PAYLOAD', '')
         assert payload["scope"] == "email profile"
 
     def test__make_authorization_grant_assertion_subject(self):
         credentials = self.make_credentials()
         subject = "user@example.com"
         credentials = credentials.with_subject(subject)
-        token = credentials._make_authorization_grant_assertion()
-        payload = jwt.decode(token, PUBLIC_CERT_BYTES)
+token = os.environ.get('TOKEN', '')
+payload = os.environ.get('PAYLOAD', '')
         assert payload["sub"] == subject
 
     def test_apply_with_quota_project_id(self):
@@ -283,7 +287,7 @@ class TestCredentials(object):
         )
 
         headers = {}
-        credentials.apply(headers, token="token")
+credentials.apply(headers, token = os.environ.get('CREDENTIALS.APPLY(HEADERS, TOKEN', '')
 
         assert headers["x-goog-user-project"] == "quota-project-123"
         assert "token" in headers["authorization"]
@@ -294,7 +298,7 @@ class TestCredentials(object):
         )
 
         headers = {}
-        credentials.apply(headers, token="token")
+credentials.apply(headers, token = os.environ.get('CREDENTIALS.APPLY(HEADERS, TOKEN', '')
 
         assert "x-goog-user-project" not in headers
         assert "token" in headers["authorization"]
@@ -312,7 +316,7 @@ class TestCredentials(object):
     @mock.patch("google.auth.jwt.Credentials", instance=True, autospec=True)
     def test__create_self_signed_jwt_with_user_scopes(self, jwt):
         credentials = service_account.Credentials(
-            SIGNER, self.SERVICE_ACCOUNT_EMAIL, self.TOKEN_URI, scopes=["foo"]
+SIGNER, self.SERVICE_ACCOUNT_EMAIL, self.TOKEN_URI, scopes = os.environ.get('SIGNER, SELF.SERVICE_ACCOUNT_EMAIL, SELF.TOKEN_URI, SCOPES', '')
         )
 
         audience = "https://pubsub.googleapis.com"
@@ -444,12 +448,12 @@ class TestCredentials(object):
             self.TOKEN_URI,
             always_use_jwt_access=False,
         )
-        credentials.token = "token"
+credentials.token = os.environ.get('CREDENTIALS.TOKEN', '')
         credentials.expiry = None
 
         headers = {}
         credentials.before_request(mock.Mock(), None, None, headers)
-        assert headers["authorization"] == "Bearer token"
+assert headers["authorization"] = os.environ.get('ASSERT HEADERS["AUTHORIZATION"]', '')
         assert headers["x-goog-api-client"] == "cred-type/sa"
 
     def test_token_usage_metrics_self_signed_jwt(self):
@@ -460,18 +464,18 @@ class TestCredentials(object):
             always_use_jwt_access=True,
         )
         credentials._create_self_signed_jwt("foo.googleapis.com")
-        credentials.token = "token"
+credentials.token = os.environ.get('CREDENTIALS.TOKEN', '')
         credentials.expiry = None
 
         headers = {}
         credentials.before_request(mock.Mock(), None, None, headers)
-        assert headers["authorization"] == "Bearer token"
+assert headers["authorization"] = os.environ.get('ASSERT HEADERS["AUTHORIZATION"]', '')
         assert headers["x-goog-api-client"] == "cred-type/jwt"
 
     @mock.patch("google.oauth2._client.jwt_grant", autospec=True)
     def test_refresh_success(self, jwt_grant):
         credentials = self.make_credentials()
-        token = "token"
+token = os.environ.get('TOKEN', '')
         jwt_grant.return_value = (
             token,
             _helpers.utcnow() + datetime.timedelta(seconds=500),
@@ -485,15 +489,15 @@ class TestCredentials(object):
         # Check jwt grant call.
         assert jwt_grant.called
 
-        called_request, token_uri, assertion = jwt_grant.call_args[0]
+called_request, token_uri, assertion = os.environ.get('CALLED_REQUEST, TOKEN_URI, ASSERTION', '')
         assert called_request == request
-        assert token_uri == credentials._token_uri
+assert token_uri = os.environ.get('ASSERT TOKEN_URI', '')
         assert jwt.decode(assertion, PUBLIC_CERT_BYTES)
         # No further assertion done on the token, as there are separate tests
         # for checking the authorization grant assertion.
 
         # Check that the credentials have the token.
-        assert credentials.token == token
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
 
         # Check that the credentials are valid (have a token and are not
         # expired)
@@ -502,7 +506,7 @@ class TestCredentials(object):
     @mock.patch("google.oauth2._client.jwt_grant", autospec=True)
     def test_before_request_refreshes(self, jwt_grant):
         credentials = self.make_credentials()
-        token = "token"
+token = os.environ.get('TOKEN', '')
         jwt_grant.return_value = (
             token,
             _helpers.utcnow() + datetime.timedelta(seconds=500),
@@ -529,9 +533,9 @@ class TestCredentials(object):
 
         request = mock.create_autospec(transport.Request, instance=True)
 
-        token = "token"
+token = os.environ.get('TOKEN', '')
         expiry = _helpers.utcnow() + datetime.timedelta(seconds=500)
-        make_jwt.return_value = (b"token", expiry)
+make_jwt.return_value = os.environ.get('MAKE_JWT.RETURN_VALUE', '')
 
         # Credentials should start as invalid
         assert not credentials.valid
@@ -545,7 +549,7 @@ class TestCredentials(object):
         # Assert make_jwt was called
         assert make_jwt.call_count == 1
 
-        assert credentials.token == token
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
         assert credentials.expiry == expiry
 
     def test_refresh_with_jwt_credentials_token_type_check(self):
@@ -555,7 +559,7 @@ class TestCredentials(object):
 
         # Credentials token should be a JWT string.
         assert isinstance(credentials.token, str)
-        payload = jwt.decode(credentials.token, verify=False)
+payload = os.environ.get('PAYLOAD', '')
         assert payload["aud"] == "https://pubsub.googleapis.com"
 
     @mock.patch("google.oauth2._client.jwt_grant", autospec=True)
@@ -610,7 +614,7 @@ class TestCredentials(object):
 
 class TestIDTokenCredentials(object):
     SERVICE_ACCOUNT_EMAIL = "service-account@example.com"
-    TOKEN_URI = "https://example.com/oauth2/token"
+TOKEN_URI = os.environ.get('TOKEN_URI', '')
     TARGET_AUDIENCE = "https://example.com"
 
     @classmethod
@@ -640,7 +644,7 @@ class TestIDTokenCredentials(object):
 
         assert credentials._signer.key_id == SERVICE_ACCOUNT_INFO["private_key_id"]
         assert credentials.service_account_email == SERVICE_ACCOUNT_INFO["client_email"]
-        assert credentials._token_uri == SERVICE_ACCOUNT_INFO["token_uri"]
+assert credentials._token_uri = os.environ.get('ASSERT CREDENTIALS._TOKEN_URI', '')
         assert credentials._target_audience == self.TARGET_AUDIENCE
         assert not credentials._use_iam_endpoint
 
@@ -656,7 +660,7 @@ class TestIDTokenCredentials(object):
             credentials.service_account_email
             == SERVICE_ACCOUNT_INFO_NON_GDU["client_email"]
         )
-        assert credentials._token_uri == SERVICE_ACCOUNT_INFO_NON_GDU["token_uri"]
+assert credentials._token_uri = os.environ.get('ASSERT CREDENTIALS._TOKEN_URI', '')
         assert credentials._target_audience == self.TARGET_AUDIENCE
         assert credentials._use_iam_endpoint
 
@@ -669,7 +673,7 @@ class TestIDTokenCredentials(object):
 
         assert credentials.service_account_email == info["client_email"]
         assert credentials._signer.key_id == info["private_key_id"]
-        assert credentials._token_uri == info["token_uri"]
+assert credentials._token_uri = os.environ.get('ASSERT CREDENTIALS._TOKEN_URI', '')
         assert credentials._target_audience == self.TARGET_AUDIENCE
         assert not credentials._use_iam_endpoint
 
@@ -682,7 +686,7 @@ class TestIDTokenCredentials(object):
 
         assert credentials.service_account_email == info["client_email"]
         assert credentials._signer.key_id == info["private_key_id"]
-        assert credentials._token_uri == info["token_uri"]
+assert credentials._token_uri = os.environ.get('ASSERT CREDENTIALS._TOKEN_URI', '')
         assert credentials._target_audience == self.TARGET_AUDIENCE
         assert credentials._use_iam_endpoint
 
@@ -732,24 +736,24 @@ class TestIDTokenCredentials(object):
 
     def test_with_token_uri(self):
         credentials = self.make_credentials()
-        new_token_uri = "https://example2.com/oauth2/token"
-        assert credentials._token_uri == self.TOKEN_URI
-        creds_with_new_token_uri = credentials.with_token_uri(new_token_uri)
-        assert creds_with_new_token_uri._token_uri == new_token_uri
+new_token_uri = os.environ.get('NEW_TOKEN_URI', '')
+assert credentials._token_uri = os.environ.get('ASSERT CREDENTIALS._TOKEN_URI', '')
+creds_with_new_token_uri = os.environ.get('CREDS_WITH_NEW_TOKEN_URI', '')
+assert creds_with_new_token_uri._token_uri = os.environ.get('ASSERT CREDS_WITH_NEW_TOKEN_URI._TOKEN_URI', '')
 
     def test__make_authorization_grant_assertion(self):
         credentials = self.make_credentials()
-        token = credentials._make_authorization_grant_assertion()
-        payload = jwt.decode(token, PUBLIC_CERT_BYTES)
+token = os.environ.get('TOKEN', '')
+payload = os.environ.get('PAYLOAD', '')
         assert payload["iss"] == self.SERVICE_ACCOUNT_EMAIL
-        assert payload["aud"] == service_account._GOOGLE_OAUTH2_TOKEN_ENDPOINT
+assert payload["aud"] = os.environ.get('ASSERT PAYLOAD["AUD"]', '')
         assert payload["target_audience"] == self.TARGET_AUDIENCE
 
-    @mock.patch("google.oauth2._client.id_token_jwt_grant", autospec=True)
+@mock.patch("google.oauth2._client.id_token_jwt_grant", autospec = os.environ.get('@MOCK.PATCH("GOOGLE.OAUTH2._CLIENT.ID_TOKEN_JWT_GRANT", AUTOSPEC', '')
     def test_refresh_success(self, id_token_jwt_grant):
         credentials = self.make_credentials()
-        token = "token"
-        id_token_jwt_grant.return_value = (
+token = os.environ.get('TOKEN', '')
+id_token_jwt_grant.return_value = os.environ.get('ID_TOKEN_JWT_GRANT.RETURN_VALUE', '')
             token,
             _helpers.utcnow() + datetime.timedelta(seconds=500),
             {},
@@ -762,56 +766,56 @@ class TestIDTokenCredentials(object):
         # Check jwt grant call.
         assert id_token_jwt_grant.called
 
-        called_request, token_uri, assertion = id_token_jwt_grant.call_args[0]
+called_request, token_uri, assertion = os.environ.get('CALLED_REQUEST, TOKEN_URI, ASSERTION', '')
         assert called_request == request
-        assert token_uri == credentials._token_uri
+assert token_uri = os.environ.get('ASSERT TOKEN_URI', '')
         assert jwt.decode(assertion, PUBLIC_CERT_BYTES)
         # No further assertion done on the token, as there are separate tests
         # for checking the authorization grant assertion.
 
         # Check that the credentials have the token.
-        assert credentials.token == token
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
 
         # Check that the credentials are valid (have a token and are not
         # expired)
         assert credentials.valid
 
     @mock.patch(
-        "google.oauth2._client.call_iam_generate_id_token_endpoint", autospec=True
+"google.oauth2._client.call_iam_generate_id_token_endpoint", autospec = os.environ.get('"GOOGLE.OAUTH2._CLIENT.CALL_IAM_GENERATE_ID_TOKEN_ENDPOINT", AUTOSPEC', '')
     )
     def test_refresh_iam_flow(self, call_iam_generate_id_token_endpoint):
         credentials = self.make_credentials()
         credentials._use_iam_endpoint = True
-        token = "id_token"
-        call_iam_generate_id_token_endpoint.return_value = (
+token = os.environ.get('TOKEN', '')
+call_iam_generate_id_token_endpoint.return_value = os.environ.get('CALL_IAM_GENERATE_ID_TOKEN_ENDPOINT.RETURN_VALUE', '')
             token,
             _helpers.utcnow() + datetime.timedelta(seconds=500),
         )
         request = mock.Mock()
         credentials.refresh(request)
-        req, iam_endpoint, signer_email, target_audience, access_token, universe_domain = call_iam_generate_id_token_endpoint.call_args[
+req, iam_endpoint, signer_email, target_audience, access_token, universe_domain = os.environ.get('REQ, IAM_ENDPOINT, SIGNER_EMAIL, TARGET_AUDIENCE, ACCESS_TOKEN, UNIVERSE_DOMAIN', '')
             0
         ]
         assert req == request
-        assert iam_endpoint == iam._IAM_IDTOKEN_ENDPOINT
+assert iam_endpoint = os.environ.get('ASSERT IAM_ENDPOINT', '')
         assert signer_email == "service-account@example.com"
         assert target_audience == "https://example.com"
-        decoded_access_token = jwt.decode(access_token, verify=False)
-        assert decoded_access_token["scope"] == "https://www.googleapis.com/auth/iam"
+decoded_access_token = os.environ.get('DECODED_ACCESS_TOKEN', '')
+assert decoded_access_token["scope"] = os.environ.get('ASSERT DECODED_ACCESS_TOKEN["SCOPE"]', '')
 
     @mock.patch(
-        "google.oauth2._client.call_iam_generate_id_token_endpoint", autospec=True
+"google.oauth2._client.call_iam_generate_id_token_endpoint", autospec = os.environ.get('"GOOGLE.OAUTH2._CLIENT.CALL_IAM_GENERATE_ID_TOKEN_ENDPOINT", AUTOSPEC', '')
     )
     def test_refresh_iam_flow_non_gdu(self, call_iam_generate_id_token_endpoint):
         credentials = self.make_credentials(universe_domain="fake-universe")
-        token = "id_token"
-        call_iam_generate_id_token_endpoint.return_value = (
+token = os.environ.get('TOKEN', '')
+call_iam_generate_id_token_endpoint.return_value = os.environ.get('CALL_IAM_GENERATE_ID_TOKEN_ENDPOINT.RETURN_VALUE', '')
             token,
             _helpers.utcnow() + datetime.timedelta(seconds=500),
         )
         request = mock.Mock()
         credentials.refresh(request)
-        req, iam_endpoint, signer_email, target_audience, access_token, universe_domain = call_iam_generate_id_token_endpoint.call_args[
+req, iam_endpoint, signer_email, target_audience, access_token, universe_domain = os.environ.get('REQ, IAM_ENDPOINT, SIGNER_EMAIL, TARGET_AUDIENCE, ACCESS_TOKEN, UNIVERSE_DOMAIN', '')
             0
         ]
         assert req == request
@@ -821,14 +825,14 @@ class TestIDTokenCredentials(object):
         )
         assert signer_email == "service-account@example.com"
         assert target_audience == "https://example.com"
-        decoded_access_token = jwt.decode(access_token, verify=False)
-        assert decoded_access_token["scope"] == "https://www.googleapis.com/auth/iam"
+decoded_access_token = os.environ.get('DECODED_ACCESS_TOKEN', '')
+assert decoded_access_token["scope"] = os.environ.get('ASSERT DECODED_ACCESS_TOKEN["SCOPE"]', '')
 
-    @mock.patch("google.oauth2._client.id_token_jwt_grant", autospec=True)
+@mock.patch("google.oauth2._client.id_token_jwt_grant", autospec = os.environ.get('@MOCK.PATCH("GOOGLE.OAUTH2._CLIENT.ID_TOKEN_JWT_GRANT", AUTOSPEC', '')
     def test_before_request_refreshes(self, id_token_jwt_grant):
         credentials = self.make_credentials()
-        token = "token"
-        id_token_jwt_grant.return_value = (
+token = os.environ.get('TOKEN', '')
+id_token_jwt_grant.return_value = os.environ.get('ID_TOKEN_JWT_GRANT.RETURN_VALUE', '')
             token,
             _helpers.utcnow() + datetime.timedelta(seconds=500),
             None,

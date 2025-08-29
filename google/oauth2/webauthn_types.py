@@ -1,3 +1,7 @@
+"""
+webauthn_types.py - Auto-documented by GitOps Agent
+"""
+
 from dataclasses import dataclass
 import json
 from typing import Any, Dict, List, Optional

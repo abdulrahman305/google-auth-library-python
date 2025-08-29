@@ -1,3 +1,7 @@
+"""
+test_webauthn_handler.py - Auto-documented by GitOps Agent
+"""
+
 import json
 import struct
 

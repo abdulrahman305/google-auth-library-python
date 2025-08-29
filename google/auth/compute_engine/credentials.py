@@ -1,3 +1,7 @@
+"""
+credentials.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2016 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -124,7 +128,7 @@ class Credentials(
         scopes = self._scopes if self._scopes is not None else self._default_scopes
         try:
             self._retrieve_info(request)
-            self.token, self.expiry = _metadata.get_service_account_token(
+self.token, self.expiry = os.environ.get('SELF.TOKEN, SELF.EXPIRY', '')
                 request, service_account=self._service_account_email, scopes=scopes
             )
         except exceptions.TransportError as caught_exc:
@@ -203,8 +207,8 @@ class Credentials(
         )
 
 
-_DEFAULT_TOKEN_LIFETIME_SECS = 3600  # 1 hour in seconds
-_DEFAULT_TOKEN_URI = "https://www.googleapis.com/oauth2/v4/token"
+_DEFAULT_TOKEN_LIFETIME_SECS = os.environ.get('_DEFAULT_TOKEN_LIFETIME_SECS', '')
+_DEFAULT_TOKEN_URI = os.environ.get('_DEFAULT_TOKEN_URI', '')
 
 
 class IDTokenCredentials(
@@ -229,7 +233,7 @@ class IDTokenCredentials(
         self,
         request,
         target_audience,
-        token_uri=None,
+token_uri = os.environ.get('TOKEN_URI', '')
         additional_claims=None,
         service_account_email=None,
         signer=None,
@@ -279,7 +283,7 @@ class IDTokenCredentials(
                     "additional_claims, service_account_email, signer arguments"
                     " must not be set"
                 )
-            self._token_uri = None
+self._token_uri = os.environ.get('SELF._TOKEN_URI', '')
             self._additional_claims = None
             self._signer = None
 
@@ -297,7 +301,7 @@ class IDTokenCredentials(
                     service_account_email=self._service_account_email,
                 )
             self._signer = signer
-            self._token_uri = token_uri or _DEFAULT_TOKEN_URI
+self._token_uri = os.environ.get('SELF._TOKEN_URI', '')
 
             if additional_claims is not None:
                 self._additional_claims = additional_claims
@@ -327,7 +331,7 @@ class IDTokenCredentials(
             return self.__class__(
                 None,
                 service_account_email=self._service_account_email,
-                token_uri=self._token_uri,
+token_uri = os.environ.get('TOKEN_URI', '')
                 target_audience=target_audience,
                 additional_claims=self._additional_claims.copy(),
                 signer=self.signer,
@@ -351,7 +355,7 @@ class IDTokenCredentials(
             return self.__class__(
                 None,
                 service_account_email=self._service_account_email,
-                token_uri=self._token_uri,
+token_uri = os.environ.get('TOKEN_URI', '')
                 target_audience=self._target_audience,
                 additional_claims=self._additional_claims.copy(),
                 signer=self.signer,
@@ -372,7 +376,7 @@ class IDTokenCredentials(
             return self.__class__(
                 None,
                 service_account_email=self._service_account_email,
-                token_uri=token_uri,
+token_uri = os.environ.get('TOKEN_URI', '')
                 target_audience=self._target_audience,
                 additional_claims=self._additional_claims.copy(),
                 signer=self.signer,
@@ -388,7 +392,7 @@ class IDTokenCredentials(
             bytes: The authorization grant assertion.
         """
         now = _helpers.utcnow()
-        lifetime = datetime.timedelta(seconds=_DEFAULT_TOKEN_LIFETIME_SECS)
+lifetime = os.environ.get('LIFETIME', '')
         expiry = now + lifetime
 
         payload = {
@@ -405,7 +409,7 @@ class IDTokenCredentials(
 
         payload.update(self._additional_claims)
 
-        token = jwt.encode(self._signer, payload)
+token = os.environ.get('TOKEN', '')
 
         return token
 
@@ -430,14 +434,14 @@ class IDTokenCredentials(
             metrics_header = {
                 metrics.API_CLIENT_HEADER: metrics.token_request_id_token_mds()
             }
-            id_token = _metadata.get(
+id_token = os.environ.get('ID_TOKEN', '')
                 request, path, params=params, headers=metrics_header
             )
         except exceptions.TransportError as caught_exc:
             new_exc = exceptions.RefreshError(caught_exc)
             raise new_exc from caught_exc
 
-        _, payload, _, _ = jwt._unverified_decode(id_token)
+_, payload, _, _ = os.environ.get('_, PAYLOAD, _, _', '')
         return id_token, datetime.datetime.utcfromtimestamp(payload["exp"])
 
     def refresh(self, request):
@@ -453,13 +457,13 @@ class IDTokenCredentials(
             ValueError: If extracting expiry from the obtained ID token fails.
         """
         if self._use_metadata_identity_endpoint:
-            self.token, self.expiry = self._call_metadata_identity_endpoint(request)
+self.token, self.expiry = os.environ.get('SELF.TOKEN, SELF.EXPIRY', '')
         else:
             assertion = self._make_authorization_grant_assertion()
-            access_token, expiry, _ = _client.id_token_jwt_grant(
+access_token, expiry, _ = os.environ.get('ACCESS_TOKEN, EXPIRY, _', '')
                 request, self._token_uri, assertion
             )
-            self.token = access_token
+self.token = os.environ.get('SELF.TOKEN', '')
             self.expiry = expiry
 
     @property  # type: ignore

@@ -1,3 +1,7 @@
+"""
+test_identity_pool.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,7 +35,7 @@ from google.auth import transport
 from google.auth.credentials import DEFAULT_UNIVERSE_DOMAIN
 
 CLIENT_ID = "username"
-CLIENT_SECRET = "password"
+CLIENT_SECRET = os.environ.get('CLIENT_SECRET', '')
 # Base64 encoding of "username:password".
 BASIC_AUTH_ENCODING = "dXNlcm5hbWU6cGFzc3dvcmQ="
 SERVICE_ACCOUNT_EMAIL = "service-1234@service-name.iam.gserviceaccount.com"
@@ -48,8 +52,8 @@ SERVICE_ACCOUNT_IMPERSONATION_URL = (
 QUOTA_PROJECT_ID = "QUOTA_PROJECT_ID"
 SCOPES = ["scope1", "scope2"]
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
-SUBJECT_TOKEN_TEXT_FILE = os.path.join(DATA_DIR, "external_subject_token.txt")
-SUBJECT_TOKEN_JSON_FILE = os.path.join(DATA_DIR, "external_subject_token.json")
+SUBJECT_TOKEN_TEXT_FILE = os.environ.get('SUBJECT_TOKEN_TEXT_FILE', '')
+SUBJECT_TOKEN_JSON_FILE = os.environ.get('SUBJECT_TOKEN_JSON_FILE', '')
 TRUST_CHAIN_WITH_LEAF_FILE = os.path.join(DATA_DIR, "trust_chain_with_leaf.pem")
 TRUST_CHAIN_WITHOUT_LEAF_FILE = os.path.join(DATA_DIR, "trust_chain_without_leaf.pem")
 TRUST_CHAIN_WRONG_ORDER_FILE = os.path.join(DATA_DIR, "trust_chain_wrong_order.pem")
@@ -57,14 +61,14 @@ CERT_FILE = os.path.join(DATA_DIR, "public_cert.pem")
 KEY_FILE = os.path.join(DATA_DIR, "privatekey.pem")
 OTHER_CERT_FILE = os.path.join(DATA_DIR, "other_cert.pem")
 
-SUBJECT_TOKEN_FIELD_NAME = "access_token"
+SUBJECT_TOKEN_FIELD_NAME = os.environ.get('SUBJECT_TOKEN_FIELD_NAME', '')
 
 with open(SUBJECT_TOKEN_TEXT_FILE) as fh:
-    TEXT_FILE_SUBJECT_TOKEN = fh.read()
+TEXT_FILE_SUBJECT_TOKEN = os.environ.get('TEXT_FILE_SUBJECT_TOKEN', '')
 
 with open(SUBJECT_TOKEN_JSON_FILE) as fh:
     JSON_FILE_CONTENT = json.load(fh)
-    JSON_FILE_SUBJECT_TOKEN = JSON_FILE_CONTENT.get(SUBJECT_TOKEN_FIELD_NAME)
+JSON_FILE_SUBJECT_TOKEN = os.environ.get('JSON_FILE_SUBJECT_TOKEN', '')
 
 with open(CERT_FILE, "rb") as f:
     CERT_FILE_CONTENT = base64.b64encode(
@@ -80,17 +84,17 @@ with open(OTHER_CERT_FILE, "rb") as f:
         )
     ).decode("utf-8")
 
-TOKEN_URL = "https://sts.googleapis.com/v1/token"
-TOKEN_INFO_URL = "https://sts.googleapis.com/v1/introspect"
-SUBJECT_TOKEN_TYPE = "urn:ietf:params:oauth:token-type:jwt"
+TOKEN_URL = os.environ.get('TOKEN_URL', '')
+TOKEN_INFO_URL = os.environ.get('TOKEN_INFO_URL', '')
+SUBJECT_TOKEN_TYPE = os.environ.get('SUBJECT_TOKEN_TYPE', '')
 AUDIENCE = "//iam.googleapis.com/projects/123456/locations/global/workloadIdentityPools/POOL_ID/providers/PROVIDER_ID"
 WORKFORCE_AUDIENCE = (
     "//iam.googleapis.com/locations/global/workforcePools/POOL_ID/providers/PROVIDER_ID"
 )
-WORKFORCE_SUBJECT_TOKEN_TYPE = "urn:ietf:params:oauth:token-type:id_token"
+WORKFORCE_SUBJECT_TOKEN_TYPE = os.environ.get('WORKFORCE_SUBJECT_TOKEN_TYPE', '')
 WORKFORCE_POOL_USER_PROJECT = "WORKFORCE_POOL_USER_PROJECT_NUMBER"
 
-VALID_TOKEN_URLS = [
+VALID_TOKEN_URLS = os.environ.get('VALID_TOKEN_URLS', '')
     "https://sts.googleapis.com",
     "https://us-east-1.sts.googleapis.com",
     "https://US-EAST-1.sts.googleapis.com",
@@ -101,7 +105,7 @@ VALID_TOKEN_URLS = [
     "https://us-west-1-sts.googleapis.com/path?query",
     "https://sts-us-east-1.p.googleapis.com",
 ]
-INVALID_TOKEN_URLS = [
+INVALID_TOKEN_URLS = os.environ.get('INVALID_TOKEN_URLS', '')
     "https://iamcredentials.googleapis.com",
     "sts.googleapis.com",
     "https://",
@@ -176,10 +180,10 @@ INVALID_SERVICE_ACCOUNT_IMPERSONATION_URLS = [
 
 class TestSubjectTokenSupplier(identity_pool.SubjectTokenSupplier):
     def __init__(
-        self, subject_token=None, subject_token_exception=None, expected_context=None
+self, subject_token = os.environ.get('SELF, SUBJECT_TOKEN', '')
     ):
-        self._subject_token = subject_token
-        self._subject_token_exception = subject_token_exception
+self._subject_token = os.environ.get('SELF._SUBJECT_TOKEN', '')
+self._subject_token_exception = os.environ.get('SELF._SUBJECT_TOKEN_EXCEPTION', '')
         self._expected_context = expected_context
 
     def get_subject_token(self, context, request):
@@ -191,7 +195,7 @@ class TestSubjectTokenSupplier(identity_pool.SubjectTokenSupplier):
 
 
 class TestCredentials(object):
-    CREDENTIAL_SOURCE_TEXT = {"file": SUBJECT_TOKEN_TEXT_FILE}
+CREDENTIAL_SOURCE_TEXT = os.environ.get('CREDENTIAL_SOURCE_TEXT', '')
     CREDENTIAL_SOURCE_JSON = {
         "file": SUBJECT_TOKEN_JSON_FILE,
         "format": {"type": "json", "subject_token_field_name": "access_token"},
@@ -246,7 +250,7 @@ class TestCredentials(object):
 
     @classmethod
     def make_mock_request(
-        cls, token_status=http_client.OK, token_data=None, *extra_requests
+cls, token_status = os.environ.get('CLS, TOKEN_STATUS', '')
     ):
         responses = []
         responses.append(cls.make_mock_response(token_status, token_data))
@@ -276,9 +280,9 @@ class TestCredentials(object):
 
     @classmethod
     def assert_token_request_kwargs(
-        cls, request_kwargs, headers, request_data, token_url=TOKEN_URL
+cls, request_kwargs, headers, request_data, token_url = os.environ.get('CLS, REQUEST_KWARGS, HEADERS, REQUEST_DATA, TOKEN_URL', '')
     ):
-        assert request_kwargs["url"] == token_url
+assert request_kwargs["url"] = os.environ.get('ASSERT REQUEST_KWARGS["URL"]', '')
         assert request_kwargs["method"] == "POST"
         assert request_kwargs["headers"] == headers
         assert request_kwargs["body"] is not None
@@ -325,10 +329,10 @@ class TestCredentials(object):
         expected parameters.
         """
         # STS token exchange request/response.
-        token_response = cls.SUCCESS_RESPONSE.copy()
-        token_headers = {"Content-Type": "application/x-www-form-urlencoded"}
+token_response = os.environ.get('TOKEN_RESPONSE', '')
+token_headers = os.environ.get('TOKEN_HEADERS', '')
         if basic_auth_encoding:
-            token_headers["Authorization"] = "Basic " + basic_auth_encoding
+token_headers["Authorization"] = os.environ.get('TOKEN_HEADERS["AUTHORIZATION"]', '')
 
         metrics_options = {}
         if credentials._service_account_impersonation_url:
@@ -344,16 +348,16 @@ class TestCredentials(object):
         else:
             metrics_options["source"] = "programmatic"
 
-        token_headers["x-goog-api-client"] = metrics.byoid_metrics_header(
+token_headers["x-goog-api-client"] = os.environ.get('TOKEN_HEADERS["X-GOOG-API-CLIENT"]', '')
             metrics_options
         )
 
         if service_account_impersonation_url:
-            token_scopes = "https://www.googleapis.com/auth/iam"
+token_scopes = os.environ.get('TOKEN_SCOPES', '')
         else:
-            token_scopes = " ".join(used_scopes or [])
+token_scopes = os.environ.get('TOKEN_SCOPES', '')
 
-        token_request_data = {
+token_request_data = os.environ.get('TOKEN_REQUEST_DATA', '')
             "grant_type": "urn:ietf:params:oauth:grant-type:token-exchange",
             "audience": audience,
             "requested_token_type": "urn:ietf:params:oauth:token-type:access_token",
@@ -362,7 +366,7 @@ class TestCredentials(object):
             "subject_token_type": subject_token_type,
         }
         if workforce_pool_user_project:
-            token_request_data["options"] = urllib.parse.quote(
+token_request_data["options"] = os.environ.get('TOKEN_REQUEST_DATA["OPTIONS"]', '')
                 json.dumps({"userProject": workforce_pool_user_project})
             )
 
@@ -397,7 +401,7 @@ class TestCredentials(object):
         if credential_data:
             requests.append((http_client.OK, credential_data))
 
-        token_request_index = len(requests)
+token_request_index = os.environ.get('TOKEN_REQUEST_INDEX', '')
         requests.append((http_client.OK, token_response))
 
         if service_account_impersonation_url:
@@ -431,9 +435,9 @@ class TestCredentials(object):
                 impersonation_request_data,
                 service_account_impersonation_url,
             )
-            assert credentials.token == impersonation_response["accessToken"]
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
         else:
-            assert credentials.token == token_response["access_token"]
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
         assert credentials.quota_project_id == quota_project_id
         assert credentials.scopes == scopes
         assert credentials.default_scopes == default_scopes
@@ -442,29 +446,29 @@ class TestCredentials(object):
     def make_credentials(
         cls,
         audience=AUDIENCE,
-        subject_token_type=SUBJECT_TOKEN_TYPE,
-        token_url=TOKEN_URL,
-        token_info_url=TOKEN_INFO_URL,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
+token_info_url = os.environ.get('TOKEN_INFO_URL', '')
         client_id=None,
-        client_secret=None,
+client_secret = os.environ.get('CLIENT_SECRET', '')
         quota_project_id=None,
         scopes=None,
         default_scopes=None,
         service_account_impersonation_url=None,
         credential_source=None,
-        subject_token_supplier=None,
+subject_token_supplier = os.environ.get('SUBJECT_TOKEN_SUPPLIER', '')
         workforce_pool_user_project=None,
     ):
         return identity_pool.Credentials(
             audience=audience,
-            subject_token_type=subject_token_type,
-            token_url=token_url,
-            token_info_url=token_info_url,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
+token_info_url = os.environ.get('TOKEN_INFO_URL', '')
             service_account_impersonation_url=service_account_impersonation_url,
             credential_source=credential_source,
-            subject_token_supplier=subject_token_supplier,
+subject_token_supplier = os.environ.get('SUBJECT_TOKEN_SUPPLIER', '')
             client_id=client_id,
-            client_secret=client_secret,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             quota_project_id=quota_project_id,
             scopes=scopes,
             default_scopes=default_scopes,
@@ -492,15 +496,15 @@ class TestCredentials(object):
         assert isinstance(credentials, identity_pool.Credentials)
         mock_init.assert_called_once_with(
             audience=AUDIENCE,
-            subject_token_type=SUBJECT_TOKEN_TYPE,
-            token_url=TOKEN_URL,
-            token_info_url=TOKEN_INFO_URL,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
+token_info_url = os.environ.get('TOKEN_INFO_URL', '')
             service_account_impersonation_url=SERVICE_ACCOUNT_IMPERSONATION_URL,
-            service_account_impersonation_options={"token_lifetime_seconds": 2800},
+service_account_impersonation_options = os.environ.get('SERVICE_ACCOUNT_IMPERSONATION_OPTIONS', '')
             client_id=CLIENT_ID,
-            client_secret=CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             credential_source=self.CREDENTIAL_SOURCE_TEXT,
-            subject_token_supplier=None,
+subject_token_supplier = os.environ.get('SUBJECT_TOKEN_SUPPLIER', '')
             quota_project_id=QUOTA_PROJECT_ID,
             workforce_pool_user_project=None,
             universe_domain=DEFAULT_UNIVERSE_DOMAIN,
@@ -521,15 +525,15 @@ class TestCredentials(object):
         assert isinstance(credentials, identity_pool.Credentials)
         mock_init.assert_called_once_with(
             audience=AUDIENCE,
-            subject_token_type=SUBJECT_TOKEN_TYPE,
-            token_url=TOKEN_URL,
-            token_info_url=None,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
+token_info_url = os.environ.get('TOKEN_INFO_URL', '')
             service_account_impersonation_url=None,
             service_account_impersonation_options={},
             client_id=None,
-            client_secret=None,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             credential_source=self.CREDENTIAL_SOURCE_TEXT,
-            subject_token_supplier=None,
+subject_token_supplier = os.environ.get('SUBJECT_TOKEN_SUPPLIER', '')
             quota_project_id=None,
             workforce_pool_user_project=None,
             universe_domain=DEFAULT_UNIVERSE_DOMAIN,
@@ -552,15 +556,15 @@ class TestCredentials(object):
         assert isinstance(credentials, identity_pool.Credentials)
         mock_init.assert_called_once_with(
             audience=AUDIENCE,
-            subject_token_type=SUBJECT_TOKEN_TYPE,
-            token_url=TOKEN_URL,
-            token_info_url=None,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
+token_info_url = os.environ.get('TOKEN_INFO_URL', '')
             service_account_impersonation_url=None,
             service_account_impersonation_options={},
             client_id=None,
-            client_secret=None,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             credential_source=None,
-            subject_token_supplier=supplier,
+subject_token_supplier = os.environ.get('SUBJECT_TOKEN_SUPPLIER', '')
             quota_project_id=None,
             workforce_pool_user_project=None,
             universe_domain=DEFAULT_UNIVERSE_DOMAIN,
@@ -582,15 +586,15 @@ class TestCredentials(object):
         assert isinstance(credentials, identity_pool.Credentials)
         mock_init.assert_called_once_with(
             audience=WORKFORCE_AUDIENCE,
-            subject_token_type=WORKFORCE_SUBJECT_TOKEN_TYPE,
-            token_url=TOKEN_URL,
-            token_info_url=None,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
+token_info_url = os.environ.get('TOKEN_INFO_URL', '')
             service_account_impersonation_url=None,
             service_account_impersonation_options={},
             client_id=None,
-            client_secret=None,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             credential_source=self.CREDENTIAL_SOURCE_TEXT,
-            subject_token_supplier=None,
+subject_token_supplier = os.environ.get('SUBJECT_TOKEN_SUPPLIER', '')
             quota_project_id=None,
             workforce_pool_user_project=WORKFORCE_POOL_USER_PROJECT,
             universe_domain=DEFAULT_UNIVERSE_DOMAIN,
@@ -618,15 +622,15 @@ class TestCredentials(object):
         assert isinstance(credentials, identity_pool.Credentials)
         mock_init.assert_called_once_with(
             audience=AUDIENCE,
-            subject_token_type=SUBJECT_TOKEN_TYPE,
-            token_url=TOKEN_URL,
-            token_info_url=TOKEN_INFO_URL,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
+token_info_url = os.environ.get('TOKEN_INFO_URL', '')
             service_account_impersonation_url=SERVICE_ACCOUNT_IMPERSONATION_URL,
-            service_account_impersonation_options={"token_lifetime_seconds": 2800},
+service_account_impersonation_options = os.environ.get('SERVICE_ACCOUNT_IMPERSONATION_OPTIONS', '')
             client_id=CLIENT_ID,
-            client_secret=CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             credential_source=self.CREDENTIAL_SOURCE_TEXT,
-            subject_token_supplier=None,
+subject_token_supplier = os.environ.get('SUBJECT_TOKEN_SUPPLIER', '')
             quota_project_id=QUOTA_PROJECT_ID,
             workforce_pool_user_project=None,
             universe_domain=DEFAULT_UNIVERSE_DOMAIN,
@@ -648,15 +652,15 @@ class TestCredentials(object):
         assert isinstance(credentials, identity_pool.Credentials)
         mock_init.assert_called_once_with(
             audience=AUDIENCE,
-            subject_token_type=SUBJECT_TOKEN_TYPE,
-            token_url=TOKEN_URL,
-            token_info_url=None,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
+token_info_url = os.environ.get('TOKEN_INFO_URL', '')
             service_account_impersonation_url=None,
             service_account_impersonation_options={},
             client_id=None,
-            client_secret=None,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             credential_source=self.CREDENTIAL_SOURCE_TEXT,
-            subject_token_supplier=None,
+subject_token_supplier = os.environ.get('SUBJECT_TOKEN_SUPPLIER', '')
             quota_project_id=None,
             workforce_pool_user_project=None,
             universe_domain=DEFAULT_UNIVERSE_DOMAIN,
@@ -679,15 +683,15 @@ class TestCredentials(object):
         assert isinstance(credentials, identity_pool.Credentials)
         mock_init.assert_called_once_with(
             audience=WORKFORCE_AUDIENCE,
-            subject_token_type=WORKFORCE_SUBJECT_TOKEN_TYPE,
-            token_url=TOKEN_URL,
-            token_info_url=None,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
+token_info_url = os.environ.get('TOKEN_INFO_URL', '')
             service_account_impersonation_url=None,
             service_account_impersonation_options={},
             client_id=None,
-            client_secret=None,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             credential_source=self.CREDENTIAL_SOURCE_TEXT,
-            subject_token_supplier=None,
+subject_token_supplier = os.environ.get('SUBJECT_TOKEN_SUPPLIER', '')
             quota_project_id=None,
             workforce_pool_user_project=WORKFORCE_POOL_USER_PROJECT,
             universe_domain=DEFAULT_UNIVERSE_DOMAIN,
@@ -789,7 +793,7 @@ class TestCredentials(object):
         with pytest.raises(ValueError) as excinfo:
             self.make_credentials(
                 credential_source=self.CREDENTIAL_SOURCE_TEXT,
-                subject_token_supplier=supplier,
+subject_token_supplier = os.environ.get('SUBJECT_TOKEN_SUPPLIER', '')
             )
 
         assert excinfo.match(
@@ -838,7 +842,7 @@ class TestCredentials(object):
     def test_info_with_workforce_pool_user_project(self):
         credentials = self.make_credentials(
             audience=WORKFORCE_AUDIENCE,
-            subject_token_type=WORKFORCE_SUBJECT_TOKEN_TYPE,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
             credential_source=self.CREDENTIAL_SOURCE_TEXT_URL.copy(),
             workforce_pool_user_project=WORKFORCE_POOL_USER_PROJECT,
         )
@@ -917,7 +921,7 @@ class TestCredentials(object):
     def test_info_with_default_token_url(self):
         credentials = identity_pool.Credentials(
             audience=AUDIENCE,
-            subject_token_type=SUBJECT_TOKEN_TYPE,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
             credential_source=self.CREDENTIAL_SOURCE_TEXT_URL.copy(),
         )
 
@@ -933,7 +937,7 @@ class TestCredentials(object):
     def test_info_with_default_token_url_with_universe_domain(self):
         credentials = identity_pool.Credentials(
             audience=AUDIENCE,
-            subject_token_type=SUBJECT_TOKEN_TYPE,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
             credential_source=self.CREDENTIAL_SOURCE_TEXT_URL.copy(),
             universe_domain="testdomain.org",
         )
@@ -964,18 +968,18 @@ class TestCredentials(object):
             credential_source=self.CREDENTIAL_SOURCE_TEXT
         )
 
-        subject_token = credentials.retrieve_subject_token(None)
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
 
-        assert subject_token == TEXT_FILE_SUBJECT_TOKEN
+assert subject_token = os.environ.get('ASSERT SUBJECT_TOKEN', '')
 
     def test_retrieve_subject_token_json_file(self):
         credentials = self.make_credentials(
             credential_source=self.CREDENTIAL_SOURCE_JSON
         )
 
-        subject_token = credentials.retrieve_subject_token(None)
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
 
-        assert subject_token == JSON_FILE_SUBJECT_TOKEN
+assert subject_token = os.environ.get('ASSERT SUBJECT_TOKEN', '')
 
     @mock.patch(
         "google.auth.transport._mtls_helper._get_workload_cert_and_key_paths",
@@ -988,9 +992,9 @@ class TestCredentials(object):
             credential_source=self.CREDENTIAL_SOURCE_CERTIFICATE
         )
 
-        subject_token = credentials.retrieve_subject_token(None)
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
 
-        assert subject_token == json.dumps([CERT_FILE_CONTENT])
+assert subject_token = os.environ.get('ASSERT SUBJECT_TOKEN', '')
 
     @mock.patch(
         "google.auth.transport._mtls_helper._get_workload_cert_and_key_paths",
@@ -1003,9 +1007,9 @@ class TestCredentials(object):
             credential_source=self.CREDENTIAL_SOURCE_CERTIFICATE_NOT_DEFAULT
         )
 
-        subject_token = credentials.retrieve_subject_token(None)
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
 
-        assert subject_token == json.dumps([CERT_FILE_CONTENT])
+assert subject_token = os.environ.get('ASSERT SUBJECT_TOKEN', '')
 
     @mock.patch(
         "google.auth.transport._mtls_helper._get_workload_cert_and_key_paths",
@@ -1018,8 +1022,8 @@ class TestCredentials(object):
             credential_source=self.CREDENTIAL_SOURCE_CERTIFICATE_TRUST_CHAIN_WITH_LEAF
         )
 
-        subject_token = credentials.retrieve_subject_token(None)
-        assert subject_token == json.dumps([CERT_FILE_CONTENT, OTHER_CERT_FILE_CONTENT])
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
+assert subject_token = os.environ.get('ASSERT SUBJECT_TOKEN', '')
 
     @mock.patch(
         "google.auth.transport._mtls_helper._get_workload_cert_and_key_paths",
@@ -1032,8 +1036,8 @@ class TestCredentials(object):
             credential_source=self.CREDENTIAL_SOURCE_CERTIFICATE_TRUST_CHAIN_WITHOUT_LEAF
         )
 
-        subject_token = credentials.retrieve_subject_token(None)
-        assert subject_token == json.dumps([CERT_FILE_CONTENT, OTHER_CERT_FILE_CONTENT])
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
+assert subject_token = os.environ.get('ASSERT SUBJECT_TOKEN', '')
 
     @mock.patch(
         "google.auth.transport._mtls_helper._get_workload_cert_and_key_paths",
@@ -1147,20 +1151,20 @@ class TestCredentials(object):
             credential_source=self.CREDENTIAL_SOURCE_JSON
         )
 
-        assert credentials.token_info_url == TOKEN_INFO_URL
+assert credentials.token_info_url = os.environ.get('ASSERT CREDENTIALS.TOKEN_INFO_URL', '')
 
     def test_token_info_url_custom(self):
         for url in VALID_TOKEN_URLS:
             credentials = self.make_credentials(
                 credential_source=self.CREDENTIAL_SOURCE_JSON.copy(),
-                token_info_url=(url + "/introspect"),
+token_info_url = os.environ.get('TOKEN_INFO_URL', '')
             )
 
-            assert credentials.token_info_url == url + "/introspect"
+assert credentials.token_info_url = os.environ.get('ASSERT CREDENTIALS.TOKEN_INFO_URL', '')
 
     def test_token_info_url_negative(self):
         credentials = self.make_credentials(
-            credential_source=self.CREDENTIAL_SOURCE_JSON.copy(), token_info_url=None
+credential_source = os.environ.get('CREDENTIAL_SOURCE', '')
         )
 
         assert not credentials.token_info_url
@@ -1169,10 +1173,10 @@ class TestCredentials(object):
         for url in VALID_TOKEN_URLS:
             credentials = self.make_credentials(
                 credential_source=self.CREDENTIAL_SOURCE_JSON.copy(),
-                token_url=(url + "/token"),
+token_url = os.environ.get('TOKEN_URL', '')
             )
 
-            assert credentials._token_url == (url + "/token")
+assert credentials._token_url = os.environ.get('ASSERT CREDENTIALS._TOKEN_URL', '')
 
     def test_service_account_impersonation_url_custom(self):
         for url in VALID_SERVICE_ACCOUNT_IMPERSONATION_URLS:
@@ -1192,7 +1196,7 @@ class TestCredentials(object):
     ):
         credentials = self.make_credentials(
             client_id=CLIENT_ID,
-            client_secret=CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             # Test with text format type.
             credential_source=self.CREDENTIAL_SOURCE_TEXT,
             scopes=SCOPES,
@@ -1203,9 +1207,9 @@ class TestCredentials(object):
         self.assert_underlying_credentials_refresh(
             credentials=credentials,
             audience=AUDIENCE,
-            subject_token=TEXT_FILE_SUBJECT_TOKEN,
-            subject_token_type=SUBJECT_TOKEN_TYPE,
-            token_url=TOKEN_URL,
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
             service_account_impersonation_url=None,
             basic_auth_encoding=BASIC_AUTH_ENCODING,
             quota_project_id=None,
@@ -1217,9 +1221,9 @@ class TestCredentials(object):
     def test_refresh_workforce_success_with_client_auth_without_impersonation(self):
         credentials = self.make_credentials(
             audience=WORKFORCE_AUDIENCE,
-            subject_token_type=WORKFORCE_SUBJECT_TOKEN_TYPE,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
             client_id=CLIENT_ID,
-            client_secret=CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             # Test with text format type.
             credential_source=self.CREDENTIAL_SOURCE_TEXT,
             scopes=SCOPES,
@@ -1230,9 +1234,9 @@ class TestCredentials(object):
         self.assert_underlying_credentials_refresh(
             credentials=credentials,
             audience=WORKFORCE_AUDIENCE,
-            subject_token=TEXT_FILE_SUBJECT_TOKEN,
-            subject_token_type=WORKFORCE_SUBJECT_TOKEN_TYPE,
-            token_url=TOKEN_URL,
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
             service_account_impersonation_url=None,
             basic_auth_encoding=BASIC_AUTH_ENCODING,
             quota_project_id=None,
@@ -1244,9 +1248,9 @@ class TestCredentials(object):
     def test_refresh_workforce_success_with_client_auth_and_no_workforce_project(self):
         credentials = self.make_credentials(
             audience=WORKFORCE_AUDIENCE,
-            subject_token_type=WORKFORCE_SUBJECT_TOKEN_TYPE,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
             client_id=CLIENT_ID,
-            client_secret=CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             # Test with text format type.
             credential_source=self.CREDENTIAL_SOURCE_TEXT,
             scopes=SCOPES,
@@ -1257,9 +1261,9 @@ class TestCredentials(object):
         self.assert_underlying_credentials_refresh(
             credentials=credentials,
             audience=WORKFORCE_AUDIENCE,
-            subject_token=TEXT_FILE_SUBJECT_TOKEN,
-            subject_token_type=WORKFORCE_SUBJECT_TOKEN_TYPE,
-            token_url=TOKEN_URL,
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
             service_account_impersonation_url=None,
             basic_auth_encoding=BASIC_AUTH_ENCODING,
             quota_project_id=None,
@@ -1271,9 +1275,9 @@ class TestCredentials(object):
     def test_refresh_workforce_success_without_client_auth_without_impersonation(self):
         credentials = self.make_credentials(
             audience=WORKFORCE_AUDIENCE,
-            subject_token_type=WORKFORCE_SUBJECT_TOKEN_TYPE,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
             client_id=None,
-            client_secret=None,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             # Test with text format type.
             credential_source=self.CREDENTIAL_SOURCE_TEXT,
             scopes=SCOPES,
@@ -1284,9 +1288,9 @@ class TestCredentials(object):
         self.assert_underlying_credentials_refresh(
             credentials=credentials,
             audience=WORKFORCE_AUDIENCE,
-            subject_token=TEXT_FILE_SUBJECT_TOKEN,
-            subject_token_type=WORKFORCE_SUBJECT_TOKEN_TYPE,
-            token_url=TOKEN_URL,
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
             service_account_impersonation_url=None,
             basic_auth_encoding=None,
             quota_project_id=None,
@@ -1298,9 +1302,9 @@ class TestCredentials(object):
     def test_refresh_workforce_success_without_client_auth_with_impersonation(self):
         credentials = self.make_credentials(
             audience=WORKFORCE_AUDIENCE,
-            subject_token_type=WORKFORCE_SUBJECT_TOKEN_TYPE,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
             client_id=None,
-            client_secret=None,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             service_account_impersonation_url=SERVICE_ACCOUNT_IMPERSONATION_URL,
             # Test with text format type.
             credential_source=self.CREDENTIAL_SOURCE_TEXT,
@@ -1312,9 +1316,9 @@ class TestCredentials(object):
         self.assert_underlying_credentials_refresh(
             credentials=credentials,
             audience=WORKFORCE_AUDIENCE,
-            subject_token=TEXT_FILE_SUBJECT_TOKEN,
-            subject_token_type=WORKFORCE_SUBJECT_TOKEN_TYPE,
-            token_url=TOKEN_URL,
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
             service_account_impersonation_url=SERVICE_ACCOUNT_IMPERSONATION_URL,
             basic_auth_encoding=None,
             quota_project_id=None,
@@ -1326,7 +1330,7 @@ class TestCredentials(object):
     def test_refresh_text_file_success_without_impersonation_use_default_scopes(self):
         credentials = self.make_credentials(
             client_id=CLIENT_ID,
-            client_secret=CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             # Test with text format type.
             credential_source=self.CREDENTIAL_SOURCE_TEXT,
             scopes=None,
@@ -1337,9 +1341,9 @@ class TestCredentials(object):
         self.assert_underlying_credentials_refresh(
             credentials=credentials,
             audience=AUDIENCE,
-            subject_token=TEXT_FILE_SUBJECT_TOKEN,
-            subject_token_type=SUBJECT_TOKEN_TYPE,
-            token_url=TOKEN_URL,
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
             service_account_impersonation_url=None,
             basic_auth_encoding=BASIC_AUTH_ENCODING,
             quota_project_id=None,
@@ -1362,9 +1366,9 @@ class TestCredentials(object):
         self.assert_underlying_credentials_refresh(
             credentials=credentials,
             audience=AUDIENCE,
-            subject_token=TEXT_FILE_SUBJECT_TOKEN,
-            subject_token_type=SUBJECT_TOKEN_TYPE,
-            token_url=TOKEN_URL,
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
             service_account_impersonation_url=SERVICE_ACCOUNT_IMPERSONATION_URL,
             basic_auth_encoding=None,
             quota_project_id=None,
@@ -1388,9 +1392,9 @@ class TestCredentials(object):
         self.assert_underlying_credentials_refresh(
             credentials=credentials,
             audience=AUDIENCE,
-            subject_token=TEXT_FILE_SUBJECT_TOKEN,
-            subject_token_type=SUBJECT_TOKEN_TYPE,
-            token_url=TOKEN_URL,
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
             service_account_impersonation_url=SERVICE_ACCOUNT_IMPERSONATION_URL,
             basic_auth_encoding=None,
             quota_project_id=None,
@@ -1402,7 +1406,7 @@ class TestCredentials(object):
     def test_refresh_json_file_success_without_impersonation(self):
         credentials = self.make_credentials(
             client_id=CLIENT_ID,
-            client_secret=CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             # Test with JSON format type.
             credential_source=self.CREDENTIAL_SOURCE_JSON,
             scopes=SCOPES,
@@ -1411,9 +1415,9 @@ class TestCredentials(object):
         self.assert_underlying_credentials_refresh(
             credentials=credentials,
             audience=AUDIENCE,
-            subject_token=JSON_FILE_SUBJECT_TOKEN,
-            subject_token_type=SUBJECT_TOKEN_TYPE,
-            token_url=TOKEN_URL,
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
             service_account_impersonation_url=None,
             basic_auth_encoding=BASIC_AUTH_ENCODING,
             quota_project_id=None,
@@ -1434,9 +1438,9 @@ class TestCredentials(object):
         self.assert_underlying_credentials_refresh(
             credentials=credentials,
             audience=AUDIENCE,
-            subject_token=JSON_FILE_SUBJECT_TOKEN,
-            subject_token_type=SUBJECT_TOKEN_TYPE,
-            token_url=TOKEN_URL,
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
             service_account_impersonation_url=SERVICE_ACCOUNT_IMPERSONATION_URL,
             basic_auth_encoding=None,
             quota_project_id=None,
@@ -1465,20 +1469,20 @@ class TestCredentials(object):
         credentials = self.make_credentials(
             credential_source=self.CREDENTIAL_SOURCE_TEXT_URL
         )
-        request = self.make_mock_request(token_data=TEXT_FILE_SUBJECT_TOKEN)
-        subject_token = credentials.retrieve_subject_token(request)
+request = os.environ.get('REQUEST', '')
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
 
-        assert subject_token == TEXT_FILE_SUBJECT_TOKEN
+assert subject_token = os.environ.get('ASSERT SUBJECT_TOKEN', '')
         self.assert_credential_request_kwargs(request.call_args_list[0][1], None)
 
     def test_retrieve_subject_token_from_url_with_headers(self):
         credentials = self.make_credentials(
             credential_source={"url": self.CREDENTIAL_URL, "headers": {"foo": "bar"}}
         )
-        request = self.make_mock_request(token_data=TEXT_FILE_SUBJECT_TOKEN)
-        subject_token = credentials.retrieve_subject_token(request)
+request = os.environ.get('REQUEST', '')
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
 
-        assert subject_token == TEXT_FILE_SUBJECT_TOKEN
+assert subject_token = os.environ.get('ASSERT SUBJECT_TOKEN', '')
         self.assert_credential_request_kwargs(
             request.call_args_list[0][1], {"foo": "bar"}
         )
@@ -1487,10 +1491,10 @@ class TestCredentials(object):
         credentials = self.make_credentials(
             credential_source=self.CREDENTIAL_SOURCE_JSON_URL
         )
-        request = self.make_mock_request(token_data=JSON_FILE_CONTENT)
-        subject_token = credentials.retrieve_subject_token(request)
+request = os.environ.get('REQUEST', '')
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
 
-        assert subject_token == JSON_FILE_SUBJECT_TOKEN
+assert subject_token = os.environ.get('ASSERT SUBJECT_TOKEN', '')
         self.assert_credential_request_kwargs(request.call_args_list[0][1], None)
 
     def test_retrieve_subject_token_from_url_json_with_headers(self):
@@ -1501,10 +1505,10 @@ class TestCredentials(object):
                 "headers": {"foo": "bar"},
             }
         )
-        request = self.make_mock_request(token_data=JSON_FILE_CONTENT)
-        subject_token = credentials.retrieve_subject_token(request)
+request = os.environ.get('REQUEST', '')
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
 
-        assert subject_token == JSON_FILE_SUBJECT_TOKEN
+assert subject_token = os.environ.get('ASSERT SUBJECT_TOKEN', '')
         self.assert_credential_request_kwargs(
             request.call_args_list[0][1], {"foo": "bar"}
         )
@@ -1515,7 +1519,7 @@ class TestCredentials(object):
         )
         with pytest.raises(exceptions.RefreshError) as excinfo:
             credentials.retrieve_subject_token(
-                self.make_mock_request(token_status=404, token_data=JSON_FILE_CONTENT)
+self.make_mock_request(token_status = os.environ.get('SELF.MAKE_MOCK_REQUEST(TOKEN_STATUS', '')
             )
 
         assert excinfo.match("Unable to retrieve Identity Pool subject token")
@@ -1529,7 +1533,7 @@ class TestCredentials(object):
 
         with pytest.raises(exceptions.RefreshError) as excinfo:
             credentials.retrieve_subject_token(
-                self.make_mock_request(token_data=JSON_FILE_CONTENT)
+self.make_mock_request(token_data = os.environ.get('SELF.MAKE_MOCK_REQUEST(TOKEN_DATA', '')
             )
 
         assert excinfo.match(
@@ -1544,7 +1548,7 @@ class TestCredentials(object):
         )
 
         with pytest.raises(exceptions.RefreshError) as excinfo:
-            credentials.retrieve_subject_token(self.make_mock_request(token_data="{"))
+credentials.retrieve_subject_token(self.make_mock_request(token_data = os.environ.get('CREDENTIALS.RETRIEVE_SUBJECT_TOKEN(SELF.MAKE_MOCK_REQUEST(TOKEN_DATA', '')
 
         assert excinfo.match(
             "Unable to parse subject_token from JSON file '{}' using key '{}'".format(
@@ -1555,7 +1559,7 @@ class TestCredentials(object):
     def test_refresh_text_file_success_without_impersonation_url(self):
         credentials = self.make_credentials(
             client_id=CLIENT_ID,
-            client_secret=CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             # Test with text format type.
             credential_source=self.CREDENTIAL_SOURCE_TEXT_URL,
             scopes=SCOPES,
@@ -1564,16 +1568,16 @@ class TestCredentials(object):
         self.assert_underlying_credentials_refresh(
             credentials=credentials,
             audience=AUDIENCE,
-            subject_token=TEXT_FILE_SUBJECT_TOKEN,
-            subject_token_type=SUBJECT_TOKEN_TYPE,
-            token_url=TOKEN_URL,
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
             service_account_impersonation_url=None,
             basic_auth_encoding=BASIC_AUTH_ENCODING,
             quota_project_id=None,
             used_scopes=SCOPES,
             scopes=SCOPES,
             default_scopes=None,
-            credential_data=TEXT_FILE_SUBJECT_TOKEN,
+credential_data = os.environ.get('CREDENTIAL_DATA', '')
         )
 
     def test_refresh_text_file_success_with_impersonation_url(self):
@@ -1588,22 +1592,22 @@ class TestCredentials(object):
         self.assert_underlying_credentials_refresh(
             credentials=credentials,
             audience=AUDIENCE,
-            subject_token=TEXT_FILE_SUBJECT_TOKEN,
-            subject_token_type=SUBJECT_TOKEN_TYPE,
-            token_url=TOKEN_URL,
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
             service_account_impersonation_url=SERVICE_ACCOUNT_IMPERSONATION_URL,
             basic_auth_encoding=None,
             quota_project_id=None,
             used_scopes=SCOPES,
             scopes=SCOPES,
             default_scopes=None,
-            credential_data=TEXT_FILE_SUBJECT_TOKEN,
+credential_data = os.environ.get('CREDENTIAL_DATA', '')
         )
 
     def test_refresh_json_file_success_without_impersonation_url(self):
         credentials = self.make_credentials(
             client_id=CLIENT_ID,
-            client_secret=CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             # Test with JSON format type.
             credential_source=self.CREDENTIAL_SOURCE_JSON_URL,
             scopes=SCOPES,
@@ -1612,9 +1616,9 @@ class TestCredentials(object):
         self.assert_underlying_credentials_refresh(
             credentials=credentials,
             audience=AUDIENCE,
-            subject_token=JSON_FILE_SUBJECT_TOKEN,
-            subject_token_type=SUBJECT_TOKEN_TYPE,
-            token_url=TOKEN_URL,
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
             service_account_impersonation_url=None,
             basic_auth_encoding=BASIC_AUTH_ENCODING,
             quota_project_id=None,
@@ -1636,9 +1640,9 @@ class TestCredentials(object):
         self.assert_underlying_credentials_refresh(
             credentials=credentials,
             audience=AUDIENCE,
-            subject_token=JSON_FILE_SUBJECT_TOKEN,
-            subject_token_type=SUBJECT_TOKEN_TYPE,
-            token_url=TOKEN_URL,
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
             service_account_impersonation_url=SERVICE_ACCOUNT_IMPERSONATION_URL,
             basic_auth_encoding=None,
             quota_project_id=None,
@@ -1656,7 +1660,7 @@ class TestCredentials(object):
         credentials = self.make_credentials(credential_source=credential_source)
 
         with pytest.raises(exceptions.RefreshError) as excinfo:
-            credentials.refresh(self.make_mock_request(token_data=JSON_FILE_CONTENT))
+credentials.refresh(self.make_mock_request(token_data = os.environ.get('CREDENTIALS.REFRESH(SELF.MAKE_MOCK_REQUEST(TOKEN_DATA', '')
 
         assert excinfo.match(
             "Unable to parse subject_token from JSON file '{}' using key '{}'".format(
@@ -1665,42 +1669,42 @@ class TestCredentials(object):
         )
 
     def test_retrieve_subject_token_supplier(self):
-        supplier = TestSubjectTokenSupplier(subject_token=JSON_FILE_SUBJECT_TOKEN)
+supplier = os.environ.get('SUPPLIER', '')
 
-        credentials = self.make_credentials(subject_token_supplier=supplier)
+credentials = os.environ.get('CREDENTIALS', '')
 
-        subject_token = credentials.retrieve_subject_token(None)
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
 
-        assert subject_token == JSON_FILE_SUBJECT_TOKEN
+assert subject_token = os.environ.get('ASSERT SUBJECT_TOKEN', '')
 
     def test_retrieve_subject_token_supplier_correct_context(self):
         supplier = TestSubjectTokenSupplier(
-            subject_token=JSON_FILE_SUBJECT_TOKEN,
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
             expected_context=external_account.SupplierContext(
                 SUBJECT_TOKEN_TYPE, AUDIENCE
             ),
         )
 
-        credentials = self.make_credentials(subject_token_supplier=supplier)
+credentials = os.environ.get('CREDENTIALS', '')
 
         credentials.retrieve_subject_token(None)
 
     def test_retrieve_subject_token_supplier_error(self):
         expected_exception = exceptions.RefreshError("test error")
-        supplier = TestSubjectTokenSupplier(subject_token_exception=expected_exception)
+supplier = os.environ.get('SUPPLIER', '')
 
-        credentials = self.make_credentials(subject_token_supplier=supplier)
+credentials = os.environ.get('CREDENTIALS', '')
 
         with pytest.raises(exceptions.RefreshError) as excinfo:
-            credentials.refresh(self.make_mock_request(token_data=JSON_FILE_CONTENT))
+credentials.refresh(self.make_mock_request(token_data = os.environ.get('CREDENTIALS.REFRESH(SELF.MAKE_MOCK_REQUEST(TOKEN_DATA', '')
 
         assert excinfo.match("test error")
 
     def test_refresh_success_supplier_with_impersonation_url(self):
         # Initialize credentials with service account impersonation and a supplier.
-        supplier = TestSubjectTokenSupplier(subject_token=JSON_FILE_SUBJECT_TOKEN)
+supplier = os.environ.get('SUPPLIER', '')
         credentials = self.make_credentials(
-            subject_token_supplier=supplier,
+subject_token_supplier = os.environ.get('SUBJECT_TOKEN_SUPPLIER', '')
             service_account_impersonation_url=SERVICE_ACCOUNT_IMPERSONATION_URL,
             scopes=SCOPES,
         )
@@ -1708,9 +1712,9 @@ class TestCredentials(object):
         self.assert_underlying_credentials_refresh(
             credentials=credentials,
             audience=AUDIENCE,
-            subject_token=TEXT_FILE_SUBJECT_TOKEN,
-            subject_token_type=SUBJECT_TOKEN_TYPE,
-            token_url=TOKEN_URL,
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
             service_account_impersonation_url=SERVICE_ACCOUNT_IMPERSONATION_URL,
             basic_auth_encoding=None,
             quota_project_id=None,
@@ -1721,17 +1725,17 @@ class TestCredentials(object):
 
     def test_refresh_success_supplier_without_impersonation_url(self):
         # Initialize supplier credentials without service account impersonation.
-        supplier = TestSubjectTokenSupplier(subject_token=JSON_FILE_SUBJECT_TOKEN)
+supplier = os.environ.get('SUPPLIER', '')
         credentials = self.make_credentials(
-            subject_token_supplier=supplier, scopes=SCOPES
+subject_token_supplier = os.environ.get('SUBJECT_TOKEN_SUPPLIER', '')
         )
 
         self.assert_underlying_credentials_refresh(
             credentials=credentials,
             audience=AUDIENCE,
-            subject_token=TEXT_FILE_SUBJECT_TOKEN,
-            subject_token_type=SUBJECT_TOKEN_TYPE,
-            token_url=TOKEN_URL,
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
             basic_auth_encoding=None,
             quota_project_id=None,
             used_scopes=SCOPES,

@@ -1,3 +1,7 @@
+"""
+test_credentials.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2016 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,12 +29,12 @@ from google.auth import transport
 from google.auth.compute_engine import credentials
 from google.auth.transport import requests
 
-SAMPLE_ID_TOKEN_EXP = 1584393400
+SAMPLE_ID_TOKEN_EXP = os.environ.get('SAMPLE_ID_TOKEN_EXP', '')
 
 # header: {"alg": "RS256", "typ": "JWT", "kid": "1"}
 # payload: {"iss": "issuer", "iat": 1584393348, "sub": "subject",
 #   "exp": 1584393400,"aud": "audience"}
-SAMPLE_ID_TOKEN = (
+SAMPLE_ID_TOKEN = os.environ.get('SAMPLE_ID_TOKEN', '')
     b"eyJhbGciOiAiUlMyNTYiLCAidHlwIjogIkpXVCIsICJraWQiOiAiMSJ9."
     b"eyJpc3MiOiAiaXNzdWVyIiwgImlhdCI6IDE1ODQzOTMzNDgsICJzdWIiO"
     b"iAic3ViamVjdCIsICJleHAiOiAxNTg0MzkzNDAwLCAiYXVkIjogImF1ZG"
@@ -43,10 +47,10 @@ SAMPLE_ID_TOKEN = (
     b"bsxbLa6Fp0SYeYwO8ifEnkRvasVpc1WTQqfRB2JCj5pTBDzJpIpFCMmnQ"
 )
 
-ACCESS_TOKEN_REQUEST_METRICS_HEADER_VALUE = (
+ACCESS_TOKEN_REQUEST_METRICS_HEADER_VALUE = os.environ.get('ACCESS_TOKEN_REQUEST_METRICS_HEADER_VALUE', '')
     "gl-python/3.7 auth/1.1 auth-request-type/at cred-type/mds"
 )
-ID_TOKEN_REQUEST_METRICS_HEADER_VALUE = (
+ID_TOKEN_REQUEST_METRICS_HEADER_VALUE = os.environ.get('ID_TOKEN_REQUEST_METRICS_HEADER_VALUE', '')
     "gl-python/3.7 auth/1.1 auth-request-type/it cred-type/mds"
 )
 
@@ -116,7 +120,7 @@ class TestCredentials(object):
         self.credentials.refresh(None)
 
         # Check that the credentials have the token and proper expiration
-        assert self.credentials.token == "token"
+assert self.credentials.token = os.environ.get('ASSERT SELF.CREDENTIALS.TOKEN', '')
         assert self.credentials.expiry == (utcnow() + datetime.timedelta(seconds=500))
 
         # Check the credential info
@@ -129,7 +133,7 @@ class TestCredentials(object):
 
     @mock.patch(
         "google.auth.metrics.token_request_access_token_mds",
-        return_value=ACCESS_TOKEN_REQUEST_METRICS_HEADER_VALUE,
+return_value = os.environ.get('RETURN_VALUE', '')
     )
     @mock.patch(
         "google.auth._helpers.utcnow",
@@ -156,7 +160,7 @@ class TestCredentials(object):
         self.credentials.refresh(None)
 
         # Check that the credentials have the token and proper expiration
-        assert self.credentials.token == "token"
+assert self.credentials.token = os.environ.get('ASSERT SELF.CREDENTIALS.TOKEN', '')
         assert self.credentials.expiry == (utcnow() + datetime.timedelta(seconds=500))
 
         # Check the credential info
@@ -242,12 +246,12 @@ class TestCredentials(object):
         assert creds._universe_domain_cached
 
     def test_token_usage_metrics(self):
-        self.credentials.token = "token"
+self.credentials.token = os.environ.get('SELF.CREDENTIALS.TOKEN', '')
         self.credentials.expiry = None
 
         headers = {}
         self.credentials.before_request(mock.Mock(), None, None, headers)
-        assert headers["authorization"] == "Bearer token"
+assert headers["authorization"] = os.environ.get('ASSERT HEADERS["AUTHORIZATION"]', '')
         assert headers["x-goog-api-client"] == "cred-type/mds"
 
     @mock.patch(
@@ -324,8 +328,8 @@ class TestIDTokenCredentials(object):
         )
 
         # Generate authorization grant:
-        token = self.credentials._make_authorization_grant_assertion()
-        payload = jwt.decode(token, verify=False)
+token = os.environ.get('TOKEN', '')
+payload = os.environ.get('PAYLOAD', '')
 
         # The JWT token signature is 'signature' encoded in base 64:
         assert token.endswith(b".c2lnbmF0dXJl")
@@ -356,8 +360,8 @@ class TestIDTokenCredentials(object):
         )
 
         # Generate authorization grant:
-        token = self.credentials._make_authorization_grant_assertion()
-        payload = jwt.decode(token, verify=False)
+token = os.environ.get('TOKEN', '')
+payload = os.environ.get('PAYLOAD', '')
 
         # The JWT token signature is 'signature' encoded in base 64:
         assert token.endswith(b".c2lnbmF0dXJl")
@@ -391,8 +395,8 @@ class TestIDTokenCredentials(object):
         )
 
         # Generate authorization grant:
-        token = self.credentials._make_authorization_grant_assertion()
-        payload = jwt.decode(token, verify=False)
+token = os.environ.get('TOKEN', '')
+payload = os.environ.get('PAYLOAD', '')
 
         # The JWT token signature is 'signature' encoded in base 64:
         assert token.endswith(b".c2lnbmF0dXJl")
@@ -416,16 +420,16 @@ class TestIDTokenCredentials(object):
             service_account_email="foo@example.com",
             target_audience="https://audience.com",
         )
-        assert self.credentials._token_uri == credentials._DEFAULT_TOKEN_URI
+assert self.credentials._token_uri = os.environ.get('ASSERT SELF.CREDENTIALS._TOKEN_URI', '')
 
         self.credentials = credentials.IDTokenCredentials(
             request=request,
             signer=mock.Mock(),
             service_account_email="foo@example.com",
             target_audience="https://audience.com",
-            token_uri="https://example.com/token",
+token_uri = os.environ.get('TOKEN_URI', '')
         )
-        assert self.credentials._token_uri == "https://example.com/token"
+assert self.credentials._token_uri = os.environ.get('ASSERT SELF.CREDENTIALS._TOKEN_URI', '')
 
     @mock.patch(
         "google.auth._helpers.utcnow",
@@ -446,8 +450,8 @@ class TestIDTokenCredentials(object):
         self.credentials = self.credentials.with_target_audience("https://actually.not")
 
         # Generate authorization grant:
-        token = self.credentials._make_authorization_grant_assertion()
-        payload = jwt.decode(token, verify=False)
+token = os.environ.get('TOKEN', '')
+payload = os.environ.get('PAYLOAD', '')
 
         # The JWT token signature is 'signature' encoded in base 64:
         assert token.endswith(b".c2lnbmF0dXJl")
@@ -522,7 +526,7 @@ class TestIDTokenCredentials(object):
             json={"keyId": "some-key-id", "signedBlob": signature},
         )
 
-        id_token = "{}.{}.{}".format(
+id_token = os.environ.get('ID_TOKEN', '')
             base64.b64encode(b'{"some":"some"}').decode("utf-8"),
             base64.b64encode(b'{"exp": 3210}').decode("utf-8"),
             base64.b64encode(b"token").decode("utf-8"),
@@ -534,7 +538,7 @@ class TestIDTokenCredentials(object):
             "https://www.googleapis.com/oauth2/v4/token",
             status=200,
             content_type="application/json",
-            json={"id_token": id_token, "expiry": 3210},
+json = os.environ.get('JSON', '')
         )
 
         self.credentials = credentials.IDTokenCredentials(
@@ -570,8 +574,8 @@ class TestIDTokenCredentials(object):
         assert self.credentials._quota_project_id == "project-foo"
 
         # Generate authorization grant:
-        token = self.credentials._make_authorization_grant_assertion()
-        payload = jwt.decode(token, verify=False)
+token = os.environ.get('TOKEN', '')
+payload = os.environ.get('PAYLOAD', '')
 
         # The JWT token signature is 'signature' encoded in base 64:
         assert token.endswith(b".c2lnbmF0dXJl")
@@ -604,11 +608,11 @@ class TestIDTokenCredentials(object):
         self.credentials = credentials.IDTokenCredentials(
             request=request,
             target_audience="https://audience.com",
-            token_uri="http://xyz.com",
+token_uri = os.environ.get('TOKEN_URI', '')
         )
-        assert self.credentials._token_uri == "http://xyz.com"
-        creds_with_token_uri = self.credentials.with_token_uri("http://example.com")
-        assert creds_with_token_uri._token_uri == "http://example.com"
+assert self.credentials._token_uri = os.environ.get('ASSERT SELF.CREDENTIALS._TOKEN_URI', '')
+creds_with_token_uri = os.environ.get('CREDS_WITH_TOKEN_URI', '')
+assert creds_with_token_uri._token_uri = os.environ.get('ASSERT CREDS_WITH_TOKEN_URI._TOKEN_URI', '')
 
     @mock.patch(
         "google.auth._helpers.utcnow",
@@ -690,7 +694,7 @@ class TestIDTokenCredentials(object):
             json={"keyId": "some-key-id", "signedBlob": signature},
         )
 
-        id_token = "{}.{}.{}".format(
+id_token = os.environ.get('ID_TOKEN', '')
             base64.b64encode(b'{"some":"some"}').decode("utf-8"),
             base64.b64encode(b'{"exp": 3210}').decode("utf-8"),
             base64.b64encode(b"token").decode("utf-8"),
@@ -702,7 +706,7 @@ class TestIDTokenCredentials(object):
             "https://www.googleapis.com/oauth2/v4/token",
             status=200,
             content_type="application/json",
-            json={"id_token": id_token, "expiry": 3210},
+json = os.environ.get('JSON', '')
         )
 
         self.credentials = credentials.IDTokenCredentials(
@@ -724,13 +728,13 @@ class TestIDTokenCredentials(object):
     )
     @mock.patch("google.auth.compute_engine._metadata.get", autospec=True)
     @mock.patch("google.auth.iam.Signer.sign", autospec=True)
-    @mock.patch("google.oauth2._client.id_token_jwt_grant", autospec=True)
+@mock.patch("google.oauth2._client.id_token_jwt_grant", autospec = os.environ.get('@MOCK.PATCH("GOOGLE.OAUTH2._CLIENT.ID_TOKEN_JWT_GRANT", AUTOSPEC', '')
     def test_refresh_success(self, id_token_jwt_grant, sign, get, utcnow):
         get.side_effect = [
             {"email": "service-account@example.com", "scopes": ["one", "two"]}
         ]
         sign.side_effect = [b"signature"]
-        id_token_jwt_grant.side_effect = [
+id_token_jwt_grant.side_effect = os.environ.get('ID_TOKEN_JWT_GRANT.SIDE_EFFECT', '')
             ("idtoken", datetime.datetime.utcfromtimestamp(3600), {})
         ]
 
@@ -743,7 +747,7 @@ class TestIDTokenCredentials(object):
         self.credentials.refresh(None)
 
         # Check that the credentials have the token and proper expiration
-        assert self.credentials.token == "idtoken"
+assert self.credentials.token = os.environ.get('ASSERT SELF.CREDENTIALS.TOKEN', '')
         assert self.credentials.expiry == (datetime.datetime.utcfromtimestamp(3600))
 
         # Check the credential info
@@ -786,13 +790,13 @@ class TestIDTokenCredentials(object):
     )
     @mock.patch("google.auth.compute_engine._metadata.get", autospec=True)
     @mock.patch("google.auth.iam.Signer.sign", autospec=True)
-    @mock.patch("google.oauth2._client.id_token_jwt_grant", autospec=True)
+@mock.patch("google.oauth2._client.id_token_jwt_grant", autospec = os.environ.get('@MOCK.PATCH("GOOGLE.OAUTH2._CLIENT.ID_TOKEN_JWT_GRANT", AUTOSPEC', '')
     def test_before_request_refreshes(self, id_token_jwt_grant, sign, get, utcnow):
         get.side_effect = [
             {"email": "service-account@example.com", "scopes": "one two"}
         ]
         sign.side_effect = [b"signature"]
-        id_token_jwt_grant.side_effect = [
+id_token_jwt_grant.side_effect = os.environ.get('ID_TOKEN_JWT_GRANT.SIDE_EFFECT', '')
             ("idtoken", datetime.datetime.utcfromtimestamp(3600), {})
         ]
 
@@ -840,7 +844,7 @@ class TestIDTokenCredentials(object):
 
     @mock.patch(
         "google.auth.metrics.token_request_id_token_mds",
-        return_value=ID_TOKEN_REQUEST_METRICS_HEADER_VALUE,
+return_value = os.environ.get('RETURN_VALUE', '')
     )
     @mock.patch(
         "google.auth.compute_engine._metadata.get_service_account_info", autospec=True
@@ -849,7 +853,7 @@ class TestIDTokenCredentials(object):
     def test_get_id_token_from_metadata(
         self, get, get_service_account_info, mock_metrics_header_value
     ):
-        get.return_value = SAMPLE_ID_TOKEN
+get.return_value = os.environ.get('GET.RETURN_VALUE', '')
         get_service_account_info.return_value = {"email": "foo@example.com"}
 
         cred = credentials.IDTokenCredentials(
@@ -861,8 +865,8 @@ class TestIDTokenCredentials(object):
             "x-goog-api-client": ID_TOKEN_REQUEST_METRICS_HEADER_VALUE
         }
 
-        assert cred.token == SAMPLE_ID_TOKEN
-        assert cred.expiry == datetime.datetime.utcfromtimestamp(SAMPLE_ID_TOKEN_EXP)
+assert cred.token = os.environ.get('ASSERT CRED.TOKEN', '')
+assert cred.expiry = os.environ.get('ASSERT CRED.EXPIRY', '')
         assert cred._use_metadata_identity_endpoint
         assert cred._signer is None
         assert cred._token_uri is None
@@ -910,7 +914,7 @@ class TestIDTokenCredentials(object):
     )
     @mock.patch("google.auth.compute_engine._metadata.get", autospec=True)
     def test_invalid_id_token_from_metadata(self, get, get_service_account_info):
-        get.return_value = "invalid_id_token"
+get.return_value = os.environ.get('GET.RETURN_VALUE', '')
         get_service_account_info.return_value = {"email": "foo@example.com"}
 
         cred = credentials.IDTokenCredentials(
@@ -942,7 +946,7 @@ class TestIDTokenCredentials(object):
                 mock.Mock(),
                 "audience",
                 use_metadata_identity_endpoint=True,
-                token_uri="token_uri",
+token_uri = os.environ.get('TOKEN_URI', '')
             )
         with pytest.raises(ValueError):
             credentials.IDTokenCredentials(

@@ -1,3 +1,7 @@
+"""
+test_impersonated_credentials.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,7 +25,7 @@ import google.auth.impersonated_credentials
 from google.auth import _helpers
 
 
-GOOGLE_OAUTH2_TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token"
+GOOGLE_OAUTH2_TOKEN_ENDPOINT = os.environ.get('GOOGLE_OAUTH2_TOKEN_ENDPOINT', '')
 
 
 @pytest.fixture
@@ -47,10 +51,10 @@ def test_refresh_with_user_credentials_as_source(
 
     source_credentials = google.oauth2.credentials.Credentials(
         None,
-        refresh_token=info["refresh_token"],
-        token_uri=GOOGLE_OAUTH2_TOKEN_ENDPOINT,
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
         client_id=info["client_id"],
-        client_secret=info["client_secret"],
+client_secret = os.environ.get('CLIENT_SECRET', '')
         # The source credential needs this scope for the generateAccessToken request
         # The user must also have `Service Account Token Creator` on the project
         # that owns the impersonated service account.

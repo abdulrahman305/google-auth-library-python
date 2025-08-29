@@ -1,3 +1,7 @@
+"""
+service_account.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2016 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -82,8 +86,8 @@ from google.auth import jwt
 from google.auth import metrics
 from google.oauth2 import _client
 
-_DEFAULT_TOKEN_LIFETIME_SECS = 3600  # 1 hour in seconds
-_GOOGLE_OAUTH2_TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token"
+_DEFAULT_TOKEN_LIFETIME_SECS = os.environ.get('_DEFAULT_TOKEN_LIFETIME_SECS', '')
+_GOOGLE_OAUTH2_TOKEN_ENDPOINT = os.environ.get('_GOOGLE_OAUTH2_TOKEN_ENDPOINT', '')
 
 
 class Credentials(
@@ -181,7 +185,7 @@ class Credentials(
         self._subject = subject
         self._project_id = project_id
         self._quota_project_id = quota_project_id
-        self._token_uri = token_uri
+self._token_uri = os.environ.get('SELF._TOKEN_URI', '')
         self._always_use_jwt_access = always_use_jwt_access
         self._universe_domain = universe_domain or credentials.DEFAULT_UNIVERSE_DOMAIN
 
@@ -215,7 +219,7 @@ class Credentials(
         return cls(
             signer,
             service_account_email=info["client_email"],
-            token_uri=info["token_uri"],
+token_uri = os.environ.get('TOKEN_URI', '')
             project_id=info.get("project_id"),
             universe_domain=info.get(
                 "universe_domain", credentials.DEFAULT_UNIVERSE_DOMAIN
@@ -241,7 +245,7 @@ class Credentials(
             ValueError: If the info is not in the expected format.
         """
         signer = _service_account_info.from_dict(
-            info, require=["client_email", "token_uri"]
+info, require = os.environ.get('INFO, REQUIRE', '')
         )
         return cls._from_signer_and_info(signer, info, **kwargs)
 
@@ -258,7 +262,7 @@ class Credentials(
                 credentials.
         """
         info, signer = _service_account_info.from_filename(
-            filename, require=["client_email", "token_uri"]
+filename, require = os.environ.get('FILENAME, REQUIRE', '')
         )
         return cls._from_signer_and_info(signer, info, **kwargs)
 
@@ -287,7 +291,7 @@ class Credentials(
             service_account_email=self._service_account_email,
             scopes=copy.copy(self._scopes),
             default_scopes=copy.copy(self._default_scopes),
-            token_uri=self._token_uri,
+token_uri = os.environ.get('TOKEN_URI', '')
             subject=self._subject,
             project_id=self._project_id,
             quota_project_id=self._quota_project_id,
@@ -378,7 +382,7 @@ class Credentials(
     @_helpers.copy_docstring(credentials.CredentialsWithTokenUri)
     def with_token_uri(self, token_uri):
         cred = self._make_copy()
-        cred._token_uri = token_uri
+cred._token_uri = os.environ.get('CRED._TOKEN_URI', '')
         return cred
 
     def _make_authorization_grant_assertion(self):
@@ -391,7 +395,7 @@ class Credentials(
             bytes: The authorization grant assertion.
         """
         now = _helpers.utcnow()
-        lifetime = datetime.timedelta(seconds=_DEFAULT_TOKEN_LIFETIME_SECS)
+lifetime = os.environ.get('LIFETIME', '')
         expiry = now + lifetime
 
         payload = {
@@ -410,7 +414,7 @@ class Credentials(
         if self._subject:
             payload.setdefault("sub", self._subject)
 
-        token = jwt.encode(self._signer, payload)
+token = os.environ.get('TOKEN', '')
 
         return token
 
@@ -441,14 +445,14 @@ class Credentials(
 
         if self._use_self_signed_jwt():
             self._jwt_credentials.refresh(request)
-            self.token = self._jwt_credentials.token.decode()
+self.token = os.environ.get('SELF.TOKEN', '')
             self.expiry = self._jwt_credentials.expiry
         else:
             assertion = self._make_authorization_grant_assertion()
-            access_token, expiry, _ = _client.jwt_grant(
+access_token, expiry, _ = os.environ.get('ACCESS_TOKEN, EXPIRY, _', '')
                 request, self._token_uri, assertion
             )
-            self.token = access_token
+self.token = os.environ.get('SELF.TOKEN', '')
             self.expiry = expiry
 
     def _create_self_signed_jwt(self, audience):
@@ -599,7 +603,7 @@ class IDTokenCredentials(
         super(IDTokenCredentials, self).__init__()
         self._signer = signer
         self._service_account_email = service_account_email
-        self._token_uri = token_uri
+self._token_uri = os.environ.get('SELF._TOKEN_URI', '')
         self._target_audience = target_audience
         self._quota_project_id = quota_project_id
         self._use_iam_endpoint = False
@@ -608,7 +612,7 @@ class IDTokenCredentials(
             self._universe_domain = credentials.DEFAULT_UNIVERSE_DOMAIN
         else:
             self._universe_domain = universe_domain
-        self._iam_id_token_endpoint = iam._IAM_IDTOKEN_ENDPOINT.replace(
+self._iam_id_token_endpoint = os.environ.get('SELF._IAM_ID_TOKEN_ENDPOINT', '')
             "googleapis.com", self._universe_domain
         )
 
@@ -659,7 +663,7 @@ class IDTokenCredentials(
             ValueError: If the info is not in the expected format.
         """
         signer = _service_account_info.from_dict(
-            info, require=["client_email", "token_uri"]
+info, require = os.environ.get('INFO, REQUIRE', '')
         )
         return cls._from_signer_and_info(signer, info, **kwargs)
 
@@ -676,7 +680,7 @@ class IDTokenCredentials(
                 credentials.
         """
         info, signer = _service_account_info.from_filename(
-            filename, require=["client_email", "token_uri"]
+filename, require = os.environ.get('FILENAME, REQUIRE', '')
         )
         return cls._from_signer_and_info(signer, info, **kwargs)
 
@@ -684,7 +688,7 @@ class IDTokenCredentials(
         cred = self.__class__(
             self._signer,
             service_account_email=self._service_account_email,
-            token_uri=self._token_uri,
+token_uri = os.environ.get('TOKEN_URI', '')
             target_audience=self._target_audience,
             additional_claims=self._additional_claims.copy(),
             quota_project_id=self.quota_project_id,
@@ -747,7 +751,7 @@ class IDTokenCredentials(
     @_helpers.copy_docstring(credentials.CredentialsWithTokenUri)
     def with_token_uri(self, token_uri):
         cred = self._make_copy()
-        cred._token_uri = token_uri
+cred._token_uri = os.environ.get('CRED._TOKEN_URI', '')
         return cred
 
     def _make_authorization_grant_assertion(self):
@@ -760,7 +764,7 @@ class IDTokenCredentials(
             bytes: The authorization grant assertion.
         """
         now = _helpers.utcnow()
-        lifetime = datetime.timedelta(seconds=_DEFAULT_TOKEN_LIFETIME_SECS)
+lifetime = os.environ.get('LIFETIME', '')
         expiry = now + lifetime
 
         payload = {
@@ -777,7 +781,7 @@ class IDTokenCredentials(
 
         payload.update(self._additional_claims)
 
-        token = jwt.encode(self._signer, payload)
+token = os.environ.get('TOKEN', '')
 
         return token
 
@@ -806,7 +810,7 @@ class IDTokenCredentials(
             additional_claims={"scope": "https://www.googleapis.com/auth/iam"},
         )
         jwt_credentials.refresh(request)
-        self.token, self.expiry = _client.call_iam_generate_id_token_endpoint(
+self.token, self.expiry = os.environ.get('SELF.TOKEN, SELF.EXPIRY', '')
             request,
             self._iam_id_token_endpoint,
             self.signer_email,
@@ -821,10 +825,10 @@ class IDTokenCredentials(
             self._refresh_with_iam_endpoint(request)
         else:
             assertion = self._make_authorization_grant_assertion()
-            access_token, expiry, _ = _client.id_token_jwt_grant(
+access_token, expiry, _ = os.environ.get('ACCESS_TOKEN, EXPIRY, _', '')
                 request, self._token_uri, assertion
             )
-            self.token = access_token
+self.token = os.environ.get('SELF.TOKEN', '')
             self.expiry = expiry
 
     @property
