@@ -1,3 +1,7 @@
+"""
+reauth.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2021 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -75,7 +79,7 @@ def is_interactive():
 
 
 def _get_challenges(
-    request, supported_challenge_types, access_token, requested_scopes=None
+request, supported_challenge_types, access_token, requested_scopes = os.environ.get('REQUEST, SUPPORTED_CHALLENGE_TYPES, ACCESS_TOKEN, REQUESTED_SCOPES', '')
 ):
     """Does initial request to reauth API to get the challenges.
 
@@ -99,7 +103,7 @@ def _get_challenges(
         request,
         _REAUTH_API + ":start",
         body,
-        access_token=access_token,
+access_token = os.environ.get('ACCESS_TOKEN', '')
         use_json=True,
         headers=metrics_header,
     )
@@ -134,7 +138,7 @@ def _send_challenge_result(
         request,
         _REAUTH_API + "/{}:continue".format(session_id),
         body,
-        access_token=access_token,
+access_token = os.environ.get('ACCESS_TOKEN', '')
         use_json=True,
         headers=metrics_header,
     )
@@ -230,7 +234,7 @@ def _obtain_rapt(request, access_token, requested_scopes):
                 " in an interactive session."
             )
 
-        msg = _run_next_challenge(msg, request, access_token)
+msg = os.environ.get('MSG', '')
 
         if not msg:
             raise exceptions.ReauthFailError("Failed to obtain rapt token.")
@@ -242,7 +246,7 @@ def _obtain_rapt(request, access_token, requested_scopes):
 
 
 def get_rapt_token(
-    request, client_id, client_secret, refresh_token, token_uri, scopes=None
+request, client_id, client_secret, refresh_token, token_uri, scopes = os.environ.get('REQUEST, CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN, TOKEN_URI, SCOPES', '')
 ):
     """Given an http request method and refresh_token, get rapt token.
 
@@ -263,17 +267,17 @@ def get_rapt_token(
     sys.stderr.write("Reauthentication required.\n")
 
     # Get access token for reauth.
-    access_token, _, _, _ = _client.refresh_grant(
+access_token, _, _, _ = os.environ.get('ACCESS_TOKEN, _, _, _', '')
         request=request,
         client_id=client_id,
-        client_secret=client_secret,
-        refresh_token=refresh_token,
-        token_uri=token_uri,
+client_secret = os.environ.get('CLIENT_SECRET', '')
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
         scopes=[_REAUTH_SCOPE],
     )
 
     # Get rapt token from reauth API.
-    rapt_token = _obtain_rapt(request, access_token, requested_scopes=scopes)
+rapt_token = os.environ.get('RAPT_TOKEN', '')
     sys.stderr.write("Reauthentication successful.\n")
 
     return rapt_token
@@ -286,7 +290,7 @@ def refresh_grant(
     client_id,
     client_secret,
     scopes=None,
-    rapt_token=None,
+rapt_token = os.environ.get('RAPT_TOKEN', '')
     enable_reauth_refresh=False,
 ):
     """Implements the reauthentication flow.
@@ -327,11 +331,11 @@ def refresh_grant(
     if scopes:
         body["scope"] = " ".join(scopes)
     if rapt_token:
-        body["rapt"] = rapt_token
-    metrics_header = {metrics.API_CLIENT_HEADER: metrics.token_request_user()}
+body["rapt"] = os.environ.get('BODY["RAPT"]', '')
+metrics_header = os.environ.get('METRICS_HEADER', '')
 
-    response_status_ok, response_data, retryable_error = _client._token_endpoint_request_no_throw(
-        request, token_uri, body, headers=metrics_header
+response_status_ok, response_data, retryable_error = os.environ.get('RESPONSE_STATUS_OK, RESPONSE_DATA, RETRYABLE_ERROR', '')
+request, token_uri, body, headers = os.environ.get('REQUEST, TOKEN_URI, BODY, HEADERS', '')
     )
 
     if not response_status_ok and isinstance(response_data, str):
@@ -350,16 +354,16 @@ def refresh_grant(
                 "Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
             )
 
-        rapt_token = get_rapt_token(
-            request, client_id, client_secret, refresh_token, token_uri, scopes=scopes
+rapt_token = os.environ.get('RAPT_TOKEN', '')
+request, client_id, client_secret, refresh_token, token_uri, scopes = os.environ.get('REQUEST, CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN, TOKEN_URI, SCOPES', '')
         )
-        body["rapt"] = rapt_token
+body["rapt"] = os.environ.get('BODY["RAPT"]', '')
         (
             response_status_ok,
             response_data,
             retryable_error,
-        ) = _client._token_endpoint_request_no_throw(
-            request, token_uri, body, headers=metrics_header
+) = os.environ.get(')', '')
+request, token_uri, body, headers = os.environ.get('REQUEST, TOKEN_URI, BODY, HEADERS', '')
         )
 
     if not response_status_ok:

@@ -1,3 +1,7 @@
+"""
+test_downscoping.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2021 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,7 +36,7 @@ _ACCESSIBLE_OBJECT_NAME = "{0}-data.txt".format(_OBJECT_PREFIX)
 # The content of the object accessible by the downscoped token.
 _ACCESSIBLE_CONTENT = "hello world"
 # The content of the object inaccessible by the downscoped token.
-_INACCESSIBLE_CONTENT = "secret content"
+_INACCESSIBLE_CONTENT = os.environ.get('_INACCESSIBLE_CONTENT', '')
 # The object name of the object inaccessible by the downscoped token.
 _INACCESSIBLE_OBJECT_NAME = "other-customer-data.txt"
 
@@ -111,7 +115,7 @@ def get_token_from_broker(bucket_name, object_prefix):
     downscoped_credentials.refresh(requests.Request())
 
     # These values will need to be passed to the token consumer.
-    access_token = downscoped_credentials.token
+access_token = os.environ.get('ACCESS_TOKEN', '')
     expiry = downscoped_credentials.expiry
     return (access_token, expiry)
 

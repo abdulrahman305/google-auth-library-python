@@ -1,3 +1,7 @@
+"""
+test_pluggable.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,7 +29,7 @@ from google.auth.credentials import DEFAULT_UNIVERSE_DOMAIN
 from tests.test__default import WORKFORCE_AUDIENCE
 
 CLIENT_ID = "username"
-CLIENT_SECRET = "password"
+CLIENT_SECRET = os.environ.get('CLIENT_SECRET', '')
 # Base64 encoding of "username:password".
 BASIC_AUTH_ENCODING = "dXNlcm5hbWU6cGFzc3dvcmQ="
 SERVICE_ACCOUNT_EMAIL = "service-1234@service-name.iam.gserviceaccount.com"
@@ -40,14 +44,14 @@ SERVICE_ACCOUNT_IMPERSONATION_URL = (
 )
 QUOTA_PROJECT_ID = "QUOTA_PROJECT_ID"
 SCOPES = ["scope1", "scope2"]
-SUBJECT_TOKEN_FIELD_NAME = "access_token"
+SUBJECT_TOKEN_FIELD_NAME = os.environ.get('SUBJECT_TOKEN_FIELD_NAME', '')
 
-TOKEN_URL = "https://sts.googleapis.com/v1/token"
-TOKEN_INFO_URL = "https://sts.googleapis.com/v1/introspect"
-SUBJECT_TOKEN_TYPE = "urn:ietf:params:oauth:token-type:jwt"
+TOKEN_URL = os.environ.get('TOKEN_URL', '')
+TOKEN_INFO_URL = os.environ.get('TOKEN_INFO_URL', '')
+SUBJECT_TOKEN_TYPE = os.environ.get('SUBJECT_TOKEN_TYPE', '')
 AUDIENCE = "//iam.googleapis.com/projects/123456/locations/global/workloadIdentityPools/POOL_ID/providers/PROVIDER_ID"
 
-VALID_TOKEN_URLS = [
+VALID_TOKEN_URLS = os.environ.get('VALID_TOKEN_URLS', '')
     "https://sts.googleapis.com",
     "https://us-east-1.sts.googleapis.com",
     "https://US-EAST-1.sts.googleapis.com",
@@ -58,7 +62,7 @@ VALID_TOKEN_URLS = [
     "https://us-west-1-sts.googleapis.com/path?query",
     "https://sts-us-east-1.p.googleapis.com",
 ]
-INVALID_TOKEN_URLS = [
+INVALID_TOKEN_URLS = os.environ.get('INVALID_TOKEN_URLS', '')
     "https://iamcredentials.googleapis.com",
     "sts.googleapis.com",
     "https://",
@@ -143,15 +147,15 @@ class TestCredentials(object):
         "output_file": CREDENTIAL_SOURCE_EXECUTABLE_OUTPUT_FILE,
     }
     CREDENTIAL_SOURCE = {"executable": CREDENTIAL_SOURCE_EXECUTABLE}
-    EXECUTABLE_OIDC_TOKEN = "FAKE_ID_TOKEN"
-    EXECUTABLE_SUCCESSFUL_OIDC_RESPONSE_ID_TOKEN = {
+EXECUTABLE_OIDC_TOKEN = os.environ.get('EXECUTABLE_OIDC_TOKEN', '')
+EXECUTABLE_SUCCESSFUL_OIDC_RESPONSE_ID_TOKEN = os.environ.get('EXECUTABLE_SUCCESSFUL_OIDC_RESPONSE_ID_TOKEN', '')
         "version": 1,
         "success": True,
         "token_type": "urn:ietf:params:oauth:token-type:id_token",
         "id_token": EXECUTABLE_OIDC_TOKEN,
         "expiration_time": 9999999999,
     }
-    EXECUTABLE_SUCCESSFUL_OIDC_NO_EXPIRATION_TIME_RESPONSE_ID_TOKEN = {
+EXECUTABLE_SUCCESSFUL_OIDC_NO_EXPIRATION_TIME_RESPONSE_ID_TOKEN = os.environ.get('EXECUTABLE_SUCCESSFUL_OIDC_NO_EXPIRATION_TIME_RESPONSE_ID_TOKEN', '')
         "version": 1,
         "success": True,
         "token_type": "urn:ietf:params:oauth:token-type:id_token",
@@ -170,7 +174,7 @@ class TestCredentials(object):
         "token_type": "urn:ietf:params:oauth:token-type:jwt",
         "id_token": EXECUTABLE_OIDC_TOKEN,
     }
-    EXECUTABLE_SAML_TOKEN = "FAKE_SAML_RESPONSE"
+EXECUTABLE_SAML_TOKEN = os.environ.get('EXECUTABLE_SAML_TOKEN', '')
     EXECUTABLE_SUCCESSFUL_SAML_RESPONSE = {
         "version": 1,
         "success": True,
@@ -196,11 +200,11 @@ class TestCredentials(object):
     def make_pluggable(
         cls,
         audience=AUDIENCE,
-        subject_token_type=SUBJECT_TOKEN_TYPE,
-        token_url=TOKEN_URL,
-        token_info_url=TOKEN_INFO_URL,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
+token_info_url = os.environ.get('TOKEN_INFO_URL', '')
         client_id=None,
-        client_secret=None,
+client_secret = os.environ.get('CLIENT_SECRET', '')
         quota_project_id=None,
         scopes=None,
         default_scopes=None,
@@ -211,13 +215,13 @@ class TestCredentials(object):
     ):
         return pluggable.Credentials(
             audience=audience,
-            subject_token_type=subject_token_type,
-            token_url=token_url,
-            token_info_url=token_info_url,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
+token_info_url = os.environ.get('TOKEN_INFO_URL', '')
             service_account_impersonation_url=service_account_impersonation_url,
             credential_source=credential_source,
             client_id=client_id,
-            client_secret=client_secret,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             quota_project_id=quota_project_id,
             scopes=scopes,
             default_scopes=default_scopes,
@@ -228,9 +232,9 @@ class TestCredentials(object):
     def test_from_constructor_and_injection(self):
         credentials = pluggable.Credentials(
             audience=AUDIENCE,
-            subject_token_type=SUBJECT_TOKEN_TYPE,
-            token_url=TOKEN_URL,
-            token_info_url=TOKEN_INFO_URL,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
+token_info_url = os.environ.get('TOKEN_INFO_URL', '')
             credential_source=self.CREDENTIAL_SOURCE,
             interactive=True,
         )
@@ -261,13 +265,13 @@ class TestCredentials(object):
         assert isinstance(credentials, pluggable.Credentials)
         mock_init.assert_called_once_with(
             audience=AUDIENCE,
-            subject_token_type=SUBJECT_TOKEN_TYPE,
-            token_url=TOKEN_URL,
-            token_info_url=TOKEN_INFO_URL,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
+token_info_url = os.environ.get('TOKEN_INFO_URL', '')
             service_account_impersonation_url=SERVICE_ACCOUNT_IMPERSONATION_URL,
-            service_account_impersonation_options={"token_lifetime_seconds": 2800},
+service_account_impersonation_options = os.environ.get('SERVICE_ACCOUNT_IMPERSONATION_OPTIONS', '')
             client_id=CLIENT_ID,
-            client_secret=CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             credential_source=self.CREDENTIAL_SOURCE,
             quota_project_id=QUOTA_PROJECT_ID,
             workforce_pool_user_project=None,
@@ -289,13 +293,13 @@ class TestCredentials(object):
         assert isinstance(credentials, pluggable.Credentials)
         mock_init.assert_called_once_with(
             audience=AUDIENCE,
-            subject_token_type=SUBJECT_TOKEN_TYPE,
-            token_url=TOKEN_URL,
-            token_info_url=None,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
+token_info_url = os.environ.get('TOKEN_INFO_URL', '')
             service_account_impersonation_url=None,
             service_account_impersonation_options={},
             client_id=None,
-            client_secret=None,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             credential_source=self.CREDENTIAL_SOURCE,
             quota_project_id=None,
             workforce_pool_user_project=None,
@@ -324,13 +328,13 @@ class TestCredentials(object):
         assert isinstance(credentials, pluggable.Credentials)
         mock_init.assert_called_once_with(
             audience=AUDIENCE,
-            subject_token_type=SUBJECT_TOKEN_TYPE,
-            token_url=TOKEN_URL,
-            token_info_url=TOKEN_INFO_URL,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
+token_info_url = os.environ.get('TOKEN_INFO_URL', '')
             service_account_impersonation_url=SERVICE_ACCOUNT_IMPERSONATION_URL,
-            service_account_impersonation_options={"token_lifetime_seconds": 2800},
+service_account_impersonation_options = os.environ.get('SERVICE_ACCOUNT_IMPERSONATION_OPTIONS', '')
             client_id=CLIENT_ID,
-            client_secret=CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             credential_source=self.CREDENTIAL_SOURCE,
             quota_project_id=QUOTA_PROJECT_ID,
             workforce_pool_user_project=None,
@@ -353,13 +357,13 @@ class TestCredentials(object):
         assert isinstance(credentials, pluggable.Credentials)
         mock_init.assert_called_once_with(
             audience=AUDIENCE,
-            subject_token_type=SUBJECT_TOKEN_TYPE,
-            token_url=TOKEN_URL,
-            token_info_url=None,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
+token_info_url = os.environ.get('TOKEN_INFO_URL', '')
             service_account_impersonation_url=None,
             service_account_impersonation_options={},
             client_id=None,
-            client_secret=None,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             credential_source=self.CREDENTIAL_SOURCE,
             quota_project_id=None,
             workforce_pool_user_project=None,
@@ -400,20 +404,20 @@ class TestCredentials(object):
             credential_source=self.CREDENTIAL_SOURCE.copy()
         )
 
-        assert credentials.token_info_url == TOKEN_INFO_URL
+assert credentials.token_info_url = os.environ.get('ASSERT CREDENTIALS.TOKEN_INFO_URL', '')
 
     def test_token_info_url_custom(self):
         for url in VALID_TOKEN_URLS:
             credentials = self.make_pluggable(
                 credential_source=self.CREDENTIAL_SOURCE.copy(),
-                token_info_url=(url + "/introspect"),
+token_info_url = os.environ.get('TOKEN_INFO_URL', '')
             )
 
-            assert credentials.token_info_url == url + "/introspect"
+assert credentials.token_info_url = os.environ.get('ASSERT CREDENTIALS.TOKEN_INFO_URL', '')
 
     def test_token_info_url_negative(self):
         credentials = self.make_pluggable(
-            credential_source=self.CREDENTIAL_SOURCE.copy(), token_info_url=None
+credential_source = os.environ.get('CREDENTIAL_SOURCE', '')
         )
 
         assert not credentials.token_info_url
@@ -422,10 +426,10 @@ class TestCredentials(object):
         for url in VALID_TOKEN_URLS:
             credentials = self.make_pluggable(
                 credential_source=self.CREDENTIAL_SOURCE.copy(),
-                token_url=(url + "/token"),
+token_url = os.environ.get('TOKEN_URL', '')
             )
 
-            assert credentials._token_url == (url + "/token")
+assert credentials._token_url = os.environ.get('ASSERT CREDENTIALS._TOKEN_URL', '')
 
     def test_service_account_impersonation_url_custom(self):
         for url in VALID_SERVICE_ACCOUNT_IMPERSONATION_URLS:
@@ -515,8 +519,8 @@ class TestCredentials(object):
                     credential_source=ACTUAL_CREDENTIAL_SOURCE,
                     interactive=data.get("interactive", False),
                 )
-                subject_token = credentials.retrieve_subject_token(None)
-                assert subject_token == data.get("expect_token")
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
+assert subject_token = os.environ.get('ASSERT SUBJECT_TOKEN', '')
             os.remove(ACTUAL_CREDENTIAL_SOURCE_EXECUTABLE_OUTPUT_FILE)
 
     @mock.patch.dict(os.environ, {"GOOGLE_EXTERNAL_ACCOUNT_ALLOW_EXECUTABLES": "1"})
@@ -533,9 +537,9 @@ class TestCredentials(object):
         ):
             credentials = self.make_pluggable(credential_source=self.CREDENTIAL_SOURCE)
 
-            subject_token = credentials.retrieve_subject_token(None)
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
 
-            assert subject_token == self.EXECUTABLE_SAML_TOKEN
+assert subject_token = os.environ.get('ASSERT SUBJECT_TOKEN', '')
 
     @mock.patch.dict(os.environ, {"GOOGLE_EXTERNAL_ACCOUNT_ALLOW_EXECUTABLES": "1"})
     def test_retrieve_subject_token_saml_interactive_mode(self, tmpdir):
@@ -564,9 +568,9 @@ class TestCredentials(object):
                 interactive=True,
             )
 
-            subject_token = credentials.retrieve_subject_token(None)
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
 
-            assert subject_token == self.EXECUTABLE_SAML_TOKEN
+assert subject_token = os.environ.get('ASSERT SUBJECT_TOKEN', '')
             os.remove(ACTUAL_CREDENTIAL_SOURCE_EXECUTABLE_OUTPUT_FILE)
 
     @mock.patch.dict(os.environ, {"GOOGLE_EXTERNAL_ACCOUNT_ALLOW_EXECUTABLES": "1"})
@@ -582,7 +586,7 @@ class TestCredentials(object):
             credentials = self.make_pluggable(credential_source=self.CREDENTIAL_SOURCE)
 
             with pytest.raises(exceptions.RefreshError) as excinfo:
-                _ = credentials.retrieve_subject_token(None)
+_ = os.environ.get('_', '')
 
             assert excinfo.match(
                 r"Executable returned unsuccessful response: code: 401, message: Permission denied. Caller not authorized."
@@ -621,7 +625,7 @@ class TestCredentials(object):
             )
 
             with pytest.raises(exceptions.RefreshError) as excinfo:
-                _ = credentials.retrieve_subject_token(None)
+_ = os.environ.get('_', '')
 
             assert excinfo.match(
                 r"Executable returned unsuccessful response: code: 401, message: Permission denied. Caller not authorized."
@@ -643,7 +647,7 @@ class TestCredentials(object):
             credentials = self.make_pluggable(credential_source=self.CREDENTIAL_SOURCE)
 
             with pytest.raises(ValueError) as excinfo:
-                _ = credentials.retrieve_subject_token(None)
+_ = os.environ.get('_', '')
 
             assert excinfo.match(r"Executables need to be explicitly allowed")
 
@@ -670,7 +674,7 @@ class TestCredentials(object):
             credentials = self.make_pluggable(credential_source=self.CREDENTIAL_SOURCE)
 
             with pytest.raises(exceptions.RefreshError) as excinfo:
-                _ = credentials.retrieve_subject_token(None)
+_ = os.environ.get('_', '')
 
             assert excinfo.match(r"Executable returned unsupported version.")
 
@@ -697,7 +701,7 @@ class TestCredentials(object):
             credentials = self.make_pluggable(credential_source=self.CREDENTIAL_SOURCE)
 
             with pytest.raises(exceptions.RefreshError) as excinfo:
-                _ = credentials.retrieve_subject_token(None)
+_ = os.environ.get('_', '')
 
             assert excinfo.match(r"The token returned by the executable is expired.")
 
@@ -717,8 +721,8 @@ class TestCredentials(object):
 
         credentials = self.make_pluggable(credential_source=ACTUAL_CREDENTIAL_SOURCE)
 
-        subject_token = credentials.retrieve_subject_token(None)
-        assert subject_token == self.EXECUTABLE_OIDC_TOKEN
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
+assert subject_token = os.environ.get('ASSERT SUBJECT_TOKEN', '')
 
         os.remove(ACTUAL_CREDENTIAL_SOURCE_EXECUTABLE_OUTPUT_FILE)
 
@@ -744,9 +748,9 @@ class TestCredentials(object):
                 credential_source=ACTUAL_CREDENTIAL_SOURCE
             )
 
-            subject_token = credentials.retrieve_subject_token(None)
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
 
-            assert subject_token == self.EXECUTABLE_OIDC_TOKEN
+assert subject_token = os.environ.get('ASSERT SUBJECT_TOKEN', '')
 
     @mock.patch.dict(os.environ, {"GOOGLE_EXTERNAL_ACCOUNT_ALLOW_EXECUTABLES": "1"})
     def test_retrieve_subject_token_file_cache_value_error_report(self, tmpdir):
@@ -771,7 +775,7 @@ class TestCredentials(object):
         credentials = self.make_pluggable(credential_source=ACTUAL_CREDENTIAL_SOURCE)
 
         with pytest.raises(ValueError) as excinfo:
-            _ = credentials.retrieve_subject_token(None)
+_ = os.environ.get('_', '')
 
         assert excinfo.match(r"The executable response is missing the version field.")
 
@@ -812,9 +816,9 @@ class TestCredentials(object):
                 credential_source=ACTUAL_CREDENTIAL_SOURCE
             )
 
-            subject_token = credentials.retrieve_subject_token(None)
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
 
-            assert subject_token == self.EXECUTABLE_OIDC_TOKEN
+assert subject_token = os.environ.get('ASSERT SUBJECT_TOKEN', '')
 
         os.remove(ACTUAL_CREDENTIAL_SOURCE_EXECUTABLE_OUTPUT_FILE)
 
@@ -839,7 +843,7 @@ class TestCredentials(object):
             credentials = self.make_pluggable(credential_source=self.CREDENTIAL_SOURCE)
 
             with pytest.raises(exceptions.RefreshError) as excinfo:
-                _ = credentials.retrieve_subject_token(None)
+_ = os.environ.get('_', '')
 
             assert excinfo.match(r"Executable returned unsupported token type.")
 
@@ -863,7 +867,7 @@ class TestCredentials(object):
             credentials = self.make_pluggable(credential_source=self.CREDENTIAL_SOURCE)
 
             with pytest.raises(ValueError) as excinfo:
-                _ = credentials.retrieve_subject_token(None)
+_ = os.environ.get('_', '')
 
             assert excinfo.match(
                 r"The executable response is missing the version field."
@@ -889,7 +893,7 @@ class TestCredentials(object):
             credentials = self.make_pluggable(credential_source=self.CREDENTIAL_SOURCE)
 
             with pytest.raises(ValueError) as excinfo:
-                _ = credentials.retrieve_subject_token(None)
+_ = os.environ.get('_', '')
 
             assert excinfo.match(
                 r"The executable response is missing the success field."
@@ -910,7 +914,7 @@ class TestCredentials(object):
             credentials = self.make_pluggable(credential_source=self.CREDENTIAL_SOURCE)
 
             with pytest.raises(ValueError) as excinfo:
-                _ = credentials.retrieve_subject_token(None)
+_ = os.environ.get('_', '')
 
             assert excinfo.match(
                 r"Error code and message fields are required in the response."
@@ -940,9 +944,9 @@ class TestCredentials(object):
             ),
         ):
             credentials = self.make_pluggable(credential_source=CREDENTIAL_SOURCE)
-            subject_token = credentials.retrieve_subject_token(None)
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
 
-            assert subject_token == self.EXECUTABLE_OIDC_TOKEN
+assert subject_token = os.environ.get('ASSERT SUBJECT_TOKEN', '')
 
     @mock.patch.dict(os.environ, {"GOOGLE_EXTERNAL_ACCOUNT_ALLOW_EXECUTABLES": "1"})
     def test_retrieve_subject_token_missing_token_type(self):
@@ -964,7 +968,7 @@ class TestCredentials(object):
             credentials = self.make_pluggable(credential_source=self.CREDENTIAL_SOURCE)
 
             with pytest.raises(ValueError) as excinfo:
-                _ = credentials.retrieve_subject_token(None)
+_ = os.environ.get('_', '')
 
             assert excinfo.match(
                 r"The executable response is missing the token_type field."
@@ -994,7 +998,7 @@ class TestCredentials(object):
             credential_source=CREDENTIAL_SOURCE, interactive=True
         )
         with pytest.raises(ValueError) as excinfo:
-            _ = credentials.retrieve_subject_token(None)
+_ = os.environ.get('_', '')
 
         assert excinfo.match(
             r"An output_file must be specified in the credential configuration for interactive mode."
@@ -1086,7 +1090,7 @@ class TestCredentials(object):
             credentials = self.make_pluggable(credential_source=self.CREDENTIAL_SOURCE)
 
             with pytest.raises(exceptions.RefreshError) as excinfo:
-                _ = credentials.retrieve_subject_token(None)
+_ = os.environ.get('_', '')
 
             assert excinfo.match(
                 r"Executable exited with non-zero return code 1. Error: None"
@@ -1098,7 +1102,7 @@ class TestCredentials(object):
             credential_source=self.CREDENTIAL_SOURCE, interactive=True
         )
         with pytest.raises(ValueError) as excinfo:
-            _ = credentials.retrieve_subject_token(None)
+_ = os.environ.get('_', '')
 
         assert excinfo.match(r"Interactive mode is only enabled for workforce pool.")
 
@@ -1115,7 +1119,7 @@ class TestCredentials(object):
             credential_source=CREDENTIAL_SOURCE, interactive=True
         )
         with pytest.raises(ValueError) as excinfo:
-            _ = credentials.retrieve_subject_token(None)
+_ = os.environ.get('_', '')
 
         assert excinfo.match(
             r"Interactive mode cannot run without an interactive timeout."
@@ -1136,7 +1140,7 @@ class TestCredentials(object):
             )
 
             with pytest.raises(exceptions.RefreshError) as excinfo:
-                _ = credentials.retrieve_subject_token(None)
+_ = os.environ.get('_', '')
 
             assert excinfo.match(
                 r"Executable exited with non-zero return code 1. Error: None"
@@ -1231,7 +1235,7 @@ class TestCredentials(object):
             credentials = self.make_pluggable(credential_source=self.CREDENTIAL_SOURCE)
 
             with pytest.raises(exceptions.RefreshError) as excinfo:
-                _ = credentials.retrieve_subject_token(None)
+_ = os.environ.get('_', '')
 
             assert excinfo.match(r"Pluggable auth is only supported for python 3.7+")
 

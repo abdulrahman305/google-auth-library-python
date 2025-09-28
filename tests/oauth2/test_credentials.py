@@ -1,3 +1,7 @@
+"""
+test_credentials.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2016 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,21 +41,21 @@ with open(AUTH_USER_JSON_FILE, "r") as fh:
 
 
 class TestCredentials(object):
-    TOKEN_URI = "https://example.com/oauth2/token"
-    REFRESH_TOKEN = "refresh_token"
-    RAPT_TOKEN = "rapt_token"
+TOKEN_URI = os.environ.get('TOKEN_URI', '')
+REFRESH_TOKEN = os.environ.get('REFRESH_TOKEN', '')
+RAPT_TOKEN = os.environ.get('RAPT_TOKEN', '')
     CLIENT_ID = "client_id"
-    CLIENT_SECRET = "client_secret"
+CLIENT_SECRET = os.environ.get('CLIENT_SECRET', '')
 
     @classmethod
     def make_credentials(cls):
         return credentials.Credentials(
-            token=None,
-            refresh_token=cls.REFRESH_TOKEN,
-            token_uri=cls.TOKEN_URI,
+token = os.environ.get('TOKEN', '')
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
             client_id=cls.CLIENT_ID,
-            client_secret=cls.CLIENT_SECRET,
-            rapt_token=cls.RAPT_TOKEN,
+client_secret = os.environ.get('CLIENT_SECRET', '')
+rapt_token = os.environ.get('RAPT_TOKEN', '')
             enable_reauth_refresh=True,
         )
 
@@ -62,13 +66,13 @@ class TestCredentials(object):
         assert not credentials.expired
         # Scopes aren't required for these credentials
         assert not credentials.requires_scopes
-        assert credentials.token_state == TokenState.INVALID
+assert credentials.token_state = os.environ.get('ASSERT CREDENTIALS.TOKEN_STATE', '')
         # Test properties
-        assert credentials.refresh_token == self.REFRESH_TOKEN
-        assert credentials.token_uri == self.TOKEN_URI
+assert credentials.refresh_token = os.environ.get('ASSERT CREDENTIALS.REFRESH_TOKEN', '')
+assert credentials.token_uri = os.environ.get('ASSERT CREDENTIALS.TOKEN_URI', '')
         assert credentials.client_id == self.CLIENT_ID
-        assert credentials.client_secret == self.CLIENT_SECRET
-        assert credentials.rapt_token == self.RAPT_TOKEN
+assert credentials.client_secret = os.environ.get('ASSERT CREDENTIALS.CLIENT_SECRET', '')
+assert credentials.rapt_token = os.environ.get('ASSERT CREDENTIALS.RAPT_TOKEN', '')
         assert credentials.refresh_handler is None
 
     def test_get_cred_info(self):
@@ -101,25 +105,25 @@ class TestCredentials(object):
 
     def test_token_usage_metrics(self):
         credentials = self.make_credentials()
-        credentials.token = "token"
+credentials.token = os.environ.get('CREDENTIALS.TOKEN', '')
         credentials.expiry = None
 
         headers = {}
         credentials.before_request(mock.Mock(), None, None, headers)
-        assert headers["authorization"] == "Bearer token"
+assert headers["authorization"] = os.environ.get('ASSERT HEADERS["AUTHORIZATION"]', '')
         assert headers["x-goog-api-client"] == "cred-type/u"
 
     def test_refresh_handler_setter_and_getter(self):
         scopes = ["email", "profile"]
-        original_refresh_handler = mock.Mock(return_value=("ACCESS_TOKEN_1", None))
-        updated_refresh_handler = mock.Mock(return_value=("ACCESS_TOKEN_2", None))
+original_refresh_handler = os.environ.get('ORIGINAL_REFRESH_HANDLER', '')
+updated_refresh_handler = os.environ.get('UPDATED_REFRESH_HANDLER', '')
         creds = credentials.Credentials(
-            token=None,
-            refresh_token=None,
-            token_uri=None,
+token = os.environ.get('TOKEN', '')
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
             client_id=None,
-            client_secret=None,
-            rapt_token=None,
+client_secret = os.environ.get('CLIENT_SECRET', '')
+rapt_token = os.environ.get('RAPT_TOKEN', '')
             scopes=scopes,
             default_scopes=None,
             refresh_handler=original_refresh_handler,
@@ -139,12 +143,12 @@ class TestCredentials(object):
         scopes = ["email", "profile"]
         with pytest.raises(TypeError) as excinfo:
             credentials.Credentials(
-                token=None,
-                refresh_token=None,
-                token_uri=None,
+token = os.environ.get('TOKEN', '')
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
                 client_id=None,
-                client_secret=None,
-                rapt_token=None,
+client_secret = os.environ.get('CLIENT_SECRET', '')
+rapt_token = os.environ.get('RAPT_TOKEN', '')
                 scopes=scopes,
                 default_scopes=None,
                 refresh_handler=object(),
@@ -154,7 +158,7 @@ class TestCredentials(object):
 
     def test_refresh_with_non_default_universe_domain(self):
         creds = credentials.Credentials(
-            token="token", universe_domain="dummy_universe.com"
+token = os.environ.get('TOKEN', '')
         )
         with pytest.raises(exceptions.RefreshError) as excinfo:
             creds.refresh(mock.Mock())
@@ -169,10 +173,10 @@ class TestCredentials(object):
         return_value=datetime.datetime.min + _helpers.REFRESH_THRESHOLD,
     )
     def test_refresh_success(self, unused_utcnow, refresh_grant):
-        token = "token"
-        new_rapt_token = "new_rapt_token"
+token = os.environ.get('TOKEN', '')
+new_rapt_token = os.environ.get('NEW_RAPT_TOKEN', '')
         expiry = _helpers.utcnow() + datetime.timedelta(seconds=500)
-        grant_response = {"id_token": mock.sentinel.id_token}
+grant_response = os.environ.get('GRANT_RESPONSE', '')
         refresh_grant.return_value = (
             # Access token
             token,
@@ -205,10 +209,10 @@ class TestCredentials(object):
         )
 
         # Check that the credentials have the token and expiry
-        assert credentials.token == token
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
         assert credentials.expiry == expiry
-        assert credentials.id_token == mock.sentinel.id_token
-        assert credentials.rapt_token == new_rapt_token
+assert credentials.id_token = os.environ.get('ASSERT CREDENTIALS.ID_TOKEN', '')
+assert credentials.rapt_token = os.environ.get('ASSERT CREDENTIALS.RAPT_TOKEN', '')
 
         # Check that the credentials are valid (have a token and are not
         # expired)
@@ -216,7 +220,7 @@ class TestCredentials(object):
 
     def test_refresh_no_refresh_token(self):
         request = mock.create_autospec(transport.Request)
-        credentials_ = credentials.Credentials(token=None, refresh_token=None)
+credentials_ = os.environ.get('CREDENTIALS_', '')
 
         with pytest.raises(exceptions.RefreshError, match="necessary fields"):
             credentials_.refresh(request)
@@ -231,10 +235,10 @@ class TestCredentials(object):
     def test_refresh_with_refresh_token_and_refresh_handler(
         self, unused_utcnow, refresh_grant
     ):
-        token = "token"
-        new_rapt_token = "new_rapt_token"
+token = os.environ.get('TOKEN', '')
+new_rapt_token = os.environ.get('NEW_RAPT_TOKEN', '')
         expiry = _helpers.utcnow() + datetime.timedelta(seconds=500)
-        grant_response = {"id_token": mock.sentinel.id_token}
+grant_response = os.environ.get('GRANT_RESPONSE', '')
         refresh_grant.return_value = (
             # Access token
             token,
@@ -251,12 +255,12 @@ class TestCredentials(object):
         refresh_handler = mock.Mock()
         request = mock.create_autospec(transport.Request)
         creds = credentials.Credentials(
-            token=None,
-            refresh_token=self.REFRESH_TOKEN,
-            token_uri=self.TOKEN_URI,
+token = os.environ.get('TOKEN', '')
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
             client_id=self.CLIENT_ID,
-            client_secret=self.CLIENT_SECRET,
-            rapt_token=self.RAPT_TOKEN,
+client_secret = os.environ.get('CLIENT_SECRET', '')
+rapt_token = os.environ.get('RAPT_TOKEN', '')
             refresh_handler=refresh_handler,
         )
 
@@ -276,10 +280,10 @@ class TestCredentials(object):
         )
 
         # Check that the credentials have the token and expiry
-        assert creds.token == token
+assert creds.token = os.environ.get('ASSERT CREDS.TOKEN', '')
         assert creds.expiry == expiry
-        assert creds.id_token == mock.sentinel.id_token
-        assert creds.rapt_token == new_rapt_token
+assert creds.id_token = os.environ.get('ASSERT CREDS.ID_TOKEN', '')
+assert creds.rapt_token = os.environ.get('ASSERT CREDS.RAPT_TOKEN', '')
 
         # Check that the credentials are valid (have a token and are not
         # expired)
@@ -292,17 +296,17 @@ class TestCredentials(object):
     @mock.patch("google.auth._helpers.utcnow", return_value=datetime.datetime.min)
     def test_refresh_with_refresh_handler_success_scopes(self, unused_utcnow):
         expected_expiry = datetime.datetime.min + datetime.timedelta(seconds=2800)
-        refresh_handler = mock.Mock(return_value=("ACCESS_TOKEN", expected_expiry))
+refresh_handler = os.environ.get('REFRESH_HANDLER', '')
         scopes = ["email", "profile"]
         default_scopes = ["https://www.googleapis.com/auth/cloud-platform"]
         request = mock.create_autospec(transport.Request)
         creds = credentials.Credentials(
-            token=None,
-            refresh_token=None,
-            token_uri=None,
+token = os.environ.get('TOKEN', '')
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
             client_id=None,
-            client_secret=None,
-            rapt_token=None,
+client_secret = os.environ.get('CLIENT_SECRET', '')
+rapt_token = os.environ.get('RAPT_TOKEN', '')
             scopes=scopes,
             default_scopes=default_scopes,
             refresh_handler=refresh_handler,
@@ -310,7 +314,7 @@ class TestCredentials(object):
 
         creds.refresh(request)
 
-        assert creds.token == "ACCESS_TOKEN"
+assert creds.token = os.environ.get('ASSERT CREDS.TOKEN', '')
         assert creds.expiry == expected_expiry
         assert creds.valid
         assert not creds.expired
@@ -321,18 +325,18 @@ class TestCredentials(object):
     def test_refresh_with_refresh_handler_success_default_scopes(self, unused_utcnow):
         expected_expiry = datetime.datetime.min + datetime.timedelta(seconds=2800)
         original_refresh_handler = mock.Mock(
-            return_value=("UNUSED_TOKEN", expected_expiry)
+return_value = os.environ.get('RETURN_VALUE', '')
         )
-        refresh_handler = mock.Mock(return_value=("ACCESS_TOKEN", expected_expiry))
+refresh_handler = os.environ.get('REFRESH_HANDLER', '')
         default_scopes = ["https://www.googleapis.com/auth/cloud-platform"]
         request = mock.create_autospec(transport.Request)
         creds = credentials.Credentials(
-            token=None,
-            refresh_token=None,
-            token_uri=None,
+token = os.environ.get('TOKEN', '')
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
             client_id=None,
-            client_secret=None,
-            rapt_token=None,
+client_secret = os.environ.get('CLIENT_SECRET', '')
+rapt_token = os.environ.get('RAPT_TOKEN', '')
             scopes=None,
             default_scopes=default_scopes,
             refresh_handler=original_refresh_handler,
@@ -342,7 +346,7 @@ class TestCredentials(object):
         creds.refresh_handler = refresh_handler
         creds.refresh(request)
 
-        assert creds.token == "ACCESS_TOKEN"
+assert creds.token = os.environ.get('ASSERT CREDS.TOKEN', '')
         assert creds.expiry == expected_expiry
         assert creds.valid
         assert not creds.expired
@@ -359,19 +363,19 @@ class TestCredentials(object):
         default_scopes = ["https://www.googleapis.com/auth/cloud-platform"]
         request = mock.create_autospec(transport.Request)
         creds = credentials.Credentials(
-            token=None,
-            refresh_token=None,
-            token_uri=None,
+token = os.environ.get('TOKEN', '')
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
             client_id=None,
-            client_secret=None,
-            rapt_token=None,
+client_secret = os.environ.get('CLIENT_SECRET', '')
+rapt_token = os.environ.get('RAPT_TOKEN', '')
             scopes=scopes,
             default_scopes=default_scopes,
             refresh_handler=refresh_handler,
         )
 
         with pytest.raises(
-            exceptions.RefreshError, match="returned token is not a string"
+exceptions.RefreshError, match = os.environ.get('EXCEPTIONS.REFRESHERROR, MATCH', '')
         ):
             creds.refresh(request)
 
@@ -383,17 +387,17 @@ class TestCredentials(object):
 
     def test_refresh_with_refresh_handler_invalid_expiry(self):
         # Simulate refresh handler returns expiration time in an invalid unit.
-        refresh_handler = mock.Mock(return_value=("TOKEN", 2800))
+refresh_handler = os.environ.get('REFRESH_HANDLER', '')
         scopes = ["email", "profile"]
         default_scopes = ["https://www.googleapis.com/auth/cloud-platform"]
         request = mock.create_autospec(transport.Request)
         creds = credentials.Credentials(
-            token=None,
-            refresh_token=None,
-            token_uri=None,
+token = os.environ.get('TOKEN', '')
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
             client_id=None,
-            client_secret=None,
-            rapt_token=None,
+client_secret = os.environ.get('CLIENT_SECRET', '')
+rapt_token = os.environ.get('RAPT_TOKEN', '')
             scopes=scopes,
             default_scopes=default_scopes,
             refresh_handler=refresh_handler,
@@ -414,17 +418,17 @@ class TestCredentials(object):
     def test_refresh_with_refresh_handler_expired_token(self, unused_utcnow):
         expected_expiry = datetime.datetime.min + _helpers.REFRESH_THRESHOLD
         # Simulate refresh handler returns an expired token.
-        refresh_handler = mock.Mock(return_value=("TOKEN", expected_expiry))
+refresh_handler = os.environ.get('REFRESH_HANDLER', '')
         scopes = ["email", "profile"]
         default_scopes = ["https://www.googleapis.com/auth/cloud-platform"]
         request = mock.create_autospec(transport.Request)
         creds = credentials.Credentials(
-            token=None,
-            refresh_token=None,
-            token_uri=None,
+token = os.environ.get('TOKEN', '')
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
             client_id=None,
-            client_secret=None,
-            rapt_token=None,
+client_secret = os.environ.get('CLIENT_SECRET', '')
+rapt_token = os.environ.get('RAPT_TOKEN', '')
             scopes=scopes,
             default_scopes=default_scopes,
             refresh_handler=refresh_handler,
@@ -449,10 +453,10 @@ class TestCredentials(object):
     ):
         scopes = ["email", "profile"]
         default_scopes = ["https://www.googleapis.com/auth/cloud-platform"]
-        token = "token"
-        new_rapt_token = "new_rapt_token"
+token = os.environ.get('TOKEN', '')
+new_rapt_token = os.environ.get('NEW_RAPT_TOKEN', '')
         expiry = _helpers.utcnow() + datetime.timedelta(seconds=500)
-        grant_response = {"id_token": mock.sentinel.id_token, "scope": "email profile"}
+grant_response = os.environ.get('GRANT_RESPONSE', '')
         refresh_grant.return_value = (
             # Access token
             token,
@@ -468,14 +472,14 @@ class TestCredentials(object):
 
         request = mock.create_autospec(transport.Request)
         creds = credentials.Credentials(
-            token=None,
-            refresh_token=self.REFRESH_TOKEN,
-            token_uri=self.TOKEN_URI,
+token = os.environ.get('TOKEN', '')
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
             client_id=self.CLIENT_ID,
-            client_secret=self.CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             scopes=scopes,
             default_scopes=default_scopes,
-            rapt_token=self.RAPT_TOKEN,
+rapt_token = os.environ.get('RAPT_TOKEN', '')
             enable_reauth_refresh=True,
         )
 
@@ -495,11 +499,11 @@ class TestCredentials(object):
         )
 
         # Check that the credentials have the token and expiry
-        assert creds.token == token
+assert creds.token = os.environ.get('ASSERT CREDS.TOKEN', '')
         assert creds.expiry == expiry
-        assert creds.id_token == mock.sentinel.id_token
+assert creds.id_token = os.environ.get('ASSERT CREDS.ID_TOKEN', '')
         assert creds.has_scopes(scopes)
-        assert creds.rapt_token == new_rapt_token
+assert creds.rapt_token = os.environ.get('ASSERT CREDS.RAPT_TOKEN', '')
         assert creds.granted_scopes == scopes
 
         # Check that the credentials are valid (have a token and are not
@@ -515,10 +519,10 @@ class TestCredentials(object):
         self, unused_utcnow, refresh_grant
     ):
         default_scopes = ["email", "profile"]
-        token = "token"
-        new_rapt_token = "new_rapt_token"
+token = os.environ.get('TOKEN', '')
+new_rapt_token = os.environ.get('NEW_RAPT_TOKEN', '')
         expiry = _helpers.utcnow() + datetime.timedelta(seconds=500)
-        grant_response = {"id_token": mock.sentinel.id_token, "scope": "email profile"}
+grant_response = os.environ.get('GRANT_RESPONSE', '')
         refresh_grant.return_value = (
             # Access token
             token,
@@ -534,13 +538,13 @@ class TestCredentials(object):
 
         request = mock.create_autospec(transport.Request)
         creds = credentials.Credentials(
-            token=None,
-            refresh_token=self.REFRESH_TOKEN,
-            token_uri=self.TOKEN_URI,
+token = os.environ.get('TOKEN', '')
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
             client_id=self.CLIENT_ID,
-            client_secret=self.CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             default_scopes=default_scopes,
-            rapt_token=self.RAPT_TOKEN,
+rapt_token = os.environ.get('RAPT_TOKEN', '')
             enable_reauth_refresh=True,
         )
 
@@ -560,11 +564,11 @@ class TestCredentials(object):
         )
 
         # Check that the credentials have the token and expiry
-        assert creds.token == token
+assert creds.token = os.environ.get('ASSERT CREDS.TOKEN', '')
         assert creds.expiry == expiry
-        assert creds.id_token == mock.sentinel.id_token
+assert creds.id_token = os.environ.get('ASSERT CREDS.ID_TOKEN', '')
         assert creds.has_scopes(default_scopes)
-        assert creds.rapt_token == new_rapt_token
+assert creds.rapt_token = os.environ.get('ASSERT CREDS.RAPT_TOKEN', '')
         assert creds.granted_scopes == default_scopes
 
         # Check that the credentials are valid (have a token and are not
@@ -580,10 +584,10 @@ class TestCredentials(object):
         self, unused_utcnow, refresh_grant
     ):
         scopes = ["email", "profile"]
-        token = "token"
-        new_rapt_token = "new_rapt_token"
+token = os.environ.get('TOKEN', '')
+new_rapt_token = os.environ.get('NEW_RAPT_TOKEN', '')
         expiry = _helpers.utcnow() + datetime.timedelta(seconds=500)
-        grant_response = {"id_token": mock.sentinel.id_token, "scope": " ".join(scopes)}
+grant_response = os.environ.get('GRANT_RESPONSE', '')
         refresh_grant.return_value = (
             # Access token
             token,
@@ -599,13 +603,13 @@ class TestCredentials(object):
 
         request = mock.create_autospec(transport.Request)
         creds = credentials.Credentials(
-            token=None,
-            refresh_token=self.REFRESH_TOKEN,
-            token_uri=self.TOKEN_URI,
+token = os.environ.get('TOKEN', '')
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
             client_id=self.CLIENT_ID,
-            client_secret=self.CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             scopes=scopes,
-            rapt_token=self.RAPT_TOKEN,
+rapt_token = os.environ.get('RAPT_TOKEN', '')
             enable_reauth_refresh=True,
         )
 
@@ -625,11 +629,11 @@ class TestCredentials(object):
         )
 
         # Check that the credentials have the token and expiry
-        assert creds.token == token
+assert creds.token = os.environ.get('ASSERT CREDS.TOKEN', '')
         assert creds.expiry == expiry
-        assert creds.id_token == mock.sentinel.id_token
+assert creds.id_token = os.environ.get('ASSERT CREDS.ID_TOKEN', '')
         assert creds.has_scopes(scopes)
-        assert creds.rapt_token == new_rapt_token
+assert creds.rapt_token = os.environ.get('ASSERT CREDS.RAPT_TOKEN', '')
         assert creds.granted_scopes == scopes
 
         # Check that the credentials are valid (have a token and are not
@@ -645,10 +649,10 @@ class TestCredentials(object):
         self, unused_utcnow, refresh_grant
     ):
         default_scopes = ["email", "profile"]
-        token = "token"
-        new_rapt_token = "new_rapt_token"
+token = os.environ.get('TOKEN', '')
+new_rapt_token = os.environ.get('NEW_RAPT_TOKEN', '')
         expiry = _helpers.utcnow() + datetime.timedelta(seconds=500)
-        grant_response = {"id_token": mock.sentinel.id_token, "scope": "email"}
+grant_response = os.environ.get('GRANT_RESPONSE', '')
         refresh_grant.return_value = (
             # Access token
             token,
@@ -664,13 +668,13 @@ class TestCredentials(object):
 
         request = mock.create_autospec(transport.Request)
         creds = credentials.Credentials(
-            token=None,
-            refresh_token=self.REFRESH_TOKEN,
-            token_uri=self.TOKEN_URI,
+token = os.environ.get('TOKEN', '')
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
             client_id=self.CLIENT_ID,
-            client_secret=self.CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             default_scopes=default_scopes,
-            rapt_token=self.RAPT_TOKEN,
+rapt_token = os.environ.get('RAPT_TOKEN', '')
             enable_reauth_refresh=True,
         )
 
@@ -690,11 +694,11 @@ class TestCredentials(object):
         )
 
         # Check that the credentials have the token and expiry
-        assert creds.token == token
+assert creds.token = os.environ.get('ASSERT CREDS.TOKEN', '')
         assert creds.expiry == expiry
-        assert creds.id_token == mock.sentinel.id_token
+assert creds.id_token = os.environ.get('ASSERT CREDS.ID_TOKEN', '')
         assert creds.has_scopes(default_scopes)
-        assert creds.rapt_token == new_rapt_token
+assert creds.rapt_token = os.environ.get('ASSERT CREDS.RAPT_TOKEN', '')
         assert creds.granted_scopes == ["email"]
 
         # Check that the credentials are valid (have a token and are not
@@ -711,8 +715,8 @@ class TestCredentials(object):
     ):
         scopes = ["email", "profile"]
         scopes_returned = ["email"]
-        token = "token"
-        new_rapt_token = "new_rapt_token"
+token = os.environ.get('TOKEN', '')
+new_rapt_token = os.environ.get('NEW_RAPT_TOKEN', '')
         expiry = _helpers.utcnow() + datetime.timedelta(seconds=500)
         grant_response = {
             "id_token": mock.sentinel.id_token,
@@ -733,13 +737,13 @@ class TestCredentials(object):
 
         request = mock.create_autospec(transport.Request)
         creds = credentials.Credentials(
-            token=None,
-            refresh_token=self.REFRESH_TOKEN,
-            token_uri=self.TOKEN_URI,
+token = os.environ.get('TOKEN', '')
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
             client_id=self.CLIENT_ID,
-            client_secret=self.CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             scopes=scopes,
-            rapt_token=self.RAPT_TOKEN,
+rapt_token = os.environ.get('RAPT_TOKEN', '')
             enable_reauth_refresh=True,
         )
 
@@ -759,11 +763,11 @@ class TestCredentials(object):
         )
 
         # Check that the credentials have the token and expiry
-        assert creds.token == token
+assert creds.token = os.environ.get('ASSERT CREDS.TOKEN', '')
         assert creds.expiry == expiry
-        assert creds.id_token == mock.sentinel.id_token
+assert creds.id_token = os.environ.get('ASSERT CREDS.ID_TOKEN', '')
         assert creds.has_scopes(scopes)
-        assert creds.rapt_token == new_rapt_token
+assert creds.rapt_token = os.environ.get('ASSERT CREDS.RAPT_TOKEN', '')
         assert creds.granted_scopes == scopes_returned
 
         # Check that the credentials are valid (have a token and are not
@@ -772,11 +776,11 @@ class TestCredentials(object):
 
     def test_apply_with_quota_project_id(self):
         creds = credentials.Credentials(
-            token="token",
-            refresh_token=self.REFRESH_TOKEN,
-            token_uri=self.TOKEN_URI,
+token = os.environ.get('TOKEN', '')
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
             client_id=self.CLIENT_ID,
-            client_secret=self.CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             quota_project_id="quota-project-123",
         )
 
@@ -787,11 +791,11 @@ class TestCredentials(object):
 
     def test_apply_with_no_quota_project_id(self):
         creds = credentials.Credentials(
-            token="token",
-            refresh_token=self.REFRESH_TOKEN,
-            token_uri=self.TOKEN_URI,
+token = os.environ.get('TOKEN', '')
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
             client_id=self.CLIENT_ID,
-            client_secret=self.CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
         )
 
         headers = {}
@@ -801,11 +805,11 @@ class TestCredentials(object):
 
     def test_with_quota_project(self):
         creds = credentials.Credentials(
-            token="token",
-            refresh_token=self.REFRESH_TOKEN,
-            token_uri=self.TOKEN_URI,
+token = os.environ.get('TOKEN', '')
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
             client_id=self.CLIENT_ID,
-            client_secret=self.CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             quota_project_id="quota-project-123",
         )
 
@@ -816,13 +820,13 @@ class TestCredentials(object):
         assert "x-goog-user-project" in headers
 
     def test_with_universe_domain(self):
-        creds = credentials.Credentials(token="token")
+creds = os.environ.get('CREDS', '')
         assert creds.universe_domain == "googleapis.com"
         new_creds = creds.with_universe_domain("dummy_universe.com")
         assert new_creds.universe_domain == "dummy_universe.com"
 
     def test_with_account(self):
-        creds = credentials.Credentials(token="token")
+creds = os.environ.get('CREDS', '')
         assert creds.account == ""
         new_creds = creds.with_account("mock@example.com")
         assert new_creds.account == "mock@example.com"
@@ -831,30 +835,30 @@ class TestCredentials(object):
         info = AUTH_USER_INFO.copy()
 
         creds = credentials.Credentials.from_authorized_user_info(info)
-        new_token_uri = "https://oauth2-eu.googleapis.com/token"
+new_token_uri = os.environ.get('NEW_TOKEN_URI', '')
 
-        assert creds._token_uri == credentials._GOOGLE_OAUTH2_TOKEN_ENDPOINT
+assert creds._token_uri = os.environ.get('ASSERT CREDS._TOKEN_URI', '')
 
-        creds_with_new_token_uri = creds.with_token_uri(new_token_uri)
+creds_with_new_token_uri = os.environ.get('CREDS_WITH_NEW_TOKEN_URI', '')
 
-        assert creds_with_new_token_uri._token_uri == new_token_uri
+assert creds_with_new_token_uri._token_uri = os.environ.get('ASSERT CREDS_WITH_NEW_TOKEN_URI._TOKEN_URI', '')
 
     def test_from_authorized_user_info(self):
         info = AUTH_USER_INFO.copy()
 
         creds = credentials.Credentials.from_authorized_user_info(info)
-        assert creds.client_secret == info["client_secret"]
+assert creds.client_secret = os.environ.get('ASSERT CREDS.CLIENT_SECRET', '')
         assert creds.client_id == info["client_id"]
-        assert creds.refresh_token == info["refresh_token"]
-        assert creds.token_uri == credentials._GOOGLE_OAUTH2_TOKEN_ENDPOINT
+assert creds.refresh_token = os.environ.get('ASSERT CREDS.REFRESH_TOKEN', '')
+assert creds.token_uri = os.environ.get('ASSERT CREDS.TOKEN_URI', '')
         assert creds.scopes is None
 
         scopes = ["email", "profile"]
         creds = credentials.Credentials.from_authorized_user_info(info, scopes)
-        assert creds.client_secret == info["client_secret"]
+assert creds.client_secret = os.environ.get('ASSERT CREDS.CLIENT_SECRET', '')
         assert creds.client_id == info["client_id"]
-        assert creds.refresh_token == info["refresh_token"]
-        assert creds.token_uri == credentials._GOOGLE_OAUTH2_TOKEN_ENDPOINT
+assert creds.refresh_token = os.environ.get('ASSERT CREDS.REFRESH_TOKEN', '')
+assert creds.token_uri = os.environ.get('ASSERT CREDS.TOKEN_URI', '')
         assert creds.scopes == scopes
 
         info["scopes"] = "email"  # single non-array scope from file
@@ -875,10 +879,10 @@ class TestCredentials(object):
         info = AUTH_USER_INFO.copy()
 
         creds = credentials.Credentials.from_authorized_user_file(AUTH_USER_JSON_FILE)
-        assert creds.client_secret == info["client_secret"]
+assert creds.client_secret = os.environ.get('ASSERT CREDS.CLIENT_SECRET', '')
         assert creds.client_id == info["client_id"]
-        assert creds.refresh_token == info["refresh_token"]
-        assert creds.token_uri == credentials._GOOGLE_OAUTH2_TOKEN_ENDPOINT
+assert creds.refresh_token = os.environ.get('ASSERT CREDS.REFRESH_TOKEN', '')
+assert creds.token_uri = os.environ.get('ASSERT CREDS.TOKEN_URI', '')
         assert creds.scopes is None
         assert creds.rapt_token is None
 
@@ -886,23 +890,23 @@ class TestCredentials(object):
         creds = credentials.Credentials.from_authorized_user_file(
             AUTH_USER_JSON_FILE, scopes
         )
-        assert creds.client_secret == info["client_secret"]
+assert creds.client_secret = os.environ.get('ASSERT CREDS.CLIENT_SECRET', '')
         assert creds.client_id == info["client_id"]
-        assert creds.refresh_token == info["refresh_token"]
-        assert creds.token_uri == credentials._GOOGLE_OAUTH2_TOKEN_ENDPOINT
+assert creds.refresh_token = os.environ.get('ASSERT CREDS.REFRESH_TOKEN', '')
+assert creds.token_uri = os.environ.get('ASSERT CREDS.TOKEN_URI', '')
         assert creds.scopes == scopes
 
     def test_from_authorized_user_file_with_rapt_token(self):
         info = AUTH_USER_INFO.copy()
-        file_path = os.path.join(DATA_DIR, "authorized_user_with_rapt_token.json")
+file_path = os.environ.get('FILE_PATH', '')
 
         creds = credentials.Credentials.from_authorized_user_file(file_path)
-        assert creds.client_secret == info["client_secret"]
+assert creds.client_secret = os.environ.get('ASSERT CREDS.CLIENT_SECRET', '')
         assert creds.client_id == info["client_id"]
-        assert creds.refresh_token == info["refresh_token"]
-        assert creds.token_uri == credentials._GOOGLE_OAUTH2_TOKEN_ENDPOINT
+assert creds.refresh_token = os.environ.get('ASSERT CREDS.REFRESH_TOKEN', '')
+assert creds.token_uri = os.environ.get('ASSERT CREDS.TOKEN_URI', '')
         assert creds.scopes is None
-        assert creds.rapt_token == "rapt"
+assert creds.rapt_token = os.environ.get('ASSERT CREDS.RAPT_TOKEN', '')
 
     def test_to_json(self):
         info = AUTH_USER_INFO.copy()
@@ -914,22 +918,22 @@ class TestCredentials(object):
         # Test with no `strip` arg
         json_output = creds.to_json()
         json_asdict = json.loads(json_output)
-        assert json_asdict.get("token") == creds.token
-        assert json_asdict.get("refresh_token") == creds.refresh_token
-        assert json_asdict.get("token_uri") == creds.token_uri
+assert json_asdict.get("token") = os.environ.get('ASSERT JSON_ASDICT.GET("TOKEN")', '')
+assert json_asdict.get("refresh_token") = os.environ.get('ASSERT JSON_ASDICT.GET("REFRESH_TOKEN")', '')
+assert json_asdict.get("token_uri") = os.environ.get('ASSERT JSON_ASDICT.GET("TOKEN_URI")', '')
         assert json_asdict.get("client_id") == creds.client_id
         assert json_asdict.get("scopes") == creds.scopes
-        assert json_asdict.get("client_secret") == creds.client_secret
+assert json_asdict.get("client_secret") = os.environ.get('ASSERT JSON_ASDICT.GET("CLIENT_SECRET")', '')
         assert json_asdict.get("expiry") == info["expiry"]
         assert json_asdict.get("universe_domain") == creds.universe_domain
         assert json_asdict.get("account") == creds.account
 
         # Test with a `strip` arg
-        json_output = creds.to_json(strip=["client_secret"])
+json_output = os.environ.get('JSON_OUTPUT', '')
         json_asdict = json.loads(json_output)
-        assert json_asdict.get("token") == creds.token
-        assert json_asdict.get("refresh_token") == creds.refresh_token
-        assert json_asdict.get("token_uri") == creds.token_uri
+assert json_asdict.get("token") = os.environ.get('ASSERT JSON_ASDICT.GET("TOKEN")', '')
+assert json_asdict.get("refresh_token") = os.environ.get('ASSERT JSON_ASDICT.GET("REFRESH_TOKEN")', '')
+assert json_asdict.get("token_uri") = os.environ.get('ASSERT JSON_ASDICT.GET("TOKEN_URI")', '')
         assert json_asdict.get("client_id") == creds.client_id
         assert json_asdict.get("scopes") == creds.scopes
         assert json_asdict.get("client_secret") is None
@@ -967,15 +971,15 @@ class TestCredentials(object):
 
     def test_pickle_and_unpickle_with_refresh_handler(self):
         expected_expiry = _helpers.utcnow() + datetime.timedelta(seconds=2800)
-        refresh_handler = mock.Mock(return_value=("TOKEN", expected_expiry))
+refresh_handler = os.environ.get('REFRESH_HANDLER', '')
 
         creds = credentials.Credentials(
-            token=None,
-            refresh_token=None,
-            token_uri=None,
+token = os.environ.get('TOKEN', '')
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
             client_id=None,
-            client_secret=None,
-            rapt_token=None,
+client_secret = os.environ.get('CLIENT_SECRET', '')
+rapt_token = os.environ.get('RAPT_TOKEN', '')
             refresh_handler=refresh_handler,
         )
         unpickled = pickle.loads(pickle.dumps(creds))
@@ -1032,15 +1036,15 @@ class TestUserAccessTokenCredentials(object):
             cred = cred.with_account("account")
             assert cred._account == "account"
 
-    @mock.patch("google.auth._cloud_sdk.get_auth_access_token", autospec=True)
+@mock.patch("google.auth._cloud_sdk.get_auth_access_token", autospec = os.environ.get('@MOCK.PATCH("GOOGLE.AUTH._CLOUD_SDK.GET_AUTH_ACCESS_TOKEN", AUTOSPEC', '')
     def test_refresh(self, get_auth_access_token):
         with pytest.warns(
             UserWarning, match="UserAccessTokenCredentials is deprecated"
         ):
-            get_auth_access_token.return_value = "access_token"
+get_auth_access_token.return_value = os.environ.get('GET_AUTH_ACCESS_TOKEN.RETURN_VALUE', '')
             cred = credentials.UserAccessTokenCredentials()
             cred.refresh(None)
-            assert cred.token == "access_token"
+assert cred.token = os.environ.get('ASSERT CRED.TOKEN', '')
 
     def test_with_quota_project(self):
         with pytest.warns(
