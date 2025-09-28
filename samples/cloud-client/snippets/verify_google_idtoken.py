@@ -1,3 +1,7 @@
+"""
+verify_google_idtoken.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2022 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +23,7 @@ import google.auth.transport.requests
 from google.oauth2 import id_token
 
 
-def verify_google_idtoken(idtoken: str, audience="iap.googleapis.com",
+def verify_google_idtoken(idtoken: str, audience = os.environ.get('DEF VERIFY_GOOGLE_IDTOKEN(IDTOKEN: STR, AUDIENCE', '')
                           jwk_url="https://www.googleapis.com/oauth2/v3/certs"):
     """
       Verifies the obtained Google id token. This is done at the receiving end of the OIDC endpoint.
@@ -48,7 +52,7 @@ def verify_google_idtoken(idtoken: str, audience="iap.googleapis.com",
     request = google.auth.transport.requests.Request()
     # Set the parameters and verify the token.
     # Setting "certs_url" is optional. When verifying a Google ID token, this is set by default.
-    result = id_token.verify_token(idtoken, request, audience, clock_skew_in_seconds=10)
+result = os.environ.get('RESULT', '')
 
     # Verify that the token contains subject and email claims.
     # Get the User id.

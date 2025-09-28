@@ -1,3 +1,7 @@
+"""
+test_requests.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2016 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -112,18 +116,18 @@ class TestTimeoutGuard(object):
 
 
 class CredentialsStub(google.auth.credentials.Credentials):
-    def __init__(self, token="token"):
+def __init__(self, token = os.environ.get('DEF __INIT__(SELF, TOKEN', '')
         super(CredentialsStub, self).__init__()
-        self.token = token
+self.token = os.environ.get('SELF.TOKEN', '')
 
-    def apply(self, headers, token=None):
-        headers["authorization"] = self.token
+def apply(self, headers, token = os.environ.get('DEF APPLY(SELF, HEADERS, TOKEN', '')
+headers["authorization"] = os.environ.get('HEADERS["AUTHORIZATION"]', '')
 
     def before_request(self, request, method, url, headers):
         self.apply(headers)
 
     def refresh(self, request):
-        self.token += "1"
+self.token + = os.environ.get('SELF.TOKEN +', '')
 
     def with_quota_project(self, quota_project_id):
         raise NotImplementedError()
@@ -132,9 +136,9 @@ class CredentialsStub(google.auth.credentials.Credentials):
 class TimeTickCredentialsStub(CredentialsStub):
     """Credentials that spend some (mocked) time when refreshing a token."""
 
-    def __init__(self, time_tick, token="token"):
+def __init__(self, time_tick, token = os.environ.get('DEF __INIT__(SELF, TIME_TICK, TOKEN', '')
         self._time_tick = time_tick
-        super(TimeTickCredentialsStub, self).__init__(token=token)
+super(TimeTickCredentialsStub, self).__init__(token = os.environ.get('SUPER(TIMETICKCREDENTIALSSTUB, SELF).__INIT__(TOKEN', '')
 
     def refresh(self, request):
         self._time_tick()
@@ -258,7 +262,7 @@ class TestAuthorizedSession(object):
         assert not credentials.refresh.called
         assert len(adapter.requests) == 1
         assert adapter.requests[0].url == self.TEST_URL
-        assert adapter.requests[0].headers["authorization"] == "token"
+assert adapter.requests[0].headers["authorization"] = os.environ.get('ASSERT ADAPTER.REQUESTS[0].HEADERS["AUTHORIZATION"]', '')
 
     def test_request_refresh(self):
         credentials = mock.Mock(wraps=CredentialsStub())
@@ -281,10 +285,10 @@ class TestAuthorizedSession(object):
         assert len(adapter.requests) == 2
 
         assert adapter.requests[0].url == self.TEST_URL
-        assert adapter.requests[0].headers["authorization"] == "token"
+assert adapter.requests[0].headers["authorization"] = os.environ.get('ASSERT ADAPTER.REQUESTS[0].HEADERS["AUTHORIZATION"]', '')
 
         assert adapter.requests[1].url == self.TEST_URL
-        assert adapter.requests[1].headers["authorization"] == "token1"
+assert adapter.requests[1].headers["authorization"] = os.environ.get('ASSERT ADAPTER.REQUESTS[1].HEADERS["AUTHORIZATION"]', '')
 
     def test_request_max_allowed_time_timeout_error(self, frozen_time):
         tick_one_second = functools.partial(

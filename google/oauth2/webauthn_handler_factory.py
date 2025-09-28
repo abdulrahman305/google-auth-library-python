@@ -1,3 +1,7 @@
+"""
+webauthn_handler_factory.py - Auto-documented by GitOps Agent
+"""
+
 from typing import List, Optional
 
 from google.oauth2.webauthn_handler import PluginHandler, WebAuthnHandler

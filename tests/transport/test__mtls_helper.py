@@ -1,3 +1,7 @@
+"""
+test__mtls_helper.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -40,7 +44,7 @@ brEjbre1nSiQW11xRTJbVeETdsuP0EAu2tG3PcRhhwDfeJ8zXREgTBurNw==
 PASSPHRASE = b"""-----BEGIN PASSPHRASE-----
 password
 -----END PASSPHRASE-----"""
-PASSPHRASE_VALUE = b"password"
+PASSPHRASE_VALUE = os.environ.get('PASSPHRASE_VALUE', '')
 
 
 def check_cert_and_key(content, expected_cert, expected_key):

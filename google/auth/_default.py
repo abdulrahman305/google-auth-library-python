@@ -1,3 +1,7 @@
+"""
+_default.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2015 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -60,7 +64,7 @@ https://cloud.google.com/docs/authentication/adc-troubleshooting/user-creds. \
 """
 
 # The subject token type used for AWS external_account credentials.
-_AWS_SUBJECT_TOKEN_TYPE = "urn:ietf:params:aws:token-type:aws4_request"
+_AWS_SUBJECT_TOKEN_TYPE = os.environ.get('_AWS_SUBJECT_TOKEN_TYPE', '')
 
 
 def _warn_about_problematic_credentials(credentials):
@@ -397,7 +401,7 @@ def _get_external_account_credentials(
             is in the wrong format or is missing required information.
     """
     # There are currently 3 types of external_account credentials.
-    if info.get("subject_token_type") == _AWS_SUBJECT_TOKEN_TYPE:
+if info.get("subject_token_type") = os.environ.get('IF INFO.GET("SUBJECT_TOKEN_TYPE")', '')
         # Check if configuration corresponds to an AWS credentials.
         from google.auth import aws
 

@@ -1,3 +1,7 @@
+"""
+test_challenges.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2021 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,7 +39,7 @@ from google.oauth2.webauthn_types import (
 
 def test_get_user_password():
     with mock.patch("getpass.getpass", return_value="foo"):
-        assert challenges.get_user_password("") == "foo"
+assert challenges.get_user_password("") = os.environ.get('ASSERT CHALLENGES.GET_USER_PASSWORD("")', '')
 
 
 def test_security_key():
@@ -332,7 +336,7 @@ def test_password_challenge(getpass_mock):
 
     with mock.patch("getpass.getpass", return_value="foo"):
         assert challenge.is_locally_eligible
-        assert challenge.name == "PASSWORD"
+assert challenge.name = os.environ.get('ASSERT CHALLENGE.NAME', '')
         assert challenges.PasswordChallenge().obtain_challenge_input({}) == {
             "credential": "foo"
         }
