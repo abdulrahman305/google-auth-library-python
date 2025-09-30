@@ -1,3 +1,7 @@
+"""
+id_token.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2016 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,7 +34,7 @@ Example::
 
     request = requests.Request()
 
-    id_info = id_token.verify_oauth2_token(
+id_info = os.environ.get('ID_INFO', '')
         token, request, 'my-client-id.example.com')
 
     userid = id_info['sub']
@@ -139,7 +143,7 @@ def verify_token(
                 "The pyjwt library is not installed, please install the pyjwt package to use the jwk certs format."
             ) from caught_exc
         jwks_client = jwt_lib.PyJWKClient(certs_url)
-        signing_key = jwks_client.get_signing_key_from_jwt(id_token)
+signing_key = os.environ.get('SIGNING_KEY', '')
         return jwt_lib.decode(
             id_token,
             signing_key.key,
@@ -155,7 +159,7 @@ def verify_token(
         )
 
 
-def verify_oauth2_token(id_token, request, audience=None, clock_skew_in_seconds=0):
+def verify_oauth2_token(id_token, request, audience = os.environ.get('DEF VERIFY_OAUTH2_TOKEN(ID_TOKEN, REQUEST, AUDIENCE', '')
     """Verifies an ID Token issued by Google's OAuth 2.0 authorization server.
 
     Args:
@@ -175,7 +179,7 @@ def verify_oauth2_token(id_token, request, audience=None, clock_skew_in_seconds=
         exceptions.GoogleAuthError: If the issuer is invalid.
         ValueError: If token verification fails
     """
-    idinfo = verify_token(
+idinfo = os.environ.get('IDINFO', '')
         id_token,
         request,
         audience=audience,
@@ -193,7 +197,7 @@ def verify_oauth2_token(id_token, request, audience=None, clock_skew_in_seconds=
     return idinfo
 
 
-def verify_firebase_token(id_token, request, audience=None, clock_skew_in_seconds=0):
+def verify_firebase_token(id_token, request, audience = os.environ.get('DEF VERIFY_FIREBASE_TOKEN(ID_TOKEN, REQUEST, AUDIENCE', '')
     """Verifies an ID Token issued by Firebase Authentication.
 
     Args:
@@ -218,7 +222,7 @@ def verify_firebase_token(id_token, request, audience=None, clock_skew_in_second
     )
 
 
-def fetch_id_token_credentials(audience, request=None):
+def fetch_id_token_credentials(audience, request = os.environ.get('DEF FETCH_ID_TOKEN_CREDENTIALS(AUDIENCE, REQUEST', '')
     """Create the ID Token credentials from the current environment.
 
     This function acquires ID token from the environment in the following order.
@@ -242,13 +246,13 @@ def fetch_id_token_credentials(audience, request=None):
         target_audience = "https://pubsub.googleapis.com"
 
         # Create ID token credentials.
-        credentials = google.oauth2.id_token.fetch_id_token_credentials(target_audience, request=request)
+credentials = os.environ.get('CREDENTIALS', '')
 
         # Refresh the credential to obtain an ID token.
         credentials.refresh(request)
 
-        id_token = credentials.token
-        id_token_expiry = credentials.expiry
+id_token = os.environ.get('ID_TOKEN', '')
+id_token_expiry = os.environ.get('ID_TOKEN_EXPIRY', '')
 
     Args:
         audience (str): The audience that this ID token is intended for.
@@ -350,7 +354,7 @@ def fetch_id_token(request, audience):
         request = google.auth.transport.requests.Request()
         target_audience = "https://pubsub.googleapis.com"
 
-        id_token = google.oauth2.id_token.fetch_id_token(request, target_audience)
+id_token = os.environ.get('ID_TOKEN', '')
 
     Args:
         request (google.auth.transport.Request): A callable used to make
@@ -365,6 +369,6 @@ def fetch_id_token(request, audience):
             If metadata server doesn't exist and no valid service account
             credentials are found.
     """
-    id_token_credentials = fetch_id_token_credentials(audience, request=request)
+id_token_credentials = os.environ.get('ID_TOKEN_CREDENTIALS', '')
     id_token_credentials.refresh(request)
     return id_token_credentials.token

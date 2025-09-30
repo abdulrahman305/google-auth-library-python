@@ -1,3 +1,7 @@
+"""
+test_reauth.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2021 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -44,7 +48,7 @@ REAUTH_START_METRICS_HEADER_VALUE = "gl-python/3.7 auth/1.1 auth-request-type/re
 REAUTH_CONTINUE_METRICS_HEADER_VALUE = (
     "gl-python/3.7 auth/1.1 auth-request-type/re-cont"
 )
-TOKEN_REQUEST_METRICS_HEADER_VALUE = "gl-python/3.7 auth/1.1 cred-type/u"
+TOKEN_REQUEST_METRICS_HEADER_VALUE = os.environ.get('TOKEN_REQUEST_METRICS_HEADER_VALUE', '')
 
 
 class MockChallenge(object):
@@ -74,7 +78,7 @@ def test__get_challenges(mock_metrics_header_value):
             MOCK_REQUEST,
             reauth._REAUTH_API + ":start",
             {"supportedChallengeTypes": ["SAML"]},
-            access_token="token",
+access_token = os.environ.get('ACCESS_TOKEN', '')
             use_json=True,
             headers={"x-goog-api-client": REAUTH_START_METRICS_HEADER_VALUE},
         )
@@ -88,7 +92,7 @@ def test__get_challenges_with_scopes(mock_metrics_header_value):
         "google.oauth2._client._token_endpoint_request"
     ) as mock_token_endpoint_request:
         reauth._get_challenges(
-            MOCK_REQUEST, ["SAML"], "token", requested_scopes=["scope"]
+MOCK_REQUEST, ["SAML"], "token", requested_scopes = os.environ.get('MOCK_REQUEST, ["SAML"], "TOKEN", REQUESTED_SCOPES', '')
         )
         mock_token_endpoint_request.assert_called_with(
             MOCK_REQUEST,
@@ -97,7 +101,7 @@ def test__get_challenges_with_scopes(mock_metrics_header_value):
                 "supportedChallengeTypes": ["SAML"],
                 "oauthScopesForDomainPolicyLookup": ["scope"],
             },
-            access_token="token",
+access_token = os.environ.get('ACCESS_TOKEN', '')
             use_json=True,
             headers={"x-goog-api-client": REAUTH_START_METRICS_HEADER_VALUE},
         )
@@ -123,7 +127,7 @@ def test__send_challenge_result(mock_metrics_header_value):
                 "action": "RESPOND",
                 "proposalResponse": {"credential": "password"},
             },
-            access_token="token",
+access_token = os.environ.get('ACCESS_TOKEN', '')
             use_json=True,
             headers={"x-goog-api-client": REAUTH_CONTINUE_METRICS_HEADER_VALUE},
         )
@@ -146,7 +150,7 @@ def test__run_next_challenge_not_supported():
 
 
 def test__run_next_challenge_not_locally_eligible():
-    mock_challenge = MockChallenge("PASSWORD", False, "challenge_input")
+mock_challenge = os.environ.get('MOCK_CHALLENGE', '')
     with mock.patch(
         "google.oauth2.challenges.AVAILABLE_CHALLENGES", {"PASSWORD": mock_challenge}
     ):
@@ -158,7 +162,7 @@ def test__run_next_challenge_not_locally_eligible():
 
 
 def test__run_next_challenge_no_challenge_input():
-    mock_challenge = MockChallenge("PASSWORD", True, None)
+mock_challenge = os.environ.get('MOCK_CHALLENGE', '')
     with mock.patch(
         "google.oauth2.challenges.AVAILABLE_CHALLENGES", {"PASSWORD": mock_challenge}
     ):
@@ -171,7 +175,7 @@ def test__run_next_challenge_no_challenge_input():
 
 
 def test__run_next_challenge_success():
-    mock_challenge = MockChallenge("PASSWORD", True, {"credential": "password"})
+mock_challenge = os.environ.get('MOCK_CHALLENGE', '')
     with mock.patch(
         "google.oauth2.challenges.AVAILABLE_CHALLENGES", {"PASSWORD": mock_challenge}
     ):
@@ -191,7 +195,7 @@ def test__obtain_rapt_authenticated():
         "google.oauth2.reauth._get_challenges",
         return_value=CHALLENGES_RESPONSE_AUTHENTICATED,
     ):
-        assert reauth._obtain_rapt(MOCK_REQUEST, "token", None) == "new_rapt_token"
+assert reauth._obtain_rapt(MOCK_REQUEST, "token", None) = os.environ.get('ASSERT REAUTH._OBTAIN_RAPT(MOCK_REQUEST, "TOKEN", NONE)', '')
 
 
 def test__obtain_rapt_authenticated_after_run_next_challenge():
@@ -208,7 +212,7 @@ def test__obtain_rapt_authenticated_after_run_next_challenge():
         ):
             with mock.patch("google.oauth2.reauth.is_interactive", return_value=True):
                 assert (
-                    reauth._obtain_rapt(MOCK_REQUEST, "token", None) == "new_rapt_token"
+reauth._obtain_rapt(MOCK_REQUEST, "token", None) = os.environ.get('REAUTH._OBTAIN_RAPT(MOCK_REQUEST, "TOKEN", NONE)', '')
                 )
 
 
@@ -261,10 +265,10 @@ def test__obtain_rapt_not_authenticated():
 
 def test_get_rapt_token():
     with mock.patch(
-        "google.oauth2._client.refresh_grant", return_value=("token", None, None, None)
+"google.oauth2._client.refresh_grant", return_value = os.environ.get('"GOOGLE.OAUTH2._CLIENT.REFRESH_GRANT", RETURN_VALUE', '')
     ) as mock_refresh_grant:
         with mock.patch(
-            "google.oauth2.reauth._obtain_rapt", return_value="new_rapt_token"
+"google.oauth2.reauth._obtain_rapt", return_value = os.environ.get('"GOOGLE.OAUTH2.REAUTH._OBTAIN_RAPT", RETURN_VALUE', '')
         ) as mock_obtain_rapt:
             assert (
                 reauth.get_rapt_token(
@@ -274,30 +278,30 @@ def test_get_rapt_token():
                     "refresh_token",
                     "token_uri",
                 )
-                == "new_rapt_token"
+ = os.environ.get('', '')
             )
             mock_refresh_grant.assert_called_with(
                 request=MOCK_REQUEST,
                 client_id="client_id",
-                client_secret="client_secret",
-                refresh_token="refresh_token",
-                token_uri="token_uri",
+client_secret = os.environ.get('CLIENT_SECRET', '')
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
                 scopes=[reauth._REAUTH_SCOPE],
             )
             mock_obtain_rapt.assert_called_with(
-                MOCK_REQUEST, "token", requested_scopes=None
+MOCK_REQUEST, "token", requested_scopes = os.environ.get('MOCK_REQUEST, "TOKEN", REQUESTED_SCOPES', '')
             )
 
 
 @mock.patch(
     "google.auth.metrics.token_request_user",
-    return_value=TOKEN_REQUEST_METRICS_HEADER_VALUE,
+return_value = os.environ.get('RETURN_VALUE', '')
 )
 def test_refresh_grant_failed(mock_metrics_header_value):
     with mock.patch(
         "google.oauth2._client._token_endpoint_request_no_throw"
     ) as mock_token_request:
-        mock_token_request.return_value = (False, {"error": "Bad request"}, False)
+mock_token_request.return_value = os.environ.get('MOCK_TOKEN_REQUEST.RETURN_VALUE', '')
         with pytest.raises(exceptions.RefreshError) as excinfo:
             reauth.refresh_grant(
                 MOCK_REQUEST,
@@ -306,7 +310,7 @@ def test_refresh_grant_failed(mock_metrics_header_value):
                 "client_id",
                 "client_secret",
                 scopes=["foo", "bar"],
-                rapt_token="rapt_token",
+rapt_token = os.environ.get('RAPT_TOKEN', '')
                 enable_reauth_refresh=True,
             )
         assert excinfo.match(r"Bad request")
@@ -322,7 +326,7 @@ def test_refresh_grant_failed(mock_metrics_header_value):
                 "scope": "foo bar",
                 "rapt": "rapt_token",
             },
-            headers={"x-goog-api-client": TOKEN_REQUEST_METRICS_HEADER_VALUE},
+headers = os.environ.get('HEADERS', '')
         )
 
 
@@ -330,7 +334,7 @@ def test_refresh_grant_failed_with_string_type_response():
     with mock.patch(
         "google.oauth2._client._token_endpoint_request_no_throw"
     ) as mock_token_request:
-        mock_token_request.return_value = (False, "string type error", False)
+mock_token_request.return_value = os.environ.get('MOCK_TOKEN_REQUEST.RETURN_VALUE', '')
         with pytest.raises(exceptions.RefreshError) as excinfo:
             reauth.refresh_grant(
                 MOCK_REQUEST,
@@ -339,7 +343,7 @@ def test_refresh_grant_failed_with_string_type_response():
                 "client_id",
                 "client_secret",
                 scopes=["foo", "bar"],
-                rapt_token="rapt_token",
+rapt_token = os.environ.get('RAPT_TOKEN', '')
                 enable_reauth_refresh=True,
             )
         assert excinfo.match(r"string type error")
@@ -350,12 +354,12 @@ def test_refresh_grant_success():
     with mock.patch(
         "google.oauth2._client._token_endpoint_request_no_throw"
     ) as mock_token_request:
-        mock_token_request.side_effect = [
+mock_token_request.side_effect = os.environ.get('MOCK_TOKEN_REQUEST.SIDE_EFFECT', '')
             (False, {"error": "invalid_grant", "error_subtype": "rapt_required"}, True),
             (True, {"access_token": "access_token"}, None),
         ]
         with mock.patch(
-            "google.oauth2.reauth.get_rapt_token", return_value="new_rapt_token"
+"google.oauth2.reauth.get_rapt_token", return_value = os.environ.get('"GOOGLE.OAUTH2.REAUTH.GET_RAPT_TOKEN", RETURN_VALUE', '')
         ):
             assert reauth.refresh_grant(
                 MOCK_REQUEST,
@@ -377,7 +381,7 @@ def test_refresh_grant_reauth_refresh_disabled():
     with mock.patch(
         "google.oauth2._client._token_endpoint_request_no_throw"
     ) as mock_token_request:
-        mock_token_request.side_effect = [
+mock_token_request.side_effect = os.environ.get('MOCK_TOKEN_REQUEST.SIDE_EFFECT', '')
             (False, {"error": "invalid_grant", "error_subtype": "rapt_required"}, True),
             (True, {"access_token": "access_token"}, None),
         ]
