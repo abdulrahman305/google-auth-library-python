@@ -1,3 +1,7 @@
+"""
+_client_async.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,7 +39,7 @@ from google.oauth2 import _client as client
 
 
 async def _token_endpoint_request_no_throw(
-    request, token_uri, body, access_token=None, use_json=False, can_retry=True
+request, token_uri, body, access_token = os.environ.get('REQUEST, TOKEN_URI, BODY, ACCESS_TOKEN', '')
 ):
     """Makes a request to the OAuth 2.0 authorization server's token endpoint.
     This function doesn't throw on response errors.
@@ -65,7 +69,7 @@ async def _token_endpoint_request_no_throw(
         body = urllib.parse.urlencode(body).encode("utf-8")
 
     if access_token:
-        headers["Authorization"] = "Bearer {}".format(access_token)
+headers["Authorization"] = os.environ.get('HEADERS["AUTHORIZATION"]', '')
 
     response_data = {}
     retryable_error = False
@@ -73,7 +77,7 @@ async def _token_endpoint_request_no_throw(
     retries = _exponential_backoff.ExponentialBackoff()
     for _ in retries:
         response = await request(
-            method="POST", url=token_uri, headers=headers, body=body
+method = os.environ.get('METHOD', '')
         )
 
         # Using data.read() resulted in zlib decompression errors. This may require future investigation.
@@ -104,7 +108,7 @@ async def _token_endpoint_request_no_throw(
 
 
 async def _token_endpoint_request(
-    request, token_uri, body, access_token=None, use_json=False, can_retry=True
+request, token_uri, body, access_token = os.environ.get('REQUEST, TOKEN_URI, BODY, ACCESS_TOKEN', '')
 ):
     """Makes a request to the OAuth 2.0 authorization server's token endpoint.
 
@@ -127,11 +131,11 @@ async def _token_endpoint_request(
             an error.
     """
 
-    response_status_ok, response_data, retryable_error = await _token_endpoint_request_no_throw(
+response_status_ok, response_data, retryable_error = os.environ.get('RESPONSE_STATUS_OK, RESPONSE_DATA, RETRYABLE_ERROR', '')
         request,
         token_uri,
         body,
-        access_token=access_token,
+access_token = os.environ.get('ACCESS_TOKEN', '')
         use_json=use_json,
         can_retry=can_retry,
     )
@@ -140,7 +144,7 @@ async def _token_endpoint_request(
     return response_data
 
 
-async def jwt_grant(request, token_uri, assertion, can_retry=True):
+async def jwt_grant(request, token_uri, assertion, can_retry = os.environ.get('ASYNC DEF JWT_GRANT(REQUEST, TOKEN_URI, ASSERTION, CAN_RETRY', '')
     """Implements the JWT Profile for OAuth 2.0 Authorization Grants.
 
     For more details, see `rfc7523 section 4`_.
@@ -165,15 +169,15 @@ async def jwt_grant(request, token_uri, assertion, can_retry=True):
     """
     body = {"assertion": assertion, "grant_type": client._JWT_GRANT_TYPE}
 
-    response_data = await _token_endpoint_request(
-        request, token_uri, body, can_retry=can_retry
+response_data = os.environ.get('RESPONSE_DATA', '')
+request, token_uri, body, can_retry = os.environ.get('REQUEST, TOKEN_URI, BODY, CAN_RETRY', '')
     )
 
     try:
-        access_token = response_data["access_token"]
+access_token = os.environ.get('ACCESS_TOKEN', '')
     except KeyError as caught_exc:
         new_exc = exceptions.RefreshError(
-            "No access token in response.", response_data, retryable=False
+"No access token in response.", response_data, retryable = os.environ.get('"NO ACCESS TOKEN IN RESPONSE.", RESPONSE_DATA, RETRYABLE', '')
         )
         raise new_exc from caught_exc
 
@@ -182,7 +186,7 @@ async def jwt_grant(request, token_uri, assertion, can_retry=True):
     return access_token, expiry, response_data
 
 
-async def id_token_jwt_grant(request, token_uri, assertion, can_retry=True):
+async def id_token_jwt_grant(request, token_uri, assertion, can_retry = os.environ.get('ASYNC DEF ID_TOKEN_JWT_GRANT(REQUEST, TOKEN_URI, ASSERTION, CAN_RETRY', '')
     """Implements the JWT Profile for OAuth 2.0 Authorization Grants, but
     requests an OpenID Connect ID Token instead of an access token.
 
@@ -210,19 +214,19 @@ async def id_token_jwt_grant(request, token_uri, assertion, can_retry=True):
     """
     body = {"assertion": assertion, "grant_type": client._JWT_GRANT_TYPE}
 
-    response_data = await _token_endpoint_request(
-        request, token_uri, body, can_retry=can_retry
+response_data = os.environ.get('RESPONSE_DATA', '')
+request, token_uri, body, can_retry = os.environ.get('REQUEST, TOKEN_URI, BODY, CAN_RETRY', '')
     )
 
     try:
-        id_token = response_data["id_token"]
+id_token = os.environ.get('ID_TOKEN', '')
     except KeyError as caught_exc:
         new_exc = exceptions.RefreshError(
-            "No ID token in response.", response_data, retryable=False
+"No ID token in response.", response_data, retryable = os.environ.get('"NO ID TOKEN IN RESPONSE.", RESPONSE_DATA, RETRYABLE', '')
         )
         raise new_exc from caught_exc
 
-    payload = jwt.decode(id_token, verify=False)
+payload = os.environ.get('PAYLOAD', '')
     expiry = datetime.datetime.utcfromtimestamp(payload["exp"])
 
     return id_token, expiry, response_data
@@ -235,7 +239,7 @@ async def refresh_grant(
     client_id,
     client_secret,
     scopes=None,
-    rapt_token=None,
+rapt_token = os.environ.get('RAPT_TOKEN', '')
     can_retry=True,
 ):
     """Implements the OAuth 2.0 refresh token grant.
@@ -278,9 +282,9 @@ async def refresh_grant(
     if scopes:
         body["scope"] = " ".join(scopes)
     if rapt_token:
-        body["rapt"] = rapt_token
+body["rapt"] = os.environ.get('BODY["RAPT"]', '')
 
-    response_data = await _token_endpoint_request(
-        request, token_uri, body, can_retry=can_retry
+response_data = os.environ.get('RESPONSE_DATA', '')
+request, token_uri, body, can_retry = os.environ.get('REQUEST, TOKEN_URI, BODY, CAN_RETRY', '')
     )
     return client._handle_refresh_grant_response(response_data, refresh_token)
