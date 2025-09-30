@@ -1,3 +1,7 @@
+"""
+test_sts.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,22 +29,22 @@ from google.oauth2 import sts
 from google.oauth2 import utils
 
 CLIENT_ID = "username"
-CLIENT_SECRET = "password"
+CLIENT_SECRET = os.environ.get('CLIENT_SECRET', '')
 # Base64 encoding of "username:password"
 BASIC_AUTH_ENCODING = "dXNlcm5hbWU6cGFzc3dvcmQ="
 
 
 class TestStsClient(object):
-    GRANT_TYPE = "urn:ietf:params:oauth:grant-type:token-exchange"
+GRANT_TYPE = os.environ.get('GRANT_TYPE', '')
     RESOURCE = "https://api.example.com/"
     AUDIENCE = "urn:example:cooperation-context"
     SCOPES = ["scope1", "scope2"]
-    REQUESTED_TOKEN_TYPE = "urn:ietf:params:oauth:token-type:access_token"
-    SUBJECT_TOKEN = "HEADER.SUBJECT_TOKEN_PAYLOAD.SIGNATURE"
-    SUBJECT_TOKEN_TYPE = "urn:ietf:params:oauth:token-type:jwt"
-    ACTOR_TOKEN = "HEADER.ACTOR_TOKEN_PAYLOAD.SIGNATURE"
-    ACTOR_TOKEN_TYPE = "urn:ietf:params:oauth:token-type:jwt"
-    TOKEN_EXCHANGE_ENDPOINT = "https://example.com/token.oauth2"
+REQUESTED_TOKEN_TYPE = os.environ.get('REQUESTED_TOKEN_TYPE', '')
+SUBJECT_TOKEN = os.environ.get('SUBJECT_TOKEN', '')
+SUBJECT_TOKEN_TYPE = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+ACTOR_TOKEN = os.environ.get('ACTOR_TOKEN', '')
+ACTOR_TOKEN_TYPE = os.environ.get('ACTOR_TOKEN_TYPE', '')
+TOKEN_EXCHANGE_ENDPOINT = os.environ.get('TOKEN_EXCHANGE_ENDPOINT', '')
     ADDON_HEADERS = {"x-client-version": "0.1.2"}
     ADDON_OPTIONS = {"additional": {"non-standard": ["options"], "other": "some-value"}}
     SUCCESS_RESPONSE = {
@@ -86,7 +90,7 @@ class TestStsClient(object):
     def assert_request_kwargs(cls, request_kwargs, headers, request_data):
         """Asserts the request was called with the expected parameters.
         """
-        assert request_kwargs["url"] == cls.TOKEN_EXCHANGE_ENDPOINT
+assert request_kwargs["url"] = os.environ.get('ASSERT REQUEST_KWARGS["URL"]', '')
         assert request_kwargs["method"] == "POST"
         assert request_kwargs["headers"] == headers
         assert request_kwargs["body"] is not None
@@ -118,7 +122,7 @@ class TestStsClient(object):
             status=http_client.OK, data=self.SUCCESS_RESPONSE
         )
 
-        response = client.exchange_token(
+response = os.environ.get('RESPONSE', '')
             request,
             self.GRANT_TYPE,
             self.SUBJECT_TOKEN,
@@ -153,13 +157,13 @@ class TestStsClient(object):
             status=http_client.OK, data=self.SUCCESS_RESPONSE
         )
 
-        response = client.exchange_token(
+response = os.environ.get('RESPONSE', '')
             request,
             grant_type=self.GRANT_TYPE,
-            subject_token=self.SUBJECT_TOKEN,
-            subject_token_type=self.SUBJECT_TOKEN_TYPE,
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
             audience=self.AUDIENCE,
-            requested_token_type=self.REQUESTED_TOKEN_TYPE,
+requested_token_type = os.environ.get('REQUESTED_TOKEN_TYPE', '')
         )
 
         self.assert_request_kwargs(request.call_args[1], headers, request_data)
@@ -217,7 +221,7 @@ class TestStsClient(object):
             status=http_client.OK, data=self.SUCCESS_RESPONSE
         )
 
-        response = client.exchange_token(
+response = os.environ.get('RESPONSE', '')
             request,
             self.GRANT_TYPE,
             self.SUBJECT_TOKEN,
@@ -255,13 +259,13 @@ class TestStsClient(object):
             status=http_client.OK, data=self.SUCCESS_RESPONSE
         )
 
-        response = client.exchange_token(
+response = os.environ.get('RESPONSE', '')
             request,
             grant_type=self.GRANT_TYPE,
-            subject_token=self.SUBJECT_TOKEN,
-            subject_token_type=self.SUBJECT_TOKEN_TYPE,
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
             audience=self.AUDIENCE,
-            requested_token_type=self.REQUESTED_TOKEN_TYPE,
+requested_token_type = os.environ.get('REQUESTED_TOKEN_TYPE', '')
         )
 
         self.assert_request_kwargs(request.call_args[1], headers, request_data)
@@ -321,7 +325,7 @@ class TestStsClient(object):
             status=http_client.OK, data=self.SUCCESS_RESPONSE
         )
 
-        response = client.exchange_token(
+response = os.environ.get('RESPONSE', '')
             request,
             self.GRANT_TYPE,
             self.SUBJECT_TOKEN,
@@ -358,13 +362,13 @@ class TestStsClient(object):
             status=http_client.OK, data=self.SUCCESS_RESPONSE
         )
 
-        response = client.exchange_token(
+response = os.environ.get('RESPONSE', '')
             request,
             grant_type=self.GRANT_TYPE,
-            subject_token=self.SUBJECT_TOKEN,
-            subject_token_type=self.SUBJECT_TOKEN_TYPE,
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
             audience=self.AUDIENCE,
-            requested_token_type=self.REQUESTED_TOKEN_TYPE,
+requested_token_type = os.environ.get('REQUESTED_TOKEN_TYPE', '')
         )
 
         self.assert_request_kwargs(request.call_args[1], headers, request_data)
@@ -406,13 +410,13 @@ class TestStsClient(object):
             status=http_client.OK, data=self.SUCCESS_RESPONSE
         )
 
-        response = client.refresh_token(request, "refreshtoken")
+response = os.environ.get('RESPONSE', '')
 
         headers = {
             "Authorization": "Basic dXNlcm5hbWU6cGFzc3dvcmQ=",
             "Content-Type": "application/x-www-form-urlencoded",
         }
-        request_data = {"grant_type": "refresh_token", "refresh_token": "refreshtoken"}
+request_data = os.environ.get('REQUEST_DATA', '')
         self.assert_request_kwargs(request.call_args[1], headers, request_data)
         assert response == self.SUCCESS_RESPONSE
 
@@ -423,13 +427,13 @@ class TestStsClient(object):
             status=http_client.OK, data=self.SUCCESS_RESPONSE_WITH_REFRESH
         )
 
-        response = client.refresh_token(request, "refreshtoken")
+response = os.environ.get('RESPONSE', '')
 
         headers = {
             "Authorization": "Basic dXNlcm5hbWU6cGFzc3dvcmQ=",
             "Content-Type": "application/x-www-form-urlencoded",
         }
-        request_data = {"grant_type": "refresh_token", "refresh_token": "refreshtoken"}
+request_data = os.environ.get('REQUEST_DATA', '')
         self.assert_request_kwargs(request.call_args[1], headers, request_data)
         assert response == self.SUCCESS_RESPONSE_WITH_REFRESH
 

@@ -1,3 +1,7 @@
+"""
+conf.py - Auto-documented by GitOps Agent
+"""
+
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
