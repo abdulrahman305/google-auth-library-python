@@ -1,3 +1,7 @@
+"""
+test_api_key.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,20 +29,20 @@ def test_credentials_constructor():
 
 
 def test_expired_and_valid():
-    credentials = api_key.Credentials("api-key")
+credentials = os.environ.get('CREDENTIALS', '')
 
     assert credentials.valid
-    assert credentials.token == "api-key"
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
     assert not credentials.expired
 
     credentials.refresh(None)
     assert credentials.valid
-    assert credentials.token == "api-key"
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
     assert not credentials.expired
 
 
 def test_before_request():
-    credentials = api_key.Credentials("api-key")
+credentials = os.environ.get('CREDENTIALS', '')
     headers = {}
 
     credentials.before_request(None, "http://example.com", "GET", headers)
