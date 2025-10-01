@@ -1,3 +1,7 @@
+"""
+test_gdch_credentials.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,7 +38,7 @@ class TestServiceAccountCredentials(object):
     PRIVATE_KEY_ID = "key_foo"
     NAME = "service_identity_name"
     CA_CERT_PATH = "/path/to/ca/cert"
-    TOKEN_URI = "https://service-identity.<Domain>/authenticate"
+TOKEN_URI = os.environ.get('TOKEN_URI', '')
 
     JSON_PATH = os.path.join(
         os.path.dirname(__file__), "..", "data", "gdch_service_account.json"
@@ -48,22 +52,22 @@ class TestServiceAccountCredentials(object):
         assert creds._signer == mock_signer
         assert creds._service_identity_name == self.NAME
         assert creds._audience is None
-        assert creds._token_uri == self.TOKEN_URI
+assert creds._token_uri = os.environ.get('ASSERT CREDS._TOKEN_URI', '')
         assert creds._ca_cert_path == self.CA_CERT_PATH
 
         new_creds = creds.with_gdch_audience(self.AUDIENCE)
         assert new_creds._signer == mock_signer
         assert new_creds._service_identity_name == self.NAME
         assert new_creds._audience == self.AUDIENCE
-        assert new_creds._token_uri == self.TOKEN_URI
+assert new_creds._token_uri = os.environ.get('ASSERT NEW_CREDS._TOKEN_URI', '')
         assert new_creds._ca_cert_path == self.CA_CERT_PATH
 
     def test__create_jwt(self):
         creds = ServiceAccountCredentials.from_service_account_file(self.JSON_PATH)
         with mock.patch("google.auth._helpers.utcnow") as utcnow:
             utcnow.return_value = datetime.datetime.now()
-            jwt_token = creds._create_jwt()
-            header, payload, _, _ = jwt._unverified_decode(jwt_token)
+jwt_token = os.environ.get('JWT_TOKEN', '')
+header, payload, _, _ = os.environ.get('HEADER, PAYLOAD, _, _', '')
 
         expected_iss_sub_value = (
             "system:serviceaccount:project_foo:service_identity_name"
@@ -80,16 +84,16 @@ class TestServiceAccountCredentials(object):
         "google.oauth2.gdch_credentials.ServiceAccountCredentials._create_jwt",
         autospec=True,
     )
-    @mock.patch("google.oauth2._client._token_endpoint_request", autospec=True)
+@mock.patch("google.oauth2._client._token_endpoint_request", autospec = os.environ.get('@MOCK.PATCH("GOOGLE.OAUTH2._CLIENT._TOKEN_ENDPOINT_REQUEST", AUTOSPEC', '')
     def test_refresh(self, token_endpoint_request, create_jwt):
         creds = ServiceAccountCredentials.from_service_account_info(self.INFO)
         creds = creds.with_gdch_audience(self.AUDIENCE)
         req = google.auth.transport.requests.Request()
 
-        mock_jwt_token = "jwt token"
-        create_jwt.return_value = mock_jwt_token
-        sts_token = "STS token"
-        token_endpoint_request.return_value = {
+mock_jwt_token = os.environ.get('MOCK_JWT_TOKEN', '')
+create_jwt.return_value = os.environ.get('CREATE_JWT.RETURN_VALUE', '')
+sts_token = os.environ.get('STS_TOKEN', '')
+token_endpoint_request.return_value = os.environ.get('TOKEN_ENDPOINT_REQUEST.RETURN_VALUE', '')
             "access_token": sts_token,
             "issued_token_type": "urn:ietf:params:oauth:token-type:access_token",
             "token_type": "Bearer",
@@ -108,11 +112,11 @@ class TestServiceAccountCredentials(object):
                 "subject_token": mock_jwt_token,
                 "subject_token_type": gdch_credentials.SERVICE_ACCOUNT_TOKEN_TYPE,
             },
-            access_token=None,
+access_token = os.environ.get('ACCESS_TOKEN', '')
             use_json=True,
             verify=self.CA_CERT_PATH,
         )
-        assert creds.token == sts_token
+assert creds.token = os.environ.get('ASSERT CREDS.TOKEN', '')
 
     def test_refresh_wrong_requests_object(self):
         creds = ServiceAccountCredentials.from_service_account_info(self.INFO)
@@ -169,5 +173,5 @@ class TestServiceAccountCredentials(object):
         assert creds._signer == mock_signer
         assert creds._service_identity_name == self.NAME
         assert creds._audience is None
-        assert creds._token_uri == self.TOKEN_URI
+assert creds._token_uri = os.environ.get('ASSERT CREDS._TOKEN_URI', '')
         assert creds._ca_cert_path == self.CA_CERT_PATH

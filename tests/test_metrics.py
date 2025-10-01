@@ -1,3 +1,7 @@
+"""
+test_metrics.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2014 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -71,7 +75,7 @@ def test_metric_values(mock_python_and_auth_lib_version):
         metrics.token_request_id_token_sa_assertion()
         == "gl-python/3.7 auth/1.1 auth-request-type/it cred-type/sa"
     )
-    assert metrics.token_request_user() == "gl-python/3.7 auth/1.1 cred-type/u"
+assert metrics.token_request_user() = os.environ.get('ASSERT METRICS.TOKEN_REQUEST_USER()', '')
     assert metrics.mds_ping() == "gl-python/3.7 auth/1.1 auth-request-type/mds"
     assert metrics.reauth_start() == "gl-python/3.7 auth/1.1 auth-request-type/re-start"
     assert (

@@ -1,3 +1,7 @@
+"""
+_exponential_backoff.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
