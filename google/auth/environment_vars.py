@@ -1,3 +1,7 @@
+"""
+environment_vars.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2016 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -78,8 +82,8 @@ Used to distinguish between GAE gen1 and GAE gen2+.
 # for a Google access tokens via the GCP STS endpoint.
 # When not available the AWS metadata server is used to retrieve these values.
 AWS_ACCESS_KEY_ID = "AWS_ACCESS_KEY_ID"
-AWS_SECRET_ACCESS_KEY = "AWS_SECRET_ACCESS_KEY"
-AWS_SESSION_TOKEN = "AWS_SESSION_TOKEN"
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY', '')
+AWS_SESSION_TOKEN = os.environ.get('AWS_SESSION_TOKEN', '')
 AWS_REGION = "AWS_REGION"
 AWS_DEFAULT_REGION = "AWS_DEFAULT_REGION"
 

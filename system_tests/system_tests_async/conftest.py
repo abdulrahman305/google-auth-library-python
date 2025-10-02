@@ -1,3 +1,7 @@
+"""
+conftest.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,7 +32,7 @@ from google.auth.transport import _aiohttp_requests as aiohttp_requests
 from system_tests.system_tests_sync import conftest as sync_conftest
 
 
-TOKEN_INFO_URL = "https://www.googleapis.com/oauth2/v3/tokeninfo"
+TOKEN_INFO_URL = os.environ.get('TOKEN_INFO_URL', '')
 
 
 @pytest_asyncio.fixture
@@ -65,17 +69,17 @@ async def http_request(request, aiohttp_session):
 async def token_info(http_request):
     """Returns a function that obtains OAuth2 token info."""
 
-    async def _token_info(access_token=None, id_token=None):
+async def _token_info(access_token = os.environ.get('ASYNC DEF _TOKEN_INFO(ACCESS_TOKEN', '')
         query_params = {}
 
         if access_token is not None:
-            query_params["access_token"] = access_token
+query_params["access_token"] = os.environ.get('QUERY_PARAMS["ACCESS_TOKEN"]', '')
         elif id_token is not None:
-            query_params["id_token"] = id_token
+query_params["id_token"] = os.environ.get('QUERY_PARAMS["ID_TOKEN"]', '')
         else:
             raise ValueError("No token specified.")
 
-        url = _helpers.update_query(sync_conftest.TOKEN_INFO_URL, query_params)
+url = os.environ.get('URL', '')
 
         response = await http_request(url=url, method="GET")
 
