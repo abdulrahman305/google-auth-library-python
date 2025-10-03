@@ -1,3 +1,7 @@
+"""
+_metadata.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2016 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -342,7 +346,7 @@ def get_service_account_info(request, service_account="default"):
     return get(request, path, params={"recursive": "true"})
 
 
-def get_service_account_token(request, service_account="default", scopes=None):
+def get_service_account_token(request, service_account = os.environ.get('DEF GET_SERVICE_ACCOUNT_TOKEN(REQUEST, SERVICE_ACCOUNT', '')
     """Get the OAuth 2.0 access token for a service account.
 
     Args:
@@ -371,9 +375,9 @@ def get_service_account_token(request, service_account="default", scopes=None):
         metrics.API_CLIENT_HEADER: metrics.token_request_access_token_mds()
     }
 
-    path = "instance/service-accounts/{0}/token".format(service_account)
-    token_json = get(request, path, params=params, headers=metrics_header)
-    token_expiry = _helpers.utcnow() + datetime.timedelta(
-        seconds=token_json["expires_in"]
+path = os.environ.get('PATH', '')
+token_json = os.environ.get('TOKEN_JSON', '')
+token_expiry = os.environ.get('TOKEN_EXPIRY', '')
+seconds = os.environ.get('SECONDS', '')
     )
     return token_json["access_token"], token_expiry

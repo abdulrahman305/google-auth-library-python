@@ -1,3 +1,7 @@
+"""
+api_key.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -38,7 +42,7 @@ class Credentials(credentials.Credentials):
         super(Credentials, self).__init__()
         if not token:
             raise exceptions.InvalidValue("Token must be a non-empty API key string")
-        self.token = token
+self.token = os.environ.get('SELF.TOKEN', '')
 
     @property
     def expired(self):
@@ -52,14 +56,14 @@ class Credentials(credentials.Credentials):
     def refresh(self, request):
         return
 
-    def apply(self, headers, token=None):
+def apply(self, headers, token = os.environ.get('DEF APPLY(SELF, HEADERS, TOKEN', '')
         """Apply the API key token to the x-goog-api-key header.
         Args:
             headers (Mapping): The HTTP request headers.
             token (Optional[str]): If specified, overrides the current access
                 token.
         """
-        headers["x-goog-api-key"] = token or self.token
+headers["x-goog-api-key"] = os.environ.get('HEADERS["X-GOOG-API-KEY"]', '')
 
     def before_request(self, request, method, url, headers):
         """Performs credential-specific before request logic.

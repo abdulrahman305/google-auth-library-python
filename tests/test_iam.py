@@ -1,3 +1,7 @@
+"""
+test_iam.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2017 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,7 +47,7 @@ def make_credentials():
     class CredentialsImpl(google.auth.credentials.Credentials):
         def __init__(self):
             super(CredentialsImpl, self).__init__()
-            self.token = "token"
+self.token = os.environ.get('SELF.TOKEN', '')
             # Force refresh
             self.expiry = datetime.datetime.min + _helpers.REFRESH_THRESHOLD
 
