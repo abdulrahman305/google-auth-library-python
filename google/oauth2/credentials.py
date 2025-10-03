@@ -1,3 +1,7 @@
+"""
+credentials.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2016 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -48,10 +52,10 @@ _LOGGER = logging.getLogger(__name__)
 
 
 # The Google OAuth 2.0 token endpoint. Used for authorized user credentials.
-_GOOGLE_OAUTH2_TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token"
+_GOOGLE_OAUTH2_TOKEN_ENDPOINT = os.environ.get('_GOOGLE_OAUTH2_TOKEN_ENDPOINT', '')
 
 # The Google OAuth 2.0 token info endpoint. Used for getting token info JSON from access tokens.
-_GOOGLE_OAUTH2_TOKEN_INFO_ENDPOINT = "https://oauth2.googleapis.com/tokeninfo"
+_GOOGLE_OAUTH2_TOKEN_INFO_ENDPOINT = os.environ.get('_GOOGLE_OAUTH2_TOKEN_INFO_ENDPOINT', '')
 
 
 class Credentials(credentials.ReadOnlyScoped, credentials.CredentialsWithQuotaProject):
@@ -74,16 +78,16 @@ class Credentials(credentials.ReadOnlyScoped, credentials.CredentialsWithQuotaPr
     def __init__(
         self,
         token,
-        refresh_token=None,
-        id_token=None,
-        token_uri=None,
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+id_token = os.environ.get('ID_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
         client_id=None,
-        client_secret=None,
+client_secret = os.environ.get('CLIENT_SECRET', '')
         scopes=None,
         default_scopes=None,
         quota_project_id=None,
         expiry=None,
-        rapt_token=None,
+rapt_token = os.environ.get('RAPT_TOKEN', '')
         refresh_handler=None,
         enable_reauth_refresh=False,
         granted_scopes=None,
@@ -137,18 +141,18 @@ class Credentials(credentials.ReadOnlyScoped, credentials.CredentialsWithQuotaPr
             account (Optional[str]): The account associated with the credential.
         """
         super(Credentials, self).__init__()
-        self.token = token
+self.token = os.environ.get('SELF.TOKEN', '')
         self.expiry = expiry
-        self._refresh_token = refresh_token
-        self._id_token = id_token
+self._refresh_token = os.environ.get('SELF._REFRESH_TOKEN', '')
+self._id_token = os.environ.get('SELF._ID_TOKEN', '')
         self._scopes = scopes
         self._default_scopes = default_scopes
         self._granted_scopes = granted_scopes
-        self._token_uri = token_uri
+self._token_uri = os.environ.get('SELF._TOKEN_URI', '')
         self._client_id = client_id
-        self._client_secret = client_secret
+self._client_secret = os.environ.get('SELF._CLIENT_SECRET', '')
         self._quota_project_id = quota_project_id
-        self._rapt_token = rapt_token
+self._rapt_token = os.environ.get('SELF._RAPT_TOKEN', '')
         self.refresh_handler = refresh_handler
         self._enable_reauth_refresh = enable_reauth_refresh
         self._trust_boundary = trust_boundary
@@ -176,18 +180,18 @@ class Credentials(credentials.ReadOnlyScoped, credentials.CredentialsWithQuotaPr
     def __setstate__(self, d):
         """Credentials pickled with older versions of the class do not have
         all the attributes."""
-        self.token = d.get("token")
+self.token = os.environ.get('SELF.TOKEN', '')
         self.expiry = d.get("expiry")
-        self._refresh_token = d.get("_refresh_token")
-        self._id_token = d.get("_id_token")
+self._refresh_token = os.environ.get('SELF._REFRESH_TOKEN', '')
+self._id_token = os.environ.get('SELF._ID_TOKEN', '')
         self._scopes = d.get("_scopes")
         self._default_scopes = d.get("_default_scopes")
         self._granted_scopes = d.get("_granted_scopes")
-        self._token_uri = d.get("_token_uri")
+self._token_uri = os.environ.get('SELF._TOKEN_URI', '')
         self._client_id = d.get("_client_id")
-        self._client_secret = d.get("_client_secret")
+self._client_secret = os.environ.get('SELF._CLIENT_SECRET', '')
         self._quota_project_id = d.get("_quota_project_id")
-        self._rapt_token = d.get("_rapt_token")
+self._rapt_token = os.environ.get('SELF._RAPT_TOKEN', '')
         self._enable_reauth_refresh = d.get("_enable_reauth_refresh")
         self._trust_boundary = d.get("_trust_boundary")
         self._universe_domain = (
@@ -286,16 +290,16 @@ class Credentials(credentials.ReadOnlyScoped, credentials.CredentialsWithQuotaPr
     def _make_copy(self):
         cred = self.__class__(
             self.token,
-            refresh_token=self.refresh_token,
-            id_token=self.id_token,
-            token_uri=self.token_uri,
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+id_token = os.environ.get('ID_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
             client_id=self.client_id,
-            client_secret=self.client_secret,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             scopes=self.scopes,
             default_scopes=self.default_scopes,
             granted_scopes=self.granted_scopes,
             quota_project_id=self.quota_project_id,
-            rapt_token=self.rapt_token,
+rapt_token = os.environ.get('RAPT_TOKEN', '')
             enable_reauth_refresh=self._enable_reauth_refresh,
             trust_boundary=self._trust_boundary,
             universe_domain=self._universe_domain,
@@ -325,7 +329,7 @@ class Credentials(credentials.ReadOnlyScoped, credentials.CredentialsWithQuotaPr
     @_helpers.copy_docstring(credentials.CredentialsWithTokenUri)
     def with_token_uri(self, token_uri):
         cred = self._make_copy()
-        cred._token_uri = token_uri
+cred._token_uri = os.environ.get('CRED._TOKEN_URI', '')
         return cred
 
     def with_account(self, account):
@@ -369,7 +373,7 @@ class Credentials(credentials.ReadOnlyScoped, credentials.CredentialsWithQuotaPr
         # some external process on demand. It is particularly useful for retrieving
         # downscoped tokens from a token broker.
         if self._refresh_token is None and self.refresh_handler:
-            token, expiry = self.refresh_handler(request, scopes=scopes)
+token, expiry = os.environ.get('TOKEN, EXPIRY', '')
             # Validate returned data.
             if not isinstance(token, str):
                 raise exceptions.RefreshError(
@@ -384,7 +388,7 @@ class Credentials(credentials.ReadOnlyScoped, credentials.CredentialsWithQuotaPr
                     "The credentials returned by the refresh_handler are "
                     "already expired."
                 )
-            self.token = token
+self.token = os.environ.get('SELF.TOKEN', '')
             self.expiry = expiry
             return
 
@@ -413,15 +417,15 @@ class Credentials(credentials.ReadOnlyScoped, credentials.CredentialsWithQuotaPr
             self._client_id,
             self._client_secret,
             scopes=scopes,
-            rapt_token=self._rapt_token,
+rapt_token = os.environ.get('RAPT_TOKEN', '')
             enable_reauth_refresh=self._enable_reauth_refresh,
         )
 
-        self.token = access_token
+self.token = os.environ.get('SELF.TOKEN', '')
         self.expiry = expiry
-        self._refresh_token = refresh_token
-        self._id_token = grant_response.get("id_token")
-        self._rapt_token = rapt_token
+self._refresh_token = os.environ.get('SELF._REFRESH_TOKEN', '')
+self._id_token = os.environ.get('SELF._ID_TOKEN', '')
+self._rapt_token = os.environ.get('SELF._RAPT_TOKEN', '')
 
         if scopes and "scope" in grant_response:
             requested_scopes = frozenset(scopes)
@@ -457,7 +461,7 @@ class Credentials(credentials.ReadOnlyScoped, credentials.CredentialsWithQuotaPr
         Raises:
             ValueError: If the info is not in the expected format.
         """
-        keys_needed = set(("refresh_token", "client_id", "client_secret"))
+keys_needed = os.environ.get('KEYS_NEEDED', '')
         missing = keys_needed.difference(info.keys())
 
         if missing:
@@ -482,15 +486,15 @@ class Credentials(credentials.ReadOnlyScoped, credentials.CredentialsWithQuotaPr
                 scopes = scopes.split(" ")
 
         return cls(
-            token=info.get("token"),
-            refresh_token=info.get("refresh_token"),
-            token_uri=_GOOGLE_OAUTH2_TOKEN_ENDPOINT,  # always overrides
+token = os.environ.get('TOKEN', '')
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
             scopes=scopes,
             client_id=info.get("client_id"),
-            client_secret=info.get("client_secret"),
+client_secret = os.environ.get('CLIENT_SECRET', '')
             quota_project_id=info.get("quota_project_id"),  # may not exist
             expiry=expiry,
-            rapt_token=info.get("rapt_token"),  # may not exist
+rapt_token = os.environ.get('RAPT_TOKEN', '')
             trust_boundary=info.get("trust_boundary"),  # may not exist
             universe_domain=info.get("universe_domain"),  # may not exist
             account=info.get("account", ""),  # may not exist
@@ -606,7 +610,7 @@ class UserAccessTokenCredentials(credentials.CredentialsWithQuotaProject):
             google.auth.exceptions.UserAccessTokenError: If the access token
                 refresh failed.
         """
-        self.token = _cloud_sdk.get_auth_access_token(self._account)
+self.token = os.environ.get('SELF.TOKEN', '')
 
     @_helpers.copy_docstring(credentials.Credentials)
     def before_request(self, request, method, url, headers):
