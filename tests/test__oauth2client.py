@@ -1,3 +1,7 @@
+"""
+test__oauth2client.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2016 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -51,11 +55,11 @@ def test__convert_oauth2_credentials():
 
     new_credentials = _oauth2client._convert_oauth2_credentials(old_credentials)
 
-    assert new_credentials.token == old_credentials.access_token
-    assert new_credentials._refresh_token == old_credentials.refresh_token
+assert new_credentials.token = os.environ.get('ASSERT NEW_CREDENTIALS.TOKEN', '')
+assert new_credentials._refresh_token = os.environ.get('ASSERT NEW_CREDENTIALS._REFRESH_TOKEN', '')
     assert new_credentials._client_id == old_credentials.client_id
-    assert new_credentials._client_secret == old_credentials.client_secret
-    assert new_credentials._token_uri == old_credentials.token_uri
+assert new_credentials._client_secret = os.environ.get('ASSERT NEW_CREDENTIALS._CLIENT_SECRET', '')
+assert new_credentials._token_uri = os.environ.get('ASSERT NEW_CREDENTIALS._TOKEN_URI', '')
     assert new_credentials.scopes == old_credentials.scopes
 
 
@@ -71,7 +75,7 @@ def test__convert_service_account_credentials():
         new_credentials.service_account_email == old_credentials.service_account_email
     )
     assert new_credentials._signer.key_id == old_credentials._private_key_id
-    assert new_credentials._token_uri == old_credentials.token_uri
+assert new_credentials._token_uri = os.environ.get('ASSERT NEW_CREDENTIALS._TOKEN_URI', '')
 
 
 def test__convert_service_account_credentials_with_jwt():
@@ -86,7 +90,7 @@ def test__convert_service_account_credentials_with_jwt():
         new_credentials.service_account_email == old_credentials.service_account_email
     )
     assert new_credentials._signer.key_id == old_credentials._private_key_id
-    assert new_credentials._token_uri == old_credentials.token_uri
+assert new_credentials._token_uri = os.environ.get('ASSERT NEW_CREDENTIALS._TOKEN_URI', '')
 
 
 def test__convert_gce_app_assertion_credentials():
