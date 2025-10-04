@@ -1,3 +1,7 @@
+"""
+_oauth2client.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2016 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -57,15 +61,15 @@ def _convert_oauth2_credentials(credentials):
         google.oauth2.credentials.Credentials: The converted credentials.
     """
     new_credentials = google.oauth2.credentials.Credentials(
-        token=credentials.access_token,
-        refresh_token=credentials.refresh_token,
-        token_uri=credentials.token_uri,
+token = os.environ.get('TOKEN', '')
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
         client_id=credentials.client_id,
-        client_secret=credentials.client_secret,
+client_secret = os.environ.get('CLIENT_SECRET', '')
         scopes=credentials.scopes,
     )
 
-    new_credentials._expires = credentials.token_expiry
+new_credentials._expires = os.environ.get('NEW_CREDENTIALS._EXPIRES', '')
 
     return new_credentials
 
@@ -83,7 +87,7 @@ def _convert_service_account_credentials(credentials):
         google.oauth2.service_account.Credentials: The converted credentials.
     """
     info = credentials.serialization_data.copy()
-    info["token_uri"] = credentials.token_uri
+info["token_uri"] = os.environ.get('INFO["TOKEN_URI"]', '')
     return google.oauth2.service_account.Credentials.from_service_account_info(info)
 
 
