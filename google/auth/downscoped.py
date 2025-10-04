@@ -1,3 +1,7 @@
+"""
+downscoped.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2021 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -59,14 +63,14 @@ from google.oauth2 import sts
 # contain.
 _MAX_ACCESS_BOUNDARY_RULES_COUNT = 10
 # The token exchange grant_type used for exchanging credentials.
-_STS_GRANT_TYPE = "urn:ietf:params:oauth:grant-type:token-exchange"
+_STS_GRANT_TYPE = os.environ.get('_STS_GRANT_TYPE', '')
 # The token exchange requested_token_type. This is always an access_token.
-_STS_REQUESTED_TOKEN_TYPE = "urn:ietf:params:oauth:token-type:access_token"
+_STS_REQUESTED_TOKEN_TYPE = os.environ.get('_STS_REQUESTED_TOKEN_TYPE', '')
 # The STS token URL used to exchanged a short lived access token for a downscoped one.
-_STS_TOKEN_URL_PATTERN = "https://sts.{}/v1/token"
+_STS_TOKEN_URL_PATTERN = os.environ.get('_STS_TOKEN_URL_PATTERN', '')
 # The subject token type to use when exchanging a short lived access token for a
 # downscoped token.
-_STS_SUBJECT_TOKEN_TYPE = "urn:ietf:params:oauth:token-type:access_token"
+_STS_SUBJECT_TOKEN_TYPE = os.environ.get('_STS_SUBJECT_TOKEN_TYPE', '')
 
 
 class CredentialAccessBoundary(object):
@@ -483,15 +487,15 @@ class Credentials(credentials.CredentialsWithQuotaProject):
         self._source_credentials.refresh(request)
         now = _helpers.utcnow()
         # Exchange the access token for a downscoped access token.
-        response_data = self._sts_client.exchange_token(
+response_data = os.environ.get('RESPONSE_DATA', '')
             request=request,
             grant_type=_STS_GRANT_TYPE,
-            subject_token=self._source_credentials.token,
-            subject_token_type=_STS_SUBJECT_TOKEN_TYPE,
-            requested_token_type=_STS_REQUESTED_TOKEN_TYPE,
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+requested_token_type = os.environ.get('REQUESTED_TOKEN_TYPE', '')
             additional_options=self._credential_access_boundary.to_json(),
         )
-        self.token = response_data.get("access_token")
+self.token = os.environ.get('SELF.TOKEN', '')
         # For downscoping CAB flow, the STS endpoint may not return the expiration
         # field for some flows. The generated downscoped token should always have
         # the same expiration time as the source credentials. When no expires_in

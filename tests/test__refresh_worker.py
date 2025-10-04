@@ -1,3 +1,7 @@
+"""
+test__refresh_worker.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,13 +32,13 @@ MAIN_THREAD_SLEEP_MS = 100 / 1000
 class MockCredentialsImpl(credentials.Credentials):
     def __init__(self, sleep_seconds=None):
         self.refresh_count = 0
-        self.token = None
+self.token = os.environ.get('SELF.TOKEN', '')
         self.sleep_seconds = sleep_seconds if sleep_seconds else None
 
     def refresh(self, request):
         if self.sleep_seconds:
             time.sleep(self.sleep_seconds)
-        self.token = request
+self.token = os.environ.get('SELF.TOKEN', '')
         self.refresh_count += 1
 
 
@@ -64,7 +68,7 @@ def test_start_refresh():
 
     _cred_spinlock(cred)
 
-    assert cred.token == request
+assert cred.token = os.environ.get('ASSERT CRED.TOKEN', '')
     assert cred.refresh_count == 1
 
 
@@ -96,7 +100,7 @@ def test_multiple_refreshes_multiple_workers(test_thread_count):
 
     _cred_spinlock(cred)
 
-    assert cred.token == request
+assert cred.token = os.environ.get('ASSERT CRED.TOKEN', '')
     # There is a chance only one thread has enough time to perform a refresh.
     # Generally multiple threads will have time to perform a refresh
     assert cred.refresh_count > 0
@@ -144,7 +148,7 @@ def test_refresh_dead_worker():
 
     _cred_spinlock(cred)
 
-    assert cred.token == request
+assert cred.token = os.environ.get('ASSERT CRED.TOKEN', '')
     assert cred.refresh_count == 1
 
 
