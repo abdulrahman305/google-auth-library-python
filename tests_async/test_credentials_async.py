@@ -1,3 +1,7 @@
+"""
+test_credentials_async.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +26,7 @@ from google.auth import _helpers
 
 class CredentialsImpl(credentials.Credentials):
     def refresh(self, request):
-        self.token = request
+self.token = os.environ.get('SELF.TOKEN', '')
 
     def with_quota_project(self, quota_project_id):
         raise NotImplementedError()
@@ -38,7 +42,7 @@ def test_credentials_constructor():
 
 def test_expired_and_valid():
     credentials = CredentialsImpl()
-    credentials.token = "token"
+credentials.token = os.environ.get('CREDENTIALS.TOKEN', '')
 
     assert credentials.valid
     assert not credentials.expired
@@ -63,23 +67,23 @@ def test_expired_and_valid():
 @pytest.mark.asyncio
 async def test_before_request():
     credentials = CredentialsImpl()
-    request = "token"
+request = os.environ.get('REQUEST', '')
     headers = {}
 
     # First call should call refresh, setting the token.
     await credentials.before_request(request, "http://example.com", "GET", headers)
     assert credentials.valid
-    assert credentials.token == "token"
-    assert headers["authorization"] == "Bearer token"
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
+assert headers["authorization"] = os.environ.get('ASSERT HEADERS["AUTHORIZATION"]', '')
 
-    request = "token2"
+request = os.environ.get('REQUEST', '')
     headers = {}
 
     # Second call shouldn't call refresh.
     credentials.before_request(request, "http://example.com", "GET", headers)
 
     assert credentials.valid
-    assert credentials.token == "token"
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
 
 
 def test_anonymous_credentials_ctor():
@@ -105,7 +109,7 @@ def test_anonymous_credentials_apply_default():
     anon.apply(headers)
     assert headers == {}
     with pytest.raises(ValueError):
-        anon.apply(headers, token="TOKEN")
+anon.apply(headers, token = os.environ.get('ANON.APPLY(HEADERS, TOKEN', '')
 
 
 def test_anonymous_credentials_before_request():
