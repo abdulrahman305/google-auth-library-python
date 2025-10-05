@@ -1,3 +1,7 @@
+"""
+metrics.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,8 +31,8 @@ API_CLIENT_HEADER = "x-goog-api-client"
 BYOID_HEADER_SECTION = "google-byoid-sdk"
 
 # Auth request type
-REQUEST_TYPE_ACCESS_TOKEN = "auth-request-type/at"
-REQUEST_TYPE_ID_TOKEN = "auth-request-type/it"
+REQUEST_TYPE_ACCESS_TOKEN = os.environ.get('REQUEST_TYPE_ACCESS_TOKEN', '')
+REQUEST_TYPE_ID_TOKEN = os.environ.get('REQUEST_TYPE_ID_TOKEN', '')
 REQUEST_TYPE_MDS_PING = "auth-request-type/mds"
 REQUEST_TYPE_REAUTH_START = "auth-request-type/re-start"
 REQUEST_TYPE_REAUTH_CONTINUE = "auth-request-type/re-cont"
