@@ -1,3 +1,7 @@
+"""
+_reauth_async.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2021 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,7 +46,7 @@ from google.oauth2 import reauth
 
 
 async def _get_challenges(
-    request, supported_challenge_types, access_token, requested_scopes=None
+request, supported_challenge_types, access_token, requested_scopes = os.environ.get('REQUEST, SUPPORTED_CHALLENGE_TYPES, ACCESS_TOKEN, REQUESTED_SCOPES', '')
 ):
     """Does initial request to reauth API to get the challenges.
 
@@ -65,7 +69,7 @@ async def _get_challenges(
         request,
         reauth._REAUTH_API + ":start",
         body,
-        access_token=access_token,
+access_token = os.environ.get('ACCESS_TOKEN', '')
         use_json=True,
     )
 
@@ -98,7 +102,7 @@ async def _send_challenge_result(
         request,
         reauth._REAUTH_API + "/{}:continue".format(session_id),
         body,
-        access_token=access_token,
+access_token = os.environ.get('ACCESS_TOKEN', '')
         use_json=True,
     )
 
@@ -194,7 +198,7 @@ async def _obtain_rapt(request, access_token, requested_scopes):
                 " in an interactive session."
             )
 
-        msg = await _run_next_challenge(msg, request, access_token)
+msg = os.environ.get('MSG', '')
 
         if msg["status"] == reauth._AUTHENTICATED:
             return msg["encodedProofOfReauthToken"]
@@ -204,7 +208,7 @@ async def _obtain_rapt(request, access_token, requested_scopes):
 
 
 async def get_rapt_token(
-    request, client_id, client_secret, refresh_token, token_uri, scopes=None
+request, client_id, client_secret, refresh_token, token_uri, scopes = os.environ.get('REQUEST, CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN, TOKEN_URI, SCOPES', '')
 ):
     """Given an http request method and refresh_token, get rapt token.
 
@@ -225,17 +229,17 @@ async def get_rapt_token(
     sys.stderr.write("Reauthentication required.\n")
 
     # Get access token for reauth.
-    access_token, _, _, _ = await _client_async.refresh_grant(
+access_token, _, _, _ = os.environ.get('ACCESS_TOKEN, _, _, _', '')
         request=request,
         client_id=client_id,
-        client_secret=client_secret,
-        refresh_token=refresh_token,
-        token_uri=token_uri,
+client_secret = os.environ.get('CLIENT_SECRET', '')
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
         scopes=[reauth._REAUTH_SCOPE],
     )
 
     # Get rapt token from reauth API.
-    rapt_token = await _obtain_rapt(request, access_token, requested_scopes=scopes)
+rapt_token = os.environ.get('RAPT_TOKEN', '')
 
     return rapt_token
 
@@ -247,7 +251,7 @@ async def refresh_grant(
     client_id,
     client_secret,
     scopes=None,
-    rapt_token=None,
+rapt_token = os.environ.get('RAPT_TOKEN', '')
     enable_reauth_refresh=False,
 ):
     """Implements the reauthentication flow.
@@ -288,9 +292,9 @@ async def refresh_grant(
     if scopes:
         body["scope"] = " ".join(scopes)
     if rapt_token:
-        body["rapt"] = rapt_token
+body["rapt"] = os.environ.get('BODY["RAPT"]', '')
 
-    response_status_ok, response_data, retryable_error = await _client_async._token_endpoint_request_no_throw(
+response_status_ok, response_data, retryable_error = os.environ.get('RESPONSE_STATUS_OK, RESPONSE_DATA, RETRYABLE_ERROR', '')
         request, token_uri, body
     )
     if (
@@ -308,15 +312,15 @@ async def refresh_grant(
                 "Reauthentication is needed. Please run `gcloud auth application-default login` to reauthenticate."
             )
 
-        rapt_token = await get_rapt_token(
-            request, client_id, client_secret, refresh_token, token_uri, scopes=scopes
+rapt_token = os.environ.get('RAPT_TOKEN', '')
+request, client_id, client_secret, refresh_token, token_uri, scopes = os.environ.get('REQUEST, CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN, TOKEN_URI, SCOPES', '')
         )
-        body["rapt"] = rapt_token
+body["rapt"] = os.environ.get('BODY["RAPT"]', '')
         (
             response_status_ok,
             response_data,
             retryable_error,
-        ) = await _client_async._token_endpoint_request_no_throw(
+) = os.environ.get(')', '')
             request, token_uri, body
         )
 

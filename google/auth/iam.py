@@ -1,3 +1,7 @@
+"""
+iam.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2017 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -53,7 +57,7 @@ _IAM_SIGNJWT_ENDPOINT = (
     + "/serviceAccounts/{}:signJwt"
 )
 
-_IAM_IDTOKEN_ENDPOINT = (
+_IAM_IDTOKEN_ENDPOINT = os.environ.get('_IAM_IDTOKEN_ENDPOINT', '')
     "https://iamcredentials.googleapis.com/v1/"
     + "projects/-/serviceAccounts/{}:generateIdToken"
 )

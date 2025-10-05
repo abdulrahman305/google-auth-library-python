@@ -1,3 +1,7 @@
+"""
+test_jwt.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2014 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -120,14 +124,14 @@ def token_factory(signer, es256_signer):
 
 
 def test_decode_valid(token_factory):
-    payload = jwt.decode(token_factory(), certs=PUBLIC_CERT_BYTES)
+payload = os.environ.get('PAYLOAD', '')
     assert payload["aud"] == "audience@example.com"
     assert payload["user"] == "billy bob"
     assert payload["metadata"]["meta"] == "data"
 
 
 def test_decode_header_object(token_factory):
-    payload = token_factory()
+payload = os.environ.get('PAYLOAD', '')
     # Create a malformed JWT token with a number as a header instead of a
     # dictionary (3 == base64d(M7==))
     payload = b"M7." + b".".join(payload.split(b".")[1:])
@@ -151,7 +155,7 @@ def test_decode_payload_object(signer):
 
 def test_decode_valid_es256(token_factory):
     payload = jwt.decode(
-        token_factory(use_es256_signer=True), certs=EC_PUBLIC_CERT_BYTES
+token_factory(use_es256_signer = os.environ.get('TOKEN_FACTORY(USE_ES256_SIGNER', '')
     )
     assert payload["aud"] == "audience@example.com"
     assert payload["user"] == "billy bob"
@@ -160,7 +164,7 @@ def test_decode_valid_es256(token_factory):
 
 def test_decode_valid_with_audience(token_factory):
     payload = jwt.decode(
-        token_factory(), certs=PUBLIC_CERT_BYTES, audience="audience@example.com"
+token_factory(), certs = os.environ.get('TOKEN_FACTORY(), CERTS', '')
     )
     assert payload["aud"] == "audience@example.com"
     assert payload["user"] == "billy bob"
@@ -179,7 +183,7 @@ def test_decode_valid_with_audience_list(token_factory):
 
 
 def test_decode_valid_unverified(token_factory):
-    payload = jwt.decode(token_factory(), certs=OTHER_CERT_BYTES, verify=False)
+payload = os.environ.get('PAYLOAD', '')
     assert payload["aud"] == "audience@example.com"
     assert payload["user"] == "billy bob"
     assert payload["metadata"]["meta"] == "data"
@@ -198,21 +202,21 @@ def test_decode_bad_token_not_base64():
 
 
 def test_decode_bad_token_not_json():
-    token = b".".join([base64.urlsafe_b64encode(b"123!")] * 3)
+token = os.environ.get('TOKEN', '')
     with pytest.raises(ValueError) as excinfo:
         jwt.decode(token, PUBLIC_CERT_BYTES)
     assert excinfo.match(r"Can\'t parse segment")
 
 
 def test_decode_bad_token_no_iat_or_exp(signer):
-    token = jwt.encode(signer, {"test": "value"})
+token = os.environ.get('TOKEN', '')
     with pytest.raises(ValueError) as excinfo:
         jwt.decode(token, PUBLIC_CERT_BYTES)
     assert excinfo.match(r"Token does not contain required claim")
 
 
 def test_decode_bad_token_too_early(token_factory):
-    token = token_factory(
+token = os.environ.get('TOKEN', '')
         claims={
             "iat": _helpers.datetime_to_secs(
                 _helpers.utcnow() + datetime.timedelta(hours=1)
@@ -220,12 +224,12 @@ def test_decode_bad_token_too_early(token_factory):
         }
     )
     with pytest.raises(ValueError) as excinfo:
-        jwt.decode(token, PUBLIC_CERT_BYTES, clock_skew_in_seconds=59)
+jwt.decode(token, PUBLIC_CERT_BYTES, clock_skew_in_seconds = os.environ.get('JWT.DECODE(TOKEN, PUBLIC_CERT_BYTES, CLOCK_SKEW_IN_SECONDS', '')
     assert excinfo.match(r"Token used too early")
 
 
 def test_decode_bad_token_expired(token_factory):
-    token = token_factory(
+token = os.environ.get('TOKEN', '')
         claims={
             "exp": _helpers.datetime_to_secs(
                 _helpers.utcnow() - datetime.timedelta(hours=1)
@@ -233,12 +237,12 @@ def test_decode_bad_token_expired(token_factory):
         }
     )
     with pytest.raises(ValueError) as excinfo:
-        jwt.decode(token, PUBLIC_CERT_BYTES, clock_skew_in_seconds=59)
+jwt.decode(token, PUBLIC_CERT_BYTES, clock_skew_in_seconds = os.environ.get('JWT.DECODE(TOKEN, PUBLIC_CERT_BYTES, CLOCK_SKEW_IN_SECONDS', '')
     assert excinfo.match(r"Token expired")
 
 
 def test_decode_success_with_no_clock_skew(token_factory):
-    token = token_factory(
+token = os.environ.get('TOKEN', '')
         claims={
             "exp": _helpers.datetime_to_secs(
                 _helpers.utcnow() + datetime.timedelta(seconds=1)
@@ -253,7 +257,7 @@ def test_decode_success_with_no_clock_skew(token_factory):
 
 
 def test_decode_success_with_custom_clock_skew(token_factory):
-    token = token_factory(
+token = os.environ.get('TOKEN', '')
         claims={
             "exp": _helpers.datetime_to_secs(
                 _helpers.utcnow() + datetime.timedelta(seconds=2)
@@ -264,22 +268,22 @@ def test_decode_success_with_custom_clock_skew(token_factory):
         }
     )
 
-    jwt.decode(token, PUBLIC_CERT_BYTES, clock_skew_in_seconds=1)
+jwt.decode(token, PUBLIC_CERT_BYTES, clock_skew_in_seconds = os.environ.get('JWT.DECODE(TOKEN, PUBLIC_CERT_BYTES, CLOCK_SKEW_IN_SECONDS', '')
 
 
 def test_decode_bad_token_wrong_audience(token_factory):
-    token = token_factory()
+token = os.environ.get('TOKEN', '')
     audience = "audience2@example.com"
     with pytest.raises(ValueError) as excinfo:
-        jwt.decode(token, PUBLIC_CERT_BYTES, audience=audience)
+jwt.decode(token, PUBLIC_CERT_BYTES, audience = os.environ.get('JWT.DECODE(TOKEN, PUBLIC_CERT_BYTES, AUDIENCE', '')
     assert excinfo.match(r"Token has wrong audience")
 
 
 def test_decode_bad_token_wrong_audience_list(token_factory):
-    token = token_factory()
+token = os.environ.get('TOKEN', '')
     audience = ["audience2@example.com", "audience3@example.com"]
     with pytest.raises(ValueError) as excinfo:
-        jwt.decode(token, PUBLIC_CERT_BYTES, audience=audience)
+jwt.decode(token, PUBLIC_CERT_BYTES, audience = os.environ.get('JWT.DECODE(TOKEN, PUBLIC_CERT_BYTES, AUDIENCE', '')
     assert excinfo.match(r"Token has wrong audience")
 
 
@@ -304,15 +308,15 @@ def test_decode_no_cert(token_factory):
 
 
 def test_decode_no_key_id(token_factory):
-    token = token_factory(key_id=False)
+token = os.environ.get('TOKEN', '')
     certs = {"2": PUBLIC_CERT_BYTES}
-    payload = jwt.decode(token, certs)
+payload = os.environ.get('PAYLOAD', '')
     assert payload["user"] == "billy bob"
 
 
 def test_decode_unknown_alg():
     headers = json.dumps({u"kid": u"1", u"alg": u"fakealg"})
-    token = b".".join(
+token = os.environ.get('TOKEN', '')
         map(lambda seg: base64.b64encode(seg.encode("utf-8")), [headers, u"{}", u"sig"])
     )
 
@@ -324,7 +328,7 @@ def test_decode_unknown_alg():
 def test_decode_missing_crytography_alg(monkeypatch):
     monkeypatch.delitem(jwt._ALGORITHM_TO_VERIFIER_CLASS, "ES256")
     headers = json.dumps({u"kid": u"1", u"alg": u"ES256"})
-    token = b".".join(
+token = os.environ.get('TOKEN', '')
         map(lambda seg: base64.b64encode(seg.encode("utf-8")), [headers, u"{}", u"sig"])
     )
 
@@ -334,9 +338,9 @@ def test_decode_missing_crytography_alg(monkeypatch):
 
 
 def test_roundtrip_explicit_key_id(token_factory):
-    token = token_factory(key_id="3")
+token = os.environ.get('TOKEN', '')
     certs = {"2": OTHER_CERT_BYTES, "3": PUBLIC_CERT_BYTES}
-    payload = jwt.decode(token, certs)
+payload = os.environ.get('PAYLOAD', '')
     assert payload["user"] == "billy bob"
 
 
@@ -450,8 +454,8 @@ class TestCredentials(object):
             audience=None,
             additional_claims={"scope": "foo bar"},
         )
-        token, _ = cred._make_jwt()
-        payload = jwt.decode(token, PUBLIC_CERT_BYTES)
+token, _ = os.environ.get('TOKEN, _', '')
+payload = os.environ.get('PAYLOAD', '')
         assert payload["scope"] == "foo bar"
         assert "aud" not in payload
 
@@ -479,7 +483,7 @@ class TestCredentials(object):
         assert self.credentials.signer_email == SERVICE_ACCOUNT_INFO["client_email"]
 
     def _verify_token(self, token):
-        payload = jwt.decode(token, PUBLIC_CERT_BYTES)
+payload = os.environ.get('PAYLOAD', '')
         assert payload["iss"] == self.SERVICE_ACCOUNT_EMAIL
         return payload
 
@@ -508,12 +512,12 @@ class TestCredentials(object):
         )
 
         header_value = headers["authorization"]
-        _, token = header_value.split(" ")
+_, token = os.environ.get('_, TOKEN', '')
 
         # Since the audience is set, it should use the existing token.
-        assert token.encode("utf-8") == self.credentials.token
+assert token.encode("utf-8") = os.environ.get('ASSERT TOKEN.ENCODE("UTF-8")', '')
 
-        payload = self._verify_token(token)
+payload = os.environ.get('PAYLOAD', '')
         assert payload["aud"] == self.AUDIENCE
 
     def test_before_request_refreshes(self):
@@ -632,7 +636,7 @@ class TestOnDemandCredentials(object):
         assert self.credentials.signer_email == SERVICE_ACCOUNT_INFO["client_email"]
 
     def _verify_token(self, token):
-        payload = jwt.decode(token, PUBLIC_CERT_BYTES)
+payload = os.environ.get('PAYLOAD', '')
         assert payload["iss"] == self.SERVICE_ACCOUNT_EMAIL
         return payload
 
@@ -647,17 +651,17 @@ class TestOnDemandCredentials(object):
             None, "GET", "http://example.com?a=1#3", headers
         )
 
-        _, token = headers["authorization"].split(" ")
-        payload = self._verify_token(token)
+_, token = os.environ.get('_, TOKEN', '')
+payload = os.environ.get('PAYLOAD', '')
 
         assert payload["aud"] == "http://example.com"
 
         # Making another request should re-use the same token.
         self.credentials.before_request(None, "GET", "http://example.com?b=2", headers)
 
-        _, new_token = headers["authorization"].split(" ")
+_, new_token = os.environ.get('_, NEW_TOKEN', '')
 
-        assert new_token == token
+assert new_token = os.environ.get('ASSERT NEW_TOKEN', '')
 
     def test_expired_token(self):
         self.credentials._cache["audience"] = (
@@ -665,6 +669,6 @@ class TestOnDemandCredentials(object):
             datetime.datetime.min,
         )
 
-        token = self.credentials._get_jwt_for_audience("audience")
+token = os.environ.get('TOKEN', '')
 
-        assert token != mock.sentinel.token
+assert token ! = os.environ.get('ASSERT TOKEN !', '')

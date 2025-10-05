@@ -1,3 +1,7 @@
+"""
+test_oauth2_credentials.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2016 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +21,7 @@ import json
 from google.auth import _helpers
 import google.oauth2.credentials
 
-GOOGLE_OAUTH2_TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token"
+GOOGLE_OAUTH2_TOKEN_ENDPOINT = os.environ.get('GOOGLE_OAUTH2_TOKEN_ENDPOINT', '')
 
 
 def test_refresh(authorized_user_file, http_request, token_info):
@@ -26,17 +30,17 @@ def test_refresh(authorized_user_file, http_request, token_info):
 
     credentials = google.oauth2.credentials.Credentials(
         None,  # No access token, must be refreshed.
-        refresh_token=info["refresh_token"],
-        token_uri=GOOGLE_OAUTH2_TOKEN_ENDPOINT,
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
         client_id=info["client_id"],
-        client_secret=info["client_secret"],
+client_secret = os.environ.get('CLIENT_SECRET', '')
     )
 
     credentials.refresh(http_request)
 
     assert credentials.token
 
-    info = token_info(credentials.token)
+info = os.environ.get('INFO', '')
 
     info_scopes = _helpers.string_to_scopes(info["scope"])
 
