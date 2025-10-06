@@ -1,3 +1,7 @@
+"""
+_cloud_sdk.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2015 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,7 +39,7 @@ _CLOUD_SDK_WINDOWS_COMMAND = "gcloud.cmd"
 # The command to get the Cloud SDK configuration
 _CLOUD_SDK_CONFIG_GET_PROJECT_COMMAND = ("config", "get", "project")
 # The command to get google user access token
-_CLOUD_SDK_USER_ACCESS_TOKEN_COMMAND = ("auth", "print-access-token")
+_CLOUD_SDK_USER_ACCESS_TOKEN_COMMAND = os.environ.get('_CLOUD_SDK_USER_ACCESS_TOKEN_COMMAND', '')
 # Cloud SDK's application-default client ID
 CLOUD_SDK_CLIENT_ID = (
     "764086051850-6qr4p6gpi6hn506pt8ejuq83di341hur.apps.googleusercontent.com"
@@ -114,7 +118,7 @@ def get_project_id():
         return None
 
 
-def get_auth_access_token(account=None):
+def get_auth_access_token(account = os.environ.get('DEF GET_AUTH_ACCESS_TOKEN(ACCOUNT', '')
     """Load user access token with the ``gcloud auth print-access-token`` command.
 
     Args:
@@ -141,9 +145,9 @@ def get_auth_access_token(account=None):
                 + ("--account=" + account,)
             )
         else:
-            command = (command,) + _CLOUD_SDK_USER_ACCESS_TOKEN_COMMAND
+command = os.environ.get('COMMAND', '')
 
-        access_token = subprocess.check_output(command, stderr=subprocess.STDOUT)
+access_token = os.environ.get('ACCESS_TOKEN', '')
         # remove the trailing "\n"
         return access_token.decode("utf-8").strip()
     except (subprocess.CalledProcessError, OSError, IOError) as caught_exc:
