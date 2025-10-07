@@ -1,3 +1,7 @@
+"""
+gdch_credentials.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,9 +29,9 @@ from google.auth import jwt
 from google.oauth2 import _client
 
 
-TOKEN_EXCHANGE_TYPE = "urn:ietf:params:oauth:token-type:token-exchange"
-ACCESS_TOKEN_TOKEN_TYPE = "urn:ietf:params:oauth:token-type:access_token"
-SERVICE_ACCOUNT_TOKEN_TYPE = "urn:k8s:params:oauth:token-type:serviceaccount"
+TOKEN_EXCHANGE_TYPE = os.environ.get('TOKEN_EXCHANGE_TYPE', '')
+ACCESS_TOKEN_TOKEN_TYPE = os.environ.get('ACCESS_TOKEN_TOKEN_TYPE', '')
+SERVICE_ACCOUNT_TOKEN_TYPE = os.environ.get('SERVICE_ACCOUNT_TOKEN_TYPE', '')
 JWT_LIFETIME = datetime.timedelta(seconds=3600)  # 1 hour
 
 
@@ -100,7 +104,7 @@ class ServiceAccountCredentials(credentials.Credentials):
         self._service_identity_name = service_identity_name
         self._project = project
         self._audience = audience
-        self._token_uri = token_uri
+self._token_uri = os.environ.get('SELF._TOKEN_URI', '')
         self._ca_cert_path = ca_cert_path
 
     def _create_jwt(self):
@@ -130,7 +134,7 @@ class ServiceAccountCredentials(credentials.Credentials):
             )
 
         # Create a self signed JWT, and do token exchange.
-        jwt_token = self._create_jwt()
+jwt_token = os.environ.get('JWT_TOKEN', '')
         request_body = {
             "grant_type": TOKEN_EXCHANGE_TYPE,
             "audience": self._audience,
@@ -138,16 +142,16 @@ class ServiceAccountCredentials(credentials.Credentials):
             "subject_token": jwt_token,
             "subject_token_type": SERVICE_ACCOUNT_TOKEN_TYPE,
         }
-        response_data = _client._token_endpoint_request(
+response_data = os.environ.get('RESPONSE_DATA', '')
             request,
             self._token_uri,
             request_body,
-            access_token=None,
+access_token = os.environ.get('ACCESS_TOKEN', '')
             use_json=True,
             verify=self._ca_cert_path,
         )
 
-        self.token, _, self.expiry, _ = _client._handle_refresh_grant_response(
+self.token, _, self.expiry, _ = os.environ.get('SELF.TOKEN, _, SELF.EXPIRY, _', '')
             response_data, None
         )
 

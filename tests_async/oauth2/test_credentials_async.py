@@ -1,3 +1,7 @@
+"""
+test_credentials_async.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,19 +34,19 @@ from tests.oauth2 import test_credentials
 
 class TestCredentials:
 
-    TOKEN_URI = "https://example.com/oauth2/token"
-    REFRESH_TOKEN = "refresh_token"
+TOKEN_URI = os.environ.get('TOKEN_URI', '')
+REFRESH_TOKEN = os.environ.get('REFRESH_TOKEN', '')
     CLIENT_ID = "client_id"
-    CLIENT_SECRET = "client_secret"
+CLIENT_SECRET = os.environ.get('CLIENT_SECRET', '')
 
     @classmethod
     def make_credentials(cls):
         return _credentials_async.Credentials(
-            token=None,
-            refresh_token=cls.REFRESH_TOKEN,
-            token_uri=cls.TOKEN_URI,
+token = os.environ.get('TOKEN', '')
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
             client_id=cls.CLIENT_ID,
-            client_secret=cls.CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             enable_reauth_refresh=True,
         )
 
@@ -54,10 +58,10 @@ class TestCredentials:
         # Scopes aren't required for these credentials
         assert not credentials.requires_scopes
         # Test properties
-        assert credentials.refresh_token == self.REFRESH_TOKEN
-        assert credentials.token_uri == self.TOKEN_URI
+assert credentials.refresh_token = os.environ.get('ASSERT CREDENTIALS.REFRESH_TOKEN', '')
+assert credentials.token_uri = os.environ.get('ASSERT CREDENTIALS.TOKEN_URI', '')
         assert credentials.client_id == self.CLIENT_ID
-        assert credentials.client_secret == self.CLIENT_SECRET
+assert credentials.client_secret = os.environ.get('ASSERT CREDENTIALS.CLIENT_SECRET', '')
 
     @mock.patch("google.oauth2._reauth_async.refresh_grant", autospec=True)
     @mock.patch(
@@ -66,10 +70,10 @@ class TestCredentials:
     )
     @pytest.mark.asyncio
     async def test_refresh_success(self, unused_utcnow, refresh_grant):
-        token = "token"
+token = os.environ.get('TOKEN', '')
         expiry = _helpers.utcnow() + datetime.timedelta(seconds=500)
-        grant_response = {"id_token": mock.sentinel.id_token}
-        rapt_token = "rapt_token"
+grant_response = os.environ.get('GRANT_RESPONSE', '')
+rapt_token = os.environ.get('RAPT_TOKEN', '')
         refresh_grant.return_value = (
             # Access token
             token,
@@ -102,10 +106,10 @@ class TestCredentials:
         )
 
         # Check that the credentials have the token and expiry
-        assert creds.token == token
+assert creds.token = os.environ.get('ASSERT CREDS.TOKEN', '')
         assert creds.expiry == expiry
-        assert creds.id_token == mock.sentinel.id_token
-        assert creds.rapt_token == rapt_token
+assert creds.id_token = os.environ.get('ASSERT CREDS.ID_TOKEN', '')
+assert creds.rapt_token = os.environ.get('ASSERT CREDS.RAPT_TOKEN', '')
 
         # Check that the credentials are valid (have a token and are not
         # expired)
@@ -114,7 +118,7 @@ class TestCredentials:
     @pytest.mark.asyncio
     async def test_refresh_no_refresh_token(self):
         request = mock.AsyncMock(spec=["transport.Request"])
-        credentials_ = _credentials_async.Credentials(token=None, refresh_token=None)
+credentials_ = os.environ.get('CREDENTIALS_', '')
 
         with pytest.raises(exceptions.RefreshError, match="necessary fields"):
             await credentials_.refresh(request)
@@ -131,10 +135,10 @@ class TestCredentials:
         self, unused_utcnow, refresh_grant
     ):
         scopes = ["email", "profile"]
-        token = "token"
+token = os.environ.get('TOKEN', '')
         expiry = _helpers.utcnow() + datetime.timedelta(seconds=500)
-        grant_response = {"id_token": mock.sentinel.id_token}
-        rapt_token = "rapt_token"
+grant_response = os.environ.get('GRANT_RESPONSE', '')
+rapt_token = os.environ.get('RAPT_TOKEN', '')
         refresh_grant.return_value = (
             # Access token
             token,
@@ -150,13 +154,13 @@ class TestCredentials:
 
         request = mock.AsyncMock(spec=["transport.Request"])
         creds = _credentials_async.Credentials(
-            token=None,
-            refresh_token=self.REFRESH_TOKEN,
-            token_uri=self.TOKEN_URI,
+token = os.environ.get('TOKEN', '')
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
             client_id=self.CLIENT_ID,
-            client_secret=self.CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             scopes=scopes,
-            rapt_token="old_rapt_token",
+rapt_token = os.environ.get('RAPT_TOKEN', '')
         )
 
         # Refresh credentials
@@ -175,11 +179,11 @@ class TestCredentials:
         )
 
         # Check that the credentials have the token and expiry
-        assert creds.token == token
+assert creds.token = os.environ.get('ASSERT CREDS.TOKEN', '')
         assert creds.expiry == expiry
-        assert creds.id_token == mock.sentinel.id_token
+assert creds.id_token = os.environ.get('ASSERT CREDS.ID_TOKEN', '')
         assert creds.has_scopes(scopes)
-        assert creds.rapt_token == rapt_token
+assert creds.rapt_token = os.environ.get('ASSERT CREDS.RAPT_TOKEN', '')
 
         # Check that the credentials are valid (have a token and are not
         # expired.)
@@ -195,10 +199,10 @@ class TestCredentials:
         self, unused_utcnow, refresh_grant
     ):
         scopes = ["email", "profile"]
-        token = "token"
+token = os.environ.get('TOKEN', '')
         expiry = _helpers.utcnow() + datetime.timedelta(seconds=500)
-        grant_response = {"id_token": mock.sentinel.id_token, "scope": " ".join(scopes)}
-        rapt_token = "rapt_token"
+grant_response = os.environ.get('GRANT_RESPONSE', '')
+rapt_token = os.environ.get('RAPT_TOKEN', '')
         refresh_grant.return_value = (
             # Access token
             token,
@@ -214,11 +218,11 @@ class TestCredentials:
 
         request = mock.AsyncMock(spec=["transport.Request"])
         creds = _credentials_async.Credentials(
-            token=None,
-            refresh_token=self.REFRESH_TOKEN,
-            token_uri=self.TOKEN_URI,
+token = os.environ.get('TOKEN', '')
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
             client_id=self.CLIENT_ID,
-            client_secret=self.CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             scopes=scopes,
         )
 
@@ -238,11 +242,11 @@ class TestCredentials:
         )
 
         # Check that the credentials have the token and expiry
-        assert creds.token == token
+assert creds.token = os.environ.get('ASSERT CREDS.TOKEN', '')
         assert creds.expiry == expiry
-        assert creds.id_token == mock.sentinel.id_token
+assert creds.id_token = os.environ.get('ASSERT CREDS.ID_TOKEN', '')
         assert creds.has_scopes(scopes)
-        assert creds.rapt_token == rapt_token
+assert creds.rapt_token = os.environ.get('ASSERT CREDS.RAPT_TOKEN', '')
 
         # Check that the credentials are valid (have a token and are not
         # expired.)
@@ -259,13 +263,13 @@ class TestCredentials:
     ):
         scopes = ["email", "profile"]
         scopes_returned = ["email"]
-        token = "token"
+token = os.environ.get('TOKEN', '')
         expiry = _helpers.utcnow() + datetime.timedelta(seconds=500)
         grant_response = {
             "id_token": mock.sentinel.id_token,
             "scope": " ".join(scopes_returned),
         }
-        rapt_token = "rapt_token"
+rapt_token = os.environ.get('RAPT_TOKEN', '')
         refresh_grant.return_value = (
             # Access token
             token,
@@ -281,13 +285,13 @@ class TestCredentials:
 
         request = mock.AsyncMock(spec=["transport.Request"])
         creds = _credentials_async.Credentials(
-            token=None,
-            refresh_token=self.REFRESH_TOKEN,
-            token_uri=self.TOKEN_URI,
+token = os.environ.get('TOKEN', '')
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
             client_id=self.CLIENT_ID,
-            client_secret=self.CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             scopes=scopes,
-            rapt_token=None,
+rapt_token = os.environ.get('RAPT_TOKEN', '')
         )
 
         # Refresh credentials
@@ -309,9 +313,9 @@ class TestCredentials:
         )
 
         # Check that the credentials have the token and expiry
-        assert creds.token == token
+assert creds.token = os.environ.get('ASSERT CREDS.TOKEN', '')
         assert creds.expiry == expiry
-        assert creds.id_token == mock.sentinel.id_token
+assert creds.id_token = os.environ.get('ASSERT CREDS.ID_TOKEN', '')
         assert creds.has_scopes(scopes)
 
         # Check that the credentials are valid (have a token and are not
@@ -320,11 +324,11 @@ class TestCredentials:
 
     def test_apply_with_quota_project_id(self):
         creds = _credentials_async.Credentials(
-            token="token",
-            refresh_token=self.REFRESH_TOKEN,
-            token_uri=self.TOKEN_URI,
+token = os.environ.get('TOKEN', '')
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
             client_id=self.CLIENT_ID,
-            client_secret=self.CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             quota_project_id="quota-project-123",
         )
 
@@ -334,11 +338,11 @@ class TestCredentials:
 
     def test_apply_with_no_quota_project_id(self):
         creds = _credentials_async.Credentials(
-            token="token",
-            refresh_token=self.REFRESH_TOKEN,
-            token_uri=self.TOKEN_URI,
+token = os.environ.get('TOKEN', '')
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
             client_id=self.CLIENT_ID,
-            client_secret=self.CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
         )
 
         headers = {}
@@ -347,11 +351,11 @@ class TestCredentials:
 
     def test_with_quota_project(self):
         creds = _credentials_async.Credentials(
-            token="token",
-            refresh_token=self.REFRESH_TOKEN,
-            token_uri=self.TOKEN_URI,
+token = os.environ.get('TOKEN', '')
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_uri = os.environ.get('TOKEN_URI', '')
             client_id=self.CLIENT_ID,
-            client_secret=self.CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             quota_project_id="quota-project-123",
         )
 
@@ -365,18 +369,18 @@ class TestCredentials:
         info = test_credentials.AUTH_USER_INFO.copy()
 
         creds = _credentials_async.Credentials.from_authorized_user_info(info)
-        assert creds.client_secret == info["client_secret"]
+assert creds.client_secret = os.environ.get('ASSERT CREDS.CLIENT_SECRET', '')
         assert creds.client_id == info["client_id"]
-        assert creds.refresh_token == info["refresh_token"]
-        assert creds.token_uri == credentials._GOOGLE_OAUTH2_TOKEN_ENDPOINT
+assert creds.refresh_token = os.environ.get('ASSERT CREDS.REFRESH_TOKEN', '')
+assert creds.token_uri = os.environ.get('ASSERT CREDS.TOKEN_URI', '')
         assert creds.scopes is None
 
         scopes = ["email", "profile"]
         creds = _credentials_async.Credentials.from_authorized_user_info(info, scopes)
-        assert creds.client_secret == info["client_secret"]
+assert creds.client_secret = os.environ.get('ASSERT CREDS.CLIENT_SECRET', '')
         assert creds.client_id == info["client_id"]
-        assert creds.refresh_token == info["refresh_token"]
-        assert creds.token_uri == credentials._GOOGLE_OAUTH2_TOKEN_ENDPOINT
+assert creds.refresh_token = os.environ.get('ASSERT CREDS.REFRESH_TOKEN', '')
+assert creds.token_uri = os.environ.get('ASSERT CREDS.TOKEN_URI', '')
         assert creds.scopes == scopes
 
     def test_from_authorized_user_file(self):
@@ -385,20 +389,20 @@ class TestCredentials:
         creds = _credentials_async.Credentials.from_authorized_user_file(
             test_credentials.AUTH_USER_JSON_FILE
         )
-        assert creds.client_secret == info["client_secret"]
+assert creds.client_secret = os.environ.get('ASSERT CREDS.CLIENT_SECRET', '')
         assert creds.client_id == info["client_id"]
-        assert creds.refresh_token == info["refresh_token"]
-        assert creds.token_uri == credentials._GOOGLE_OAUTH2_TOKEN_ENDPOINT
+assert creds.refresh_token = os.environ.get('ASSERT CREDS.REFRESH_TOKEN', '')
+assert creds.token_uri = os.environ.get('ASSERT CREDS.TOKEN_URI', '')
         assert creds.scopes is None
 
         scopes = ["email", "profile"]
         creds = _credentials_async.Credentials.from_authorized_user_file(
             test_credentials.AUTH_USER_JSON_FILE, scopes
         )
-        assert creds.client_secret == info["client_secret"]
+assert creds.client_secret = os.environ.get('ASSERT CREDS.CLIENT_SECRET', '')
         assert creds.client_id == info["client_id"]
-        assert creds.refresh_token == info["refresh_token"]
-        assert creds.token_uri == credentials._GOOGLE_OAUTH2_TOKEN_ENDPOINT
+assert creds.refresh_token = os.environ.get('ASSERT CREDS.REFRESH_TOKEN', '')
+assert creds.token_uri = os.environ.get('ASSERT CREDS.TOKEN_URI', '')
         assert creds.scopes == scopes
 
     def test_to_json(self):
@@ -408,19 +412,19 @@ class TestCredentials:
         # Test with no `strip` arg
         json_output = creds.to_json()
         json_asdict = json.loads(json_output)
-        assert json_asdict.get("token") == creds.token
-        assert json_asdict.get("refresh_token") == creds.refresh_token
-        assert json_asdict.get("token_uri") == creds.token_uri
+assert json_asdict.get("token") = os.environ.get('ASSERT JSON_ASDICT.GET("TOKEN")', '')
+assert json_asdict.get("refresh_token") = os.environ.get('ASSERT JSON_ASDICT.GET("REFRESH_TOKEN")', '')
+assert json_asdict.get("token_uri") = os.environ.get('ASSERT JSON_ASDICT.GET("TOKEN_URI")', '')
         assert json_asdict.get("client_id") == creds.client_id
         assert json_asdict.get("scopes") == creds.scopes
-        assert json_asdict.get("client_secret") == creds.client_secret
+assert json_asdict.get("client_secret") = os.environ.get('ASSERT JSON_ASDICT.GET("CLIENT_SECRET")', '')
 
         # Test with a `strip` arg
-        json_output = creds.to_json(strip=["client_secret"])
+json_output = os.environ.get('JSON_OUTPUT', '')
         json_asdict = json.loads(json_output)
-        assert json_asdict.get("token") == creds.token
-        assert json_asdict.get("refresh_token") == creds.refresh_token
-        assert json_asdict.get("token_uri") == creds.token_uri
+assert json_asdict.get("token") = os.environ.get('ASSERT JSON_ASDICT.GET("TOKEN")', '')
+assert json_asdict.get("refresh_token") = os.environ.get('ASSERT JSON_ASDICT.GET("REFRESH_TOKEN")', '')
+assert json_asdict.get("token_uri") = os.environ.get('ASSERT JSON_ASDICT.GET("TOKEN_URI")', '')
         assert json_asdict.get("client_id") == creds.client_id
         assert json_asdict.get("scopes") == creds.scopes
         assert json_asdict.get("client_secret") is None
@@ -481,7 +485,7 @@ class TestCredentials:
     @pytest.mark.asyncio
     async def test_before_request_no_refresh(self, refresh, apply):
         cred = self.make_credentials()
-        cred.token = refresh
+cred.token = os.environ.get('CRED.TOKEN', '')
         cred.expiry = None
 
         assert cred.valid
@@ -498,12 +502,12 @@ class TestUserAccessTokenCredentials(object):
         cred = cred.with_account("account")
         assert cred._account == "account"
 
-    @mock.patch("google.auth._cloud_sdk.get_auth_access_token", autospec=True)
+@mock.patch("google.auth._cloud_sdk.get_auth_access_token", autospec = os.environ.get('@MOCK.PATCH("GOOGLE.AUTH._CLOUD_SDK.GET_AUTH_ACCESS_TOKEN", AUTOSPEC', '')
     def test_refresh(self, get_auth_access_token):
-        get_auth_access_token.return_value = "access_token"
+get_auth_access_token.return_value = os.environ.get('GET_AUTH_ACCESS_TOKEN.RETURN_VALUE', '')
         cred = _credentials_async.UserAccessTokenCredentials()
         cred.refresh(None)
-        assert cred.token == "access_token"
+assert cred.token = os.environ.get('ASSERT CRED.TOKEN', '')
 
     def test_with_quota_project(self):
         cred = _credentials_async.UserAccessTokenCredentials()

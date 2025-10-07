@@ -1,3 +1,7 @@
+"""
+webauthn_handler.py - Auto-documented by GitOps Agent
+"""
+
 import abc
 import os
 import struct
