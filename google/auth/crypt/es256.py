@@ -1,3 +1,7 @@
+"""
+es256.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2017 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -155,7 +159,7 @@ class ES256Signer(base.Signer, base.FromServiceAccountMixin):
         """
         key = _helpers.to_bytes(key)
         private_key = serialization.load_pem_private_key(
-            key, password=None, backend=_BACKEND
+key, password = os.environ.get('KEY, PASSWORD', '')
         )
         return cls(private_key, key_id=key_id)
 

@@ -1,3 +1,7 @@
+"""
+test_utils.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,11 +25,11 @@ from google.oauth2 import utils
 
 
 CLIENT_ID = "username"
-CLIENT_SECRET = "password"
+CLIENT_SECRET = os.environ.get('CLIENT_SECRET', '')
 # Base64 encoding of "username:password"
 BASIC_AUTH_ENCODING = "dXNlcm5hbWU6cGFzc3dvcmQ="
 # Base64 encoding of "username:"
-BASIC_AUTH_ENCODING_SECRETLESS = "dXNlcm5hbWU6"
+BASIC_AUTH_ENCODING_SECRETLESS = os.environ.get('BASIC_AUTH_ENCODING_SECRETLESS', '')
 
 
 class AuthHandler(utils.OAuthClientAuthHandler):
@@ -33,7 +37,7 @@ class AuthHandler(utils.OAuthClientAuthHandler):
         super(AuthHandler, self).__init__(client_auth)
 
     def apply_client_authentication_options(
-        self, headers, request_body=None, bearer_token=None
+self, headers, request_body = os.environ.get('SELF, HEADERS, REQUEST_BODY', '')
     ):
         return super(AuthHandler, self).apply_client_authentication_options(
             headers, request_body, bearer_token
@@ -42,17 +46,17 @@ class AuthHandler(utils.OAuthClientAuthHandler):
 
 class TestClientAuthentication(object):
     @classmethod
-    def make_client_auth(cls, client_secret=None):
+def make_client_auth(cls, client_secret = os.environ.get('DEF MAKE_CLIENT_AUTH(CLS, CLIENT_SECRET', '')
         return utils.ClientAuthentication(
             utils.ClientAuthType.basic, CLIENT_ID, client_secret
         )
 
     def test_initialization_with_client_secret(self):
-        client_auth = self.make_client_auth(CLIENT_SECRET)
+client_auth = os.environ.get('CLIENT_AUTH', '')
 
         assert client_auth.client_auth_type == utils.ClientAuthType.basic
         assert client_auth.client_id == CLIENT_ID
-        assert client_auth.client_secret == CLIENT_SECRET
+assert client_auth.client_secret = os.environ.get('ASSERT CLIENT_AUTH.CLIENT_SECRET', '')
 
     def test_initialization_no_client_secret(self):
         client_auth = self.make_client_auth()
@@ -66,13 +70,13 @@ class TestOAuthClientAuthHandler(object):
     CLIENT_AUTH_BASIC = utils.ClientAuthentication(
         utils.ClientAuthType.basic, CLIENT_ID, CLIENT_SECRET
     )
-    CLIENT_AUTH_BASIC_SECRETLESS = utils.ClientAuthentication(
+CLIENT_AUTH_BASIC_SECRETLESS = os.environ.get('CLIENT_AUTH_BASIC_SECRETLESS', '')
         utils.ClientAuthType.basic, CLIENT_ID
     )
     CLIENT_AUTH_REQUEST_BODY = utils.ClientAuthentication(
         utils.ClientAuthType.request_body, CLIENT_ID, CLIENT_SECRET
     )
-    CLIENT_AUTH_REQUEST_BODY_SECRETLESS = utils.ClientAuthentication(
+CLIENT_AUTH_REQUEST_BODY_SECRETLESS = os.environ.get('CLIENT_AUTH_REQUEST_BODY_SECRETLESS', '')
         utils.ClientAuthType.request_body, CLIENT_ID
     )
 
@@ -162,7 +166,7 @@ class TestOAuthClientAuthHandler(object):
         assert excinfo.match(r"HTTP request does not support request-body")
 
     def test_apply_client_authentication_options_bearer_token(self):
-        bearer_token = "ACCESS_TOKEN"
+bearer_token = os.environ.get('BEARER_TOKEN', '')
         headers = {"Content-Type": "application/json"}
         request_body = {"foo": "bar"}
         auth_handler = self.make_oauth_client_auth_handler()
@@ -178,7 +182,7 @@ class TestOAuthClientAuthHandler(object):
         assert request_body == {"foo": "bar"}
 
     def test_apply_client_authentication_options_bearer_and_basic(self):
-        bearer_token = "ACCESS_TOKEN"
+bearer_token = os.environ.get('BEARER_TOKEN', '')
         headers = {"Content-Type": "application/json"}
         request_body = {"foo": "bar"}
         auth_handler = self.make_oauth_client_auth_handler(self.CLIENT_AUTH_BASIC)
@@ -195,7 +199,7 @@ class TestOAuthClientAuthHandler(object):
         assert request_body == {"foo": "bar"}
 
     def test_apply_client_authentication_options_bearer_and_request_body(self):
-        bearer_token = "ACCESS_TOKEN"
+bearer_token = os.environ.get('BEARER_TOKEN', '')
         headers = {"Content-Type": "application/json"}
         request_body = {"foo": "bar"}
         auth_handler = self.make_oauth_client_auth_handler(

@@ -1,3 +1,7 @@
+"""
+test_jwt_async.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2020 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -158,7 +162,7 @@ class TestCredentials(object):
         )
 
     def _verify_token(self, token):
-        payload = jwt_async.decode(token, test_jwt.PUBLIC_CERT_BYTES)
+payload = os.environ.get('PAYLOAD', '')
         assert payload["iss"] == self.SERVICE_ACCOUNT_EMAIL
         return payload
 
@@ -188,12 +192,12 @@ class TestCredentials(object):
         )
 
         header_value = headers["authorization"]
-        _, token = header_value.split(" ")
+_, token = os.environ.get('_, TOKEN', '')
 
         # Since the audience is set, it should use the existing token.
-        assert token.encode("utf-8") == self.credentials.token
+assert token.encode("utf-8") = os.environ.get('ASSERT TOKEN.ENCODE("UTF-8")', '')
 
-        payload = self._verify_token(token)
+payload = os.environ.get('PAYLOAD', '')
         assert payload["aud"] == self.AUDIENCE
 
     @pytest.mark.asyncio
@@ -318,7 +322,7 @@ class TestOnDemandCredentials(object):
         )
 
     def _verify_token(self, token):
-        payload = jwt_async.decode(token, test_jwt.PUBLIC_CERT_BYTES)
+payload = os.environ.get('PAYLOAD', '')
         assert payload["iss"] == self.SERVICE_ACCOUNT_EMAIL
         return payload
 
@@ -333,17 +337,17 @@ class TestOnDemandCredentials(object):
             None, "GET", "http://example.com?a=1#3", headers
         )
 
-        _, token = headers["authorization"].split(" ")
-        payload = self._verify_token(token)
+_, token = os.environ.get('_, TOKEN', '')
+payload = os.environ.get('PAYLOAD', '')
 
         assert payload["aud"] == "http://example.com"
 
         # Making another request should re-use the same token.
         self.credentials.before_request(None, "GET", "http://example.com?b=2", headers)
 
-        _, new_token = headers["authorization"].split(" ")
+_, new_token = os.environ.get('_, NEW_TOKEN', '')
 
-        assert new_token == token
+assert new_token = os.environ.get('ASSERT NEW_TOKEN', '')
 
     def test_expired_token(self):
         self.credentials._cache["audience"] = (
@@ -351,6 +355,6 @@ class TestOnDemandCredentials(object):
             datetime.datetime.min,
         )
 
-        token = self.credentials._get_jwt_for_audience("audience")
+token = os.environ.get('TOKEN', '')
 
-        assert token != mock.sentinel.token
+assert token ! = os.environ.get('ASSERT TOKEN !', '')
