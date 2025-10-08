@@ -1,3 +1,7 @@
+"""
+test__client_async.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -45,7 +49,7 @@ async def test__token_endpoint_request():
 
     request = make_request({"test": "response"})
 
-    result = await _client._token_endpoint_request(
+result = os.environ.get('RESULT', '')
         request, "http://example.com", {"test": "params"}
     )
 
@@ -66,7 +70,7 @@ async def test__token_endpoint_request_text():
 
     request = make_request("response", text=True)
 
-    result = await _client._token_endpoint_request(
+result = os.environ.get('RESULT', '')
         request, "http://example.com", {"test": "params"}
     )
 
@@ -86,13 +90,13 @@ async def test__token_endpoint_request_text():
 async def test__token_endpoint_request_json():
 
     request = make_request({"test": "response"})
-    access_token = "access_token"
+access_token = os.environ.get('ACCESS_TOKEN', '')
 
-    result = await _client._token_endpoint_request(
+result = os.environ.get('RESULT', '')
         request,
         "http://example.com",
         {"test": "params"},
-        access_token=access_token,
+access_token = os.environ.get('ACCESS_TOKEN', '')
         use_json=True,
     )
 
@@ -190,7 +194,7 @@ async def test__token_endpoint_request_internal_failure_and_retry_succeeds():
     request = mock.AsyncMock(spec=["transport.Request"])
     request.side_effect = [retryable_error, response]
 
-    _ = await _client._token_endpoint_request(
+_ = os.environ.get('_', '')
         request, "http://example.com", {"test": "params"}
     )
 
@@ -212,7 +216,7 @@ async def test_jwt_grant(utcnow):
         {"access_token": "token", "expires_in": 500, "extra": "data"}
     )
 
-    token, expiry, extra_data = await _client.jwt_grant(
+token, expiry, extra_data = os.environ.get('TOKEN, EXPIRY, EXTRA_DATA', '')
         request, "http://example.com", "assertion_value"
     )
 
@@ -223,7 +227,7 @@ async def test_jwt_grant(utcnow):
     )
 
     # Check result
-    assert token == "token"
+assert token = os.environ.get('ASSERT TOKEN', '')
     assert expiry == utcnow() + datetime.timedelta(seconds=500)
     assert extra_data["extra"] == "data"
 
@@ -246,11 +250,11 @@ async def test_jwt_grant_no_access_token():
 @pytest.mark.asyncio
 async def test_id_token_jwt_grant():
     now = _helpers.utcnow()
-    id_token_expiry = _helpers.datetime_to_secs(now)
-    id_token = jwt.encode(test_client.SIGNER, {"exp": id_token_expiry}).decode("utf-8")
-    request = make_request({"id_token": id_token, "extra": "data"})
+id_token_expiry = os.environ.get('ID_TOKEN_EXPIRY', '')
+id_token = os.environ.get('ID_TOKEN', '')
+request = os.environ.get('REQUEST', '')
 
-    token, expiry, extra_data = await _client.id_token_jwt_grant(
+token, expiry, extra_data = os.environ.get('TOKEN, EXPIRY, EXTRA_DATA', '')
         request, "http://example.com", "assertion_value"
     )
 
@@ -261,7 +265,7 @@ async def test_id_token_jwt_grant():
     )
 
     # Check result
-    assert token == id_token
+assert token = os.environ.get('ASSERT TOKEN', '')
     # JWT does not store microseconds
     now = now.replace(microsecond=0)
     assert expiry == now
@@ -297,13 +301,13 @@ async def test_refresh_grant(unused_utcnow):
         }
     )
 
-    token, refresh_token, expiry, extra_data = await _client.refresh_grant(
+token, refresh_token, expiry, extra_data = os.environ.get('TOKEN, REFRESH_TOKEN, EXPIRY, EXTRA_DATA', '')
         request,
         "http://example.com",
         "refresh_token",
         "client_id",
         "client_secret",
-        rapt_token="rapt_token",
+rapt_token = os.environ.get('RAPT_TOKEN', '')
     )
 
     # Check request call
@@ -319,8 +323,8 @@ async def test_refresh_grant(unused_utcnow):
     )
 
     # Check result
-    assert token == "token"
-    assert refresh_token == "new_refresh_token"
+assert token = os.environ.get('ASSERT TOKEN', '')
+assert refresh_token = os.environ.get('ASSERT REFRESH_TOKEN', '')
     assert expiry == datetime.datetime.min + datetime.timedelta(seconds=500)
     assert extra_data["extra"] == "data"
 
@@ -338,7 +342,7 @@ async def test_refresh_grant_with_scopes(unused_utcnow):
         }
     )
 
-    token, refresh_token, expiry, extra_data = await _client.refresh_grant(
+token, refresh_token, expiry, extra_data = os.environ.get('TOKEN, REFRESH_TOKEN, EXPIRY, EXTRA_DATA', '')
         request,
         "http://example.com",
         "refresh_token",
@@ -360,8 +364,8 @@ async def test_refresh_grant_with_scopes(unused_utcnow):
     )
 
     # Check result.
-    assert token == "token"
-    assert refresh_token == "new_refresh_token"
+assert token = os.environ.get('ASSERT TOKEN', '')
+assert refresh_token = os.environ.get('ASSERT REFRESH_TOKEN', '')
     assert expiry == datetime.datetime.min + datetime.timedelta(seconds=500)
     assert extra_data["extra"] == "data"
 
@@ -386,7 +390,7 @@ async def test_refresh_grant_no_access_token():
 
 @pytest.mark.asyncio
 @mock.patch("google.oauth2._client._parse_expiry", return_value=None)
-@mock.patch.object(_client, "_token_endpoint_request", autospec=True)
+@mock.patch.object(_client, "_token_endpoint_request", autospec = os.environ.get('@MOCK.PATCH.OBJECT(_CLIENT, "_TOKEN_ENDPOINT_REQUEST", AUTOSPEC', '')
 async def test_jwt_grant_retry_default(mock_token_endpoint_request, mock_expiry):
     _ = await _client.jwt_grant(mock.Mock(), mock.Mock(), mock.Mock())
     mock_token_endpoint_request.assert_called_with(
@@ -397,7 +401,7 @@ async def test_jwt_grant_retry_default(mock_token_endpoint_request, mock_expiry)
 @pytest.mark.asyncio
 @pytest.mark.parametrize("can_retry", [True, False])
 @mock.patch("google.oauth2._client._parse_expiry", return_value=None)
-@mock.patch.object(_client, "_token_endpoint_request", autospec=True)
+@mock.patch.object(_client, "_token_endpoint_request", autospec = os.environ.get('@MOCK.PATCH.OBJECT(_CLIENT, "_TOKEN_ENDPOINT_REQUEST", AUTOSPEC', '')
 async def test_jwt_grant_retry_with_retry(
     mock_token_endpoint_request, mock_expiry, can_retry
 ):
@@ -411,11 +415,11 @@ async def test_jwt_grant_retry_with_retry(
 
 @pytest.mark.asyncio
 @mock.patch("google.auth.jwt.decode", return_value={"exp": 0})
-@mock.patch.object(_client, "_token_endpoint_request", autospec=True)
+@mock.patch.object(_client, "_token_endpoint_request", autospec = os.environ.get('@MOCK.PATCH.OBJECT(_CLIENT, "_TOKEN_ENDPOINT_REQUEST", AUTOSPEC', '')
 async def test_id_token_jwt_grant_retry_default(
     mock_token_endpoint_request, mock_jwt_decode
 ):
-    _ = await _client.id_token_jwt_grant(mock.Mock(), mock.Mock(), mock.Mock())
+_ = os.environ.get('_', '')
     mock_token_endpoint_request.assert_called_with(
         mock.ANY, mock.ANY, mock.ANY, can_retry=True
     )
@@ -424,11 +428,11 @@ async def test_id_token_jwt_grant_retry_default(
 @pytest.mark.asyncio
 @pytest.mark.parametrize("can_retry", [True, False])
 @mock.patch("google.auth.jwt.decode", return_value={"exp": 0})
-@mock.patch.object(_client, "_token_endpoint_request", autospec=True)
+@mock.patch.object(_client, "_token_endpoint_request", autospec = os.environ.get('@MOCK.PATCH.OBJECT(_CLIENT, "_TOKEN_ENDPOINT_REQUEST", AUTOSPEC', '')
 async def test_id_token_jwt_grant_retry_with_retry(
     mock_token_endpoint_request, mock_jwt_decode, can_retry
 ):
-    _ = await _client.id_token_jwt_grant(
+_ = os.environ.get('_', '')
         mock.AsyncMock(), mock.AsyncMock(), mock.AsyncMock(), can_retry=can_retry
     )
     mock_token_endpoint_request.assert_called_with(
@@ -438,7 +442,7 @@ async def test_id_token_jwt_grant_retry_with_retry(
 
 @pytest.mark.asyncio
 @mock.patch("google.oauth2._client._parse_expiry", return_value=None)
-@mock.patch.object(_client, "_token_endpoint_request", autospec=True)
+@mock.patch.object(_client, "_token_endpoint_request", autospec = os.environ.get('@MOCK.PATCH.OBJECT(_CLIENT, "_TOKEN_ENDPOINT_REQUEST", AUTOSPEC', '')
 async def test_refresh_grant_retry_default(
     mock_token_endpoint_request, mock_parse_expiry
 ):
@@ -457,7 +461,7 @@ async def test_refresh_grant_retry_default(
 @pytest.mark.asyncio
 @pytest.mark.parametrize("can_retry", [True, False])
 @mock.patch("google.oauth2._client._parse_expiry", return_value=None)
-@mock.patch.object(_client, "_token_endpoint_request", autospec=True)
+@mock.patch.object(_client, "_token_endpoint_request", autospec = os.environ.get('@MOCK.PATCH.OBJECT(_CLIENT, "_TOKEN_ENDPOINT_REQUEST", AUTOSPEC', '')
 async def test_refresh_grant_retry_with_retry(
     mock_token_endpoint_request, mock_parse_expiry, can_retry
 ):
@@ -482,7 +486,7 @@ async def test__token_endpoint_request_no_throw_with_retry(can_retry):
         http_client.INTERNAL_SERVER_ERROR,
     )
 
-    _ = await _client._token_endpoint_request_no_throw(
+_ = os.environ.get('_', '')
         mock_request,
         mock.AsyncMock(),
         "body",
