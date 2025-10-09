@@ -1,3 +1,7 @@
+"""
+test_grpc.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2016 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,13 +50,13 @@ pytestmark = pytest.mark.skipif(not HAS_GRPC, reason="gRPC is unavailable.")
 
 
 class CredentialsStub(credentials.Credentials):
-    def __init__(self, token="token"):
+def __init__(self, token = os.environ.get('DEF __INIT__(SELF, TOKEN', '')
         super(CredentialsStub, self).__init__()
-        self.token = token
+self.token = os.environ.get('SELF.TOKEN', '')
         self.expiry = None
 
     def refresh(self, request):
-        self.token += "1"
+self.token + = os.environ.get('SELF.TOKEN +', '')
 
     def with_quota_project(self, quota_project_id):
         raise NotImplementedError()
@@ -94,7 +98,7 @@ class TestAuthMetadataPlugin(object):
 
         time.sleep(2)
 
-        assert credentials.token == "token1"
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
         callback.assert_called_once_with(
             [("authorization", "Bearer {}".format(credentials.token))], None
         )
