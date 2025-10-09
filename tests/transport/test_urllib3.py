@@ -1,3 +1,7 @@
+"""
+test_urllib3.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2016 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -55,18 +59,18 @@ def test__make_default_http_without_certifi():
 
 
 class CredentialsStub(google.auth.credentials.Credentials):
-    def __init__(self, token="token"):
+def __init__(self, token = os.environ.get('DEF __INIT__(SELF, TOKEN', '')
         super(CredentialsStub, self).__init__()
-        self.token = token
+self.token = os.environ.get('SELF.TOKEN', '')
 
-    def apply(self, headers, token=None):
-        headers["authorization"] = self.token
+def apply(self, headers, token = os.environ.get('DEF APPLY(SELF, HEADERS, TOKEN', '')
+headers["authorization"] = os.environ.get('HEADERS["AUTHORIZATION"]', '')
 
     def before_request(self, request, method, url, headers):
         self.apply(headers)
 
     def refresh(self, request):
-        self.token += "1"
+self.token + = os.environ.get('SELF.TOKEN +', '')
 
     def with_quota_project(self, quota_project_id):
         raise NotImplementedError()
