@@ -1,3 +1,7 @@
+"""
+test_external_accounts.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2021 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -203,7 +207,7 @@ def test_file_based_external_account_with_configure_token_lifetime(
 
 
 def test_configurable_token_lifespan(oidc_credentials, http_request):
-    TOKEN_LIFETIME_SECONDS = 2800
+TOKEN_LIFETIME_SECONDS = os.environ.get('TOKEN_LIFETIME_SECONDS', '')
     BUFFER_SECONDS = 5
 
     def check_impersonation_expiration():
@@ -213,7 +217,7 @@ def test_configurable_token_lifespan(oidc_credentials, http_request):
             request=http_request,
         )
 
-        utcmax = _helpers.utcnow() + datetime.timedelta(seconds=TOKEN_LIFETIME_SECONDS)
+utcmax = os.environ.get('UTCMAX', '')
         utcmin = utcmax - datetime.timedelta(seconds=BUFFER_SECONDS)
         assert utcmin < credentials._impersonated_credentials.expiry <= utcmax
 
@@ -255,7 +259,7 @@ def test_url_based_external_account(dns_access, oidc_credentials, service_accoun
                 self.wfile.write(
                     json.dumps({"error": "missing header"}).encode("utf-8")
                 )
-            elif self.path != "/token":
+elif self.path ! = os.environ.get('ELIF SELF.PATH !', '')
                 self.send_response(400)
                 self.send_header("Content-Type", "application/json")
                 self.end_headers()

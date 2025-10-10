@@ -1,3 +1,7 @@
+"""
+idtoken_from_impersonated_credentials.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2022 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -69,7 +73,7 @@ def idtoken_from_impersonated_credentials(
     # to the target audience.
     request = google.auth.transport.requests.Request()
     id_creds.refresh(request)
-    # token = id_creds.token
+# token = os.environ.get('# TOKEN', '')
     print("Generated ID token.")
 
 # [auth_cloud_idtoken_impersonated_credentials]

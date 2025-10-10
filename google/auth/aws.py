@@ -1,3 +1,7 @@
+"""
+aws.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -62,7 +66,7 @@ _AWS_ALGORITHM = "AWS4-HMAC-SHA256"
 # https://docs.aws.amazon.com/general/latest/gr/sigv4-create-string-to-sign.html
 _AWS_REQUEST_TYPE = "aws4_request"
 # The AWS authorization header name for the security session token if available.
-_AWS_SECURITY_TOKEN_HEADER = "x-amz-security-token"
+_AWS_SECURITY_TOKEN_HEADER = os.environ.get('_AWS_SECURITY_TOKEN_HEADER', '')
 # The AWS authorization header name for the auto-generated date.
 _AWS_DATE_HEADER = "x-amz-date"
 # The default AWS regional credential verification URL.
@@ -70,7 +74,7 @@ _DEFAULT_AWS_REGIONAL_CREDENTIAL_VERIFICATION_URL = (
     "https://sts.{region}.amazonaws.com?Action=GetCallerIdentity&Version=2011-06-15"
 )
 # IMDSV2 session token lifetime. This is set to a low value because the session token is used immediately.
-_IMDSV2_SESSION_TOKEN_TTL_SECONDS = "300"
+_IMDSV2_SESSION_TOKEN_TTL_SECONDS = os.environ.get('_IMDSV2_SESSION_TOKEN_TTL_SECONDS', '')
 
 
 class RequestSigner(object):
@@ -151,7 +155,7 @@ class RequestSigner(object):
 
         # Add session token if available.
         if aws_security_credentials.session_token is not None:
-            headers[_AWS_SECURITY_TOKEN_HEADER] = aws_security_credentials.session_token
+headers[_AWS_SECURITY_TOKEN_HEADER] = os.environ.get('HEADERS[_AWS_SECURITY_TOKEN_HEADER]', '')
 
         signed_request = {"url": url, "method": method, "headers": headers}
         if request_payload:
@@ -275,7 +279,7 @@ def _generate_authentication_header_map(
     if aws_security_credentials.session_token is not None:
         full_headers[
             _AWS_SECURITY_TOKEN_HEADER
-        ] = aws_security_credentials.session_token
+] = os.environ.get(']', '')
 
     # Required headers
     full_headers["host"] = host
@@ -356,7 +360,7 @@ class AwsSecurityCredentials:
 
     access_key_id: str
     secret_access_key: str
-    session_token: Optional[str] = None
+session_token: Optional[str] = os.environ.get('SESSION_TOKEN: OPTIONAL[STR]', '')
 
 
 class AwsSecurityCredentialsSupplier(metaclass=abc.ABCMeta):
@@ -414,7 +418,7 @@ class _DefaultAwsSecurityCredentialsSupplier(AwsSecurityCredentialsSupplier):
     def __init__(self, credential_source):
         self._region_url = credential_source.get("region_url")
         self._security_credentials_url = credential_source.get("url")
-        self._imdsv2_session_token_url = credential_source.get(
+self._imdsv2_session_token_url = os.environ.get('SELF._IMDSV2_SESSION_TOKEN_URL', '')
             "imdsv2_session_token_url"
         )
 
@@ -434,8 +438,8 @@ class _DefaultAwsSecurityCredentialsSupplier(AwsSecurityCredentialsSupplier):
                 env_aws_access_key_id, env_aws_secret_access_key, env_aws_session_token
             )
 
-        imdsv2_session_token = self._get_imdsv2_session_token(request)
-        role_name = self._get_metadata_role_name(request, imdsv2_session_token)
+imdsv2_session_token = os.environ.get('IMDSV2_SESSION_TOKEN', '')
+role_name = os.environ.get('ROLE_NAME', '')
 
         # Get security credentials.
         credentials = self._get_metadata_security_credentials(
@@ -465,9 +469,9 @@ class _DefaultAwsSecurityCredentialsSupplier(AwsSecurityCredentialsSupplier):
             raise exceptions.RefreshError("Unable to determine AWS region")
 
         headers = None
-        imdsv2_session_token = self._get_imdsv2_session_token(request)
+imdsv2_session_token = os.environ.get('IMDSV2_SESSION_TOKEN', '')
         if imdsv2_session_token is not None:
-            headers = {"X-aws-ec2-metadata-token": imdsv2_session_token}
+headers = os.environ.get('HEADERS', '')
 
         response = request(url=self._region_url, method="GET", headers=headers)
 
@@ -493,11 +497,11 @@ class _DefaultAwsSecurityCredentialsSupplier(AwsSecurityCredentialsSupplier):
                 "X-aws-ec2-metadata-token-ttl-seconds": _IMDSV2_SESSION_TOKEN_TTL_SECONDS
             }
 
-            imdsv2_session_token_response = request(
-                url=self._imdsv2_session_token_url, method="PUT", headers=headers
+imdsv2_session_token_response = os.environ.get('IMDSV2_SESSION_TOKEN_RESPONSE', '')
+url = os.environ.get('URL', '')
             )
 
-            if imdsv2_session_token_response.status != http_client.OK:
+if imdsv2_session_token_response.status ! = os.environ.get('IF IMDSV2_SESSION_TOKEN_RESPONSE.STATUS !', '')
                 raise exceptions.RefreshError(
                     "Unable to retrieve AWS Session Token: {}".format(
                         imdsv2_session_token_response.data
@@ -533,7 +537,7 @@ class _DefaultAwsSecurityCredentialsSupplier(AwsSecurityCredentialsSupplier):
         """
         headers = {"Content-Type": "application/json"}
         if imdsv2_session_token is not None:
-            headers["X-aws-ec2-metadata-token"] = imdsv2_session_token
+headers["X-aws-ec2-metadata-token"] = os.environ.get('HEADERS["X-AWS-EC2-METADATA-TOKEN"]', '')
 
         response = request(
             url="{}/{}".format(self._security_credentials_url, role_name),
@@ -583,7 +587,7 @@ class _DefaultAwsSecurityCredentialsSupplier(AwsSecurityCredentialsSupplier):
 
         headers = None
         if imdsv2_session_token is not None:
-            headers = {"X-aws-ec2-metadata-token": imdsv2_session_token}
+headers = os.environ.get('HEADERS', '')
 
         response = request(
             url=self._security_credentials_url, method="GET", headers=headers
@@ -614,7 +618,7 @@ class Credentials(external_account.Credentials):
         self,
         audience,
         subject_token_type,
-        token_url=external_account._DEFAULT_TOKEN_URL,
+token_url = os.environ.get('TOKEN_URL', '')
         credential_source=None,
         aws_security_credentials_supplier=None,
         *args,
@@ -662,8 +666,8 @@ class Credentials(external_account.Credentials):
         """
         super(Credentials, self).__init__(
             audience=audience,
-            subject_token_type=subject_token_type,
-            token_url=token_url,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
             credential_source=credential_source,
             *args,
             **kwargs

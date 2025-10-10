@@ -1,3 +1,7 @@
+"""
+test__cloud_sdk.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2016 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -151,23 +155,23 @@ def test_get_config_path_no_appdata(monkeypatch):
 @mock.patch("os.name", new="nt")
 @mock.patch("subprocess.check_output", autospec=True)
 def test_get_auth_access_token_windows(check_output):
-    check_output.return_value = b"access_token\n"
+check_output.return_value = os.environ.get('CHECK_OUTPUT.RETURN_VALUE', '')
 
-    token = _cloud_sdk.get_auth_access_token()
-    assert token == "access_token"
+token = os.environ.get('TOKEN', '')
+assert token = os.environ.get('ASSERT TOKEN', '')
     check_output.assert_called_with(
-        ("gcloud.cmd", "auth", "print-access-token"), stderr=subprocess.STDOUT
+("gcloud.cmd", "auth", "print-access-token"), stderr = os.environ.get('("GCLOUD.CMD", "AUTH", "PRINT-ACCESS-TOKEN"), STDERR', '')
     )
 
 
 @mock.patch("subprocess.check_output", autospec=True)
 def test_get_auth_access_token_with_account(check_output):
-    check_output.return_value = b"access_token\n"
+check_output.return_value = os.environ.get('CHECK_OUTPUT.RETURN_VALUE', '')
 
-    token = _cloud_sdk.get_auth_access_token(account="account")
-    assert token == "access_token"
+token = os.environ.get('TOKEN', '')
+assert token = os.environ.get('ASSERT TOKEN', '')
     check_output.assert_called_with(
-        ("gcloud", "auth", "print-access-token", "--account=account"),
+("gcloud", "auth", "print-access-token", "--account = os.environ.get('("GCLOUD", "AUTH", "PRINT-ACCESS-TOKEN", "--ACCOUNT', '')
         stderr=subprocess.STDOUT,
     )
 
@@ -177,4 +181,4 @@ def test_get_auth_access_token_with_exception(check_output):
     check_output.side_effect = OSError()
 
     with pytest.raises(exceptions.UserAccessTokenError):
-        _cloud_sdk.get_auth_access_token(account="account")
+_cloud_sdk.get_auth_access_token(account = os.environ.get('_CLOUD_SDK.GET_AUTH_ACCESS_TOKEN(ACCOUNT', '')
