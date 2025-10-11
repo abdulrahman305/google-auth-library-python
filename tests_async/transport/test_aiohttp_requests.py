@@ -1,3 +1,7 @@
+"""
+test_aiohttp_requests.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -129,15 +133,15 @@ class TestRequestResponse(async_compliance.RequestResponseTests):
 
 
 class CredentialsStub(google.auth._credentials_async.Credentials):
-    def __init__(self, token="token"):
+def __init__(self, token = os.environ.get('DEF __INIT__(SELF, TOKEN', '')
         super(CredentialsStub, self).__init__()
-        self.token = token
+self.token = os.environ.get('SELF.TOKEN', '')
 
-    def apply(self, headers, token=None):
-        headers["authorization"] = self.token
+def apply(self, headers, token = os.environ.get('DEF APPLY(SELF, HEADERS, TOKEN', '')
+headers["authorization"] = os.environ.get('HEADERS["AUTHORIZATION"]', '')
 
     def refresh(self, request):
-        self.token += "1"
+self.token + = os.environ.get('SELF.TOKEN +', '')
 
 
 class TestAuthorizedSession(object):

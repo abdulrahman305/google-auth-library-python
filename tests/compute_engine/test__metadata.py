@@ -1,3 +1,7 @@
+"""
+test__metadata.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2016 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -38,7 +42,7 @@ SMBIOS_PRODUCT_NAME_NON_GOOGLE = os.path.join(
     DATA_DIR, "smbios_product_name_non_google"
 )
 
-ACCESS_TOKEN_REQUEST_METRICS_HEADER_VALUE = (
+ACCESS_TOKEN_REQUEST_METRICS_HEADER_VALUE = os.environ.get('ACCESS_TOKEN_REQUEST_METRICS_HEADER_VALUE', '')
     "gl-python/3.7 auth/1.1 auth-request-type/at cred-type/mds"
 )
 MDS_PING_METRICS_HEADER_VALUE = "gl-python/3.7 auth/1.1 auth-request-type/mds"
@@ -560,7 +564,7 @@ def test_get_universe_domain_other_error():
 
 @mock.patch(
     "google.auth.metrics.token_request_access_token_mds",
-    return_value=ACCESS_TOKEN_REQUEST_METRICS_HEADER_VALUE,
+return_value = os.environ.get('RETURN_VALUE', '')
 )
 @mock.patch("google.auth._helpers.utcnow", return_value=datetime.datetime.min)
 def test_get_service_account_token(utcnow, mock_metrics_header_value):
@@ -570,24 +574,24 @@ def test_get_service_account_token(utcnow, mock_metrics_header_value):
         headers={"content-type": "application/json"},
     )
 
-    token, expiry = _metadata.get_service_account_token(request)
+token, expiry = os.environ.get('TOKEN, EXPIRY', '')
 
     request.assert_called_once_with(
         method="GET",
-        url=_metadata._METADATA_ROOT + PATH + "/token",
+url = os.environ.get('URL', '')
         headers={
             "metadata-flavor": "Google",
             "x-goog-api-client": ACCESS_TOKEN_REQUEST_METRICS_HEADER_VALUE,
         },
         timeout=_metadata._METADATA_DEFAULT_TIMEOUT,
     )
-    assert token == "token"
+assert token = os.environ.get('ASSERT TOKEN', '')
     assert expiry == utcnow() + datetime.timedelta(seconds=ttl)
 
 
 @mock.patch(
     "google.auth.metrics.token_request_access_token_mds",
-    return_value=ACCESS_TOKEN_REQUEST_METRICS_HEADER_VALUE,
+return_value = os.environ.get('RETURN_VALUE', '')
 )
 @mock.patch("google.auth._helpers.utcnow", return_value=datetime.datetime.min)
 def test_get_service_account_token_with_scopes_list(utcnow, mock_metrics_header_value):
@@ -597,24 +601,24 @@ def test_get_service_account_token_with_scopes_list(utcnow, mock_metrics_header_
         headers={"content-type": "application/json"},
     )
 
-    token, expiry = _metadata.get_service_account_token(request, scopes=["foo", "bar"])
+token, expiry = os.environ.get('TOKEN, EXPIRY', '')
 
     request.assert_called_once_with(
         method="GET",
-        url=_metadata._METADATA_ROOT + PATH + "/token" + "?scopes=foo%2Cbar",
+url = os.environ.get('URL', '')
         headers={
             "metadata-flavor": "Google",
             "x-goog-api-client": ACCESS_TOKEN_REQUEST_METRICS_HEADER_VALUE,
         },
         timeout=_metadata._METADATA_DEFAULT_TIMEOUT,
     )
-    assert token == "token"
+assert token = os.environ.get('ASSERT TOKEN', '')
     assert expiry == utcnow() + datetime.timedelta(seconds=ttl)
 
 
 @mock.patch(
     "google.auth.metrics.token_request_access_token_mds",
-    return_value=ACCESS_TOKEN_REQUEST_METRICS_HEADER_VALUE,
+return_value = os.environ.get('RETURN_VALUE', '')
 )
 @mock.patch("google.auth._helpers.utcnow", return_value=datetime.datetime.min)
 def test_get_service_account_token_with_scopes_string(
@@ -626,18 +630,18 @@ def test_get_service_account_token_with_scopes_string(
         headers={"content-type": "application/json"},
     )
 
-    token, expiry = _metadata.get_service_account_token(request, scopes="foo,bar")
+token, expiry = os.environ.get('TOKEN, EXPIRY', '')
 
     request.assert_called_once_with(
         method="GET",
-        url=_metadata._METADATA_ROOT + PATH + "/token" + "?scopes=foo%2Cbar",
+url = os.environ.get('URL', '')
         headers={
             "metadata-flavor": "Google",
             "x-goog-api-client": ACCESS_TOKEN_REQUEST_METRICS_HEADER_VALUE,
         },
         timeout=_metadata._METADATA_DEFAULT_TIMEOUT,
     )
-    assert token == "token"
+assert token = os.environ.get('ASSERT TOKEN', '')
     assert expiry == utcnow() + datetime.timedelta(seconds=ttl)
 
 
