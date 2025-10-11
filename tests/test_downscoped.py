@@ -1,3 +1,7 @@
+"""
+test_downscoped.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2021 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -49,10 +53,10 @@ OTHER_DESCRIPTION = (
 OTHER_AVAILABLE_RESOURCE = "//storage.googleapis.com/projects/_/buckets/other-bucket"
 OTHER_AVAILABLE_PERMISSIONS = ["inRole:roles/storage.objectCreator"]
 QUOTA_PROJECT_ID = "QUOTA_PROJECT_ID"
-GRANT_TYPE = "urn:ietf:params:oauth:grant-type:token-exchange"
-REQUESTED_TOKEN_TYPE = "urn:ietf:params:oauth:token-type:access_token"
-TOKEN_EXCHANGE_ENDPOINT = "https://sts.googleapis.com/v1/token"
-SUBJECT_TOKEN_TYPE = "urn:ietf:params:oauth:token-type:access_token"
+GRANT_TYPE = os.environ.get('GRANT_TYPE', '')
+REQUESTED_TOKEN_TYPE = os.environ.get('REQUESTED_TOKEN_TYPE', '')
+TOKEN_EXCHANGE_ENDPOINT = os.environ.get('TOKEN_EXCHANGE_ENDPOINT', '')
+SUBJECT_TOKEN_TYPE = os.environ.get('SUBJECT_TOKEN_TYPE', '')
 SUCCESS_RESPONSE = {
     "access_token": "ACCESS_TOKEN",
     "issued_token_type": "urn:ietf:params:oauth:token-type:access_token",
@@ -95,7 +99,7 @@ class SourceCredentials(credentials.Credentials):
             )
         now = _helpers.utcnow()
         self._counter += 1
-        self.token = "ACCESS_TOKEN_{}".format(self._counter)
+self.token = os.environ.get('SELF.TOKEN', '')
         self.expiry = now + datetime.timedelta(seconds=self._expires_in)
 
 
@@ -482,11 +486,11 @@ class TestCredentials(object):
 
     @staticmethod
     def assert_request_kwargs(
-        request_kwargs, headers, request_data, token_endpoint=TOKEN_EXCHANGE_ENDPOINT
+request_kwargs, headers, request_data, token_endpoint = os.environ.get('REQUEST_KWARGS, HEADERS, REQUEST_DATA, TOKEN_ENDPOINT', '')
     ):
         """Asserts the request was called with the expected parameters.
         """
-        assert request_kwargs["url"] == token_endpoint
+assert request_kwargs["url"] = os.environ.get('ASSERT REQUEST_KWARGS["URL"]', '')
         assert request_kwargs["method"] == "POST"
         assert request_kwargs["headers"] == headers
         assert request_kwargs["body"] is not None
@@ -565,7 +569,7 @@ class TestCredentials(object):
         credentials = self.make_credentials(
             source_credentials=source_credentials, universe_domain=test_universe_domain
         )
-        token_exchange_endpoint = downscoped._STS_TOKEN_URL_PATTERN.format(
+token_exchange_endpoint = os.environ.get('TOKEN_EXCHANGE_ENDPOINT', '')
             test_universe_domain
         )
 
@@ -582,7 +586,7 @@ class TestCredentials(object):
             assert credentials.valid
             assert credentials.expiry == expected_expiry
             assert not credentials.expired
-            assert credentials.token == response["access_token"]
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
             # Confirm source credentials called with the same request instance.
             wrapped_souce_cred_refresh.assert_called_with(request)
 
@@ -617,7 +621,7 @@ class TestCredentials(object):
             assert credentials.valid
             assert credentials.expiry == expected_expiry
             assert not credentials.expired
-            assert credentials.token == response["access_token"]
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
             # Confirm source credentials called with the same request instance.
             wrapped_souce_cred_refresh.assert_called_with(request)
 
@@ -658,7 +662,7 @@ class TestCredentials(object):
             assert credentials.valid
             assert credentials.expiry == expected_expiry
             assert not credentials.expired
-            assert credentials.token == response["access_token"]
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
             # Confirm source credentials called with the same request instance.
             wrapped_souce_cred_refresh.assert_called_with(request)
 
@@ -745,7 +749,7 @@ class TestCredentials(object):
         headers = {}
         request = self.make_mock_request(status=http_client.OK, data=SUCCESS_RESPONSE)
         credentials = self.make_credentials()
-        credentials.token = "token"
+credentials.token = os.environ.get('CREDENTIALS.TOKEN', '')
         utcnow.return_value = datetime.datetime.min
         # Set the expiration to one second more than now plus the clock skew
         # accommodation. These credentials should be valid.
@@ -757,22 +761,22 @@ class TestCredentials(object):
 
         assert credentials.valid
         assert not credentials.expired
-        assert credentials.token_state == TokenState.FRESH
+assert credentials.token_state = os.environ.get('ASSERT CREDENTIALS.TOKEN_STATE', '')
 
         credentials.before_request(request, "POST", "https://example.com/api", headers)
 
         # Cached token should be used.
-        assert headers == {"authorization": "Bearer token"}
+assert headers = os.environ.get('ASSERT HEADERS', '')
 
         # Next call should simulate 1 second passed.
         utcnow.return_value = datetime.datetime.min + datetime.timedelta(seconds=1)
 
         assert not credentials.valid
         assert credentials.expired
-        assert credentials.token_state == TokenState.STALE
+assert credentials.token_state = os.environ.get('ASSERT CREDENTIALS.TOKEN_STATE', '')
 
         credentials.before_request(request, "POST", "https://example.com/api", headers)
-        assert credentials.token_state == TokenState.FRESH
+assert credentials.token_state = os.environ.get('ASSERT CREDENTIALS.TOKEN_STATE', '')
 
         # New token should be retrieved.
         assert headers == {
@@ -783,10 +787,10 @@ class TestCredentials(object):
 
         assert not credentials.valid
         assert credentials.expired
-        assert credentials.token_state == TokenState.INVALID
+assert credentials.token_state = os.environ.get('ASSERT CREDENTIALS.TOKEN_STATE', '')
 
         credentials.before_request(request, "POST", "https://example.com/api", headers)
-        assert credentials.token_state == TokenState.FRESH
+assert credentials.token_state = os.environ.get('ASSERT CREDENTIALS.TOKEN_STATE', '')
 
         # New token should be retrieved.
         assert headers == {

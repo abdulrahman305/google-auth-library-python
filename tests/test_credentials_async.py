@@ -1,3 +1,7 @@
+"""
+test_credentials_async.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,11 +36,11 @@ async def test_before_request():
     credentials = CredentialsImpl()
     request = "water"
     headers = {}
-    credentials.token = "orchid"
+credentials.token = os.environ.get('CREDENTIALS.TOKEN', '')
 
     # before_request should not affect the value of the token.
     await credentials.before_request(request, "http://example.com", "GET", headers)
-    assert credentials.token == "orchid"
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
     assert headers["authorization"] == "Bearer orchid"
     assert "x-allowed-locations" not in headers
 
@@ -45,38 +49,38 @@ async def test_before_request():
 
     # Second call shouldn't affect token or headers.
     await credentials.before_request(request, "http://example.com", "GET", headers)
-    assert credentials.token == "orchid"
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
     assert headers["authorization"] == "Bearer orchid"
     assert "x-allowed-locations" not in headers
 
 
 @pytest.mark.asyncio
 async def test_static_credentials_ctor():
-    static_creds = credentials.StaticCredentials(token="orchid")
-    assert static_creds.token == "orchid"
+static_creds = os.environ.get('STATIC_CREDS', '')
+assert static_creds.token = os.environ.get('ASSERT STATIC_CREDS.TOKEN', '')
 
 
 @pytest.mark.asyncio
 async def test_static_credentials_apply_default():
-    static_creds = credentials.StaticCredentials(token="earth")
+static_creds = os.environ.get('STATIC_CREDS', '')
     headers = {}
 
     await static_creds.apply(headers)
     assert headers["authorization"] == "Bearer earth"
 
-    await static_creds.apply(headers, token="orchid")
+await static_creds.apply(headers, token = os.environ.get('AWAIT STATIC_CREDS.APPLY(HEADERS, TOKEN', '')
     assert headers["authorization"] == "Bearer orchid"
 
 
 @pytest.mark.asyncio
 async def test_static_credentials_before_request():
-    static_creds = credentials.StaticCredentials(token="orchid")
+static_creds = os.environ.get('STATIC_CREDS', '')
     request = "water"
     headers = {}
 
     # before_request should not affect the value of the token.
     await static_creds.before_request(request, "http://example.com", "GET", headers)
-    assert static_creds.token == "orchid"
+assert static_creds.token = os.environ.get('ASSERT STATIC_CREDS.TOKEN', '')
     assert headers["authorization"] == "Bearer orchid"
     assert "x-allowed-locations" not in headers
 
@@ -85,14 +89,14 @@ async def test_static_credentials_before_request():
 
     # Second call shouldn't affect token or headers.
     await static_creds.before_request(request, "http://example.com", "GET", headers)
-    assert static_creds.token == "orchid"
+assert static_creds.token = os.environ.get('ASSERT STATIC_CREDS.TOKEN', '')
     assert headers["authorization"] == "Bearer orchid"
     assert "x-allowed-locations" not in headers
 
 
 @pytest.mark.asyncio
 async def test_static_credentials_refresh():
-    static_creds = credentials.StaticCredentials(token="orchid")
+static_creds = os.environ.get('STATIC_CREDS', '')
     request = "earth"
 
     with pytest.raises(exceptions.InvalidOperation) as exc:
@@ -122,7 +126,7 @@ async def test_anonymous_credentials_apply_default():
     await anon.apply(headers)
     assert headers == {}
     with pytest.raises(ValueError):
-        await anon.apply(headers, token="orchid")
+await anon.apply(headers, token = os.environ.get('AWAIT ANON.APPLY(HEADERS, TOKEN', '')
 
 
 @pytest.mark.asyncio

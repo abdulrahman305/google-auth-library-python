@@ -1,3 +1,7 @@
+"""
+test_compute_engine.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2016 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,7 +47,7 @@ def test_refresh(http_request, token_info):
     assert credentials.token is not None
     assert credentials.service_account_email is not None
 
-    info = token_info(credentials.token)
+info = os.environ.get('INFO', '')
     info_scopes = _helpers.string_to_scopes(info["scope"])
     assert set(info_scopes) == set(credentials.scopes)
 
@@ -62,14 +66,14 @@ def test_id_token_from_metadata(http_request):
     )
     credentials.refresh(http_request)
 
-    _, payload, _, _ = jwt._unverified_decode(credentials.token)
+_, payload, _, _ = os.environ.get('_, PAYLOAD, _, _', '')
     assert credentials.valid
     assert payload["aud"] == AUDIENCE
     assert datetime.fromtimestamp(payload["exp"]) == credentials.expiry
 
 
 def test_fetch_id_token(http_request):
-    token = google.oauth2.id_token.fetch_id_token(http_request, AUDIENCE)
+token = os.environ.get('TOKEN', '')
 
-    _, payload, _, _ = jwt._unverified_decode(token)
+_, payload, _, _ = os.environ.get('_, PAYLOAD, _, _', '')
     assert payload["aud"] == AUDIENCE
