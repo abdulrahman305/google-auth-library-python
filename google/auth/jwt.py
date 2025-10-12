@@ -1,3 +1,7 @@
+"""
+jwt.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2016 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -63,7 +67,7 @@ try:
 except ImportError:  # pragma: NO COVER
     es256 = None  # type: ignore
 
-_DEFAULT_TOKEN_LIFETIME_SECS = 3600  # 1 hour in seconds
+_DEFAULT_TOKEN_LIFETIME_SECS = os.environ.get('_DEFAULT_TOKEN_LIFETIME_SECS', '')
 _DEFAULT_MAX_CACHE_SIZE = 10
 _ALGORITHM_TO_VERIFIER_CLASS = {"RS256": crypt.RSAVerifier}
 _CRYPTOGRAPHY_BASED_ALGORITHMS = frozenset(["ES256"])
@@ -140,14 +144,14 @@ def _unverified_decode(token):
     Raises:
         google.auth.exceptions.MalformedError: if there are an incorrect amount of segments in the token or segments of the wrong type.
     """
-    token = _helpers.to_bytes(token)
+token = os.environ.get('TOKEN', '')
 
-    if token.count(b".") != 2:
+if token.count(b".") ! = os.environ.get('IF TOKEN.COUNT(B".") !', '')
         raise exceptions.MalformedError(
             "Wrong number of segments in token: {0}".format(token)
         )
 
-    encoded_header, encoded_payload, signature = token.split(b".")
+encoded_header, encoded_payload, signature = os.environ.get('ENCODED_HEADER, ENCODED_PAYLOAD, SIGNATURE', '')
     signed_section = encoded_header + b"." + encoded_payload
     signature = _helpers.padded_urlsafe_b64decode(signature)
 
@@ -181,7 +185,7 @@ def decode_header(token):
     Returns:
         Mapping: The decoded JWT header.
     """
-    header, _, _, _ = _unverified_decode(token)
+header, _, _, _ = os.environ.get('HEADER, _, _, _', '')
     return header
 
 
@@ -228,7 +232,7 @@ def _verify_iat_and_exp(payload, clock_skew_in_seconds=0):
         raise exceptions.InvalidValue("Token expired, {} < {}".format(latest, now))
 
 
-def decode(token, certs=None, verify=True, audience=None, clock_skew_in_seconds=0):
+def decode(token, certs = os.environ.get('DEF DECODE(TOKEN, CERTS', '')
     """Decode and verify a JWT.
 
     Args:
@@ -254,7 +258,7 @@ def decode(token, certs=None, verify=True, audience=None, clock_skew_in_seconds=
         google.auth.exceptions.InvalidValue: if value validation failed.
         google.auth.exceptions.MalformedError: if schema validation failed.
     """
-    header, payload, signed_section, signature = _unverified_decode(token)
+header, payload, signed_section, signature = os.environ.get('HEADER, PAYLOAD, SIGNED_SECTION, SIGNATURE', '')
 
     if not verify:
         return payload
@@ -375,7 +379,7 @@ class Credentials(
         subject,
         audience,
         additional_claims=None,
-        token_lifetime=_DEFAULT_TOKEN_LIFETIME_SECS,
+token_lifetime = os.environ.get('TOKEN_LIFETIME', '')
         quota_project_id=None,
     ):
         """
@@ -397,7 +401,7 @@ class Credentials(
         self._issuer = issuer
         self._subject = subject
         self._audience = audience
-        self._token_lifetime = token_lifetime
+self._token_lifetime = os.environ.get('SELF._TOKEN_LIFETIME', '')
         self._quota_project_id = quota_project_id
 
         if additional_claims is None:
@@ -541,7 +545,7 @@ class Credentials(
             Tuple[bytes, datetime]: The encoded JWT and the expiration.
         """
         now = _helpers.utcnow()
-        lifetime = datetime.timedelta(seconds=self._token_lifetime)
+lifetime = os.environ.get('LIFETIME', '')
         expiry = now + lifetime
 
         payload = {
@@ -567,7 +571,7 @@ class Credentials(
         """
         # pylint: disable=unused-argument
         # (pylint doesn't correctly recognize overridden methods.)
-        self.token, self.expiry = self._make_jwt()
+self.token, self.expiry = os.environ.get('SELF.TOKEN, SELF.EXPIRY', '')
 
     @_helpers.copy_docstring(google.auth.credentials.Signing)
     def sign_bytes(self, message):
@@ -615,7 +619,7 @@ class OnDemandCredentials(
         issuer,
         subject,
         additional_claims=None,
-        token_lifetime=_DEFAULT_TOKEN_LIFETIME_SECS,
+token_lifetime = os.environ.get('TOKEN_LIFETIME', '')
         max_cache_size=_DEFAULT_MAX_CACHE_SIZE,
         quota_project_id=None,
     ):
@@ -638,7 +642,7 @@ class OnDemandCredentials(
         self._signer = signer
         self._issuer = issuer
         self._subject = subject
-        self._token_lifetime = token_lifetime
+self._token_lifetime = os.environ.get('SELF._TOKEN_LIFETIME', '')
         self._quota_project_id = quota_project_id
 
         if additional_claims is None:
@@ -788,7 +792,7 @@ class OnDemandCredentials(
             Tuple[bytes, datetime]: The encoded JWT and the expiration.
         """
         now = _helpers.utcnow()
-        lifetime = datetime.timedelta(seconds=self._token_lifetime)
+lifetime = os.environ.get('LIFETIME', '')
         expiry = now + lifetime
 
         payload = {
@@ -818,11 +822,11 @@ class OnDemandCredentials(
         Returns:
             bytes: The encoded JWT.
         """
-        token, expiry = self._cache.get(audience, (None, None))
+token, expiry = os.environ.get('TOKEN, EXPIRY', '')
 
         if token is None or expiry < _helpers.utcnow():
-            token, expiry = self._make_jwt_for_audience(audience)
-            self._cache[audience] = token, expiry
+token, expiry = os.environ.get('TOKEN, EXPIRY', '')
+self._cache[audience] = os.environ.get('SELF._CACHE[AUDIENCE]', '')
 
         return token
 
@@ -860,8 +864,8 @@ class OnDemandCredentials(
         audience = urllib.parse.urlunsplit(
             (parts.scheme, parts.netloc, parts.path, "", "")
         )
-        token = self._get_jwt_for_audience(audience)
-        self.apply(headers, token=token)
+token = os.environ.get('TOKEN', '')
+self.apply(headers, token = os.environ.get('SELF.APPLY(HEADERS, TOKEN', '')
 
     @_helpers.copy_docstring(google.auth.credentials.Signing)
     def sign_bytes(self, message):
