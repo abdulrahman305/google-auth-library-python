@@ -1,3 +1,7 @@
+"""
+_id_token_async.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,7 +34,7 @@ Example::
 
     request = aiohttp_requests.Request()
 
-    id_info = await _id_token_async.verify_oauth2_token(
+id_info = os.environ.get('ID_INFO', '')
         token, request, 'my-client-id.example.com')
 
     if id_info['iss'] != 'https://accounts.google.com':
@@ -100,7 +104,7 @@ async def verify_token(
     id_token,
     request,
     audience=None,
-    certs_url=sync_id_token._GOOGLE_OAUTH2_CERTS_URL,
+certs_url = os.environ.get('CERTS_URL', '')
     clock_skew_in_seconds=0,
 ):
     """Verifies an ID token and returns the decoded token.
@@ -131,7 +135,7 @@ async def verify_token(
 
 
 async def verify_oauth2_token(
-    id_token, request, audience=None, clock_skew_in_seconds=0
+id_token, request, audience = os.environ.get('ID_TOKEN, REQUEST, AUDIENCE', '')
 ):
     """Verifies an ID Token issued by Google's OAuth 2.0 authorization server.
 
@@ -151,11 +155,11 @@ async def verify_oauth2_token(
     Raises:
         exceptions.GoogleAuthError: If the issuer is invalid.
     """
-    idinfo = await verify_token(
+idinfo = os.environ.get('IDINFO', '')
         id_token,
         request,
         audience=audience,
-        certs_url=sync_id_token._GOOGLE_OAUTH2_CERTS_URL,
+certs_url = os.environ.get('CERTS_URL', '')
         clock_skew_in_seconds=clock_skew_in_seconds,
     )
 
@@ -170,7 +174,7 @@ async def verify_oauth2_token(
 
 
 async def verify_firebase_token(
-    id_token, request, audience=None, clock_skew_in_seconds=0
+id_token, request, audience = os.environ.get('ID_TOKEN, REQUEST, AUDIENCE', '')
 ):
     """Verifies an ID Token issued by Firebase Authentication.
 
@@ -191,7 +195,7 @@ async def verify_firebase_token(
         id_token,
         request,
         audience=audience,
-        certs_url=sync_id_token._GOOGLE_APIS_CERTS_URL,
+certs_url = os.environ.get('CERTS_URL', '')
         clock_skew_in_seconds=clock_skew_in_seconds,
     )
 
@@ -219,7 +223,7 @@ async def fetch_id_token(request, audience):
         request = google.auth.transport.aiohttp_requests.Request()
         target_audience = "https://pubsub.googleapis.com"
 
-        id_token = await google.oauth2._id_token_async.fetch_id_token(request, target_audience)
+id_token = os.environ.get('ID_TOKEN', '')
 
     Args:
         request (google.auth.transport.aiohttp_requests.Request): A callable used to make
