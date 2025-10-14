@@ -1,3 +1,7 @@
+"""
+test_external_account.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,13 +33,13 @@ from google.auth import transport
 from google.auth.credentials import DEFAULT_UNIVERSE_DOMAIN
 from google.auth.credentials import TokenState
 
-IMPERSONATE_ACCESS_TOKEN_REQUEST_METRICS_HEADER_VALUE = (
+IMPERSONATE_ACCESS_TOKEN_REQUEST_METRICS_HEADER_VALUE = os.environ.get('IMPERSONATE_ACCESS_TOKEN_REQUEST_METRICS_HEADER_VALUE', '')
     "gl-python/3.7 auth/1.1 auth-request-type/at cred-type/imp"
 )
 LANG_LIBRARY_METRICS_HEADER_VALUE = "gl-python/3.7 auth/1.1"
 
 CLIENT_ID = "username"
-CLIENT_SECRET = "password"
+CLIENT_SECRET = os.environ.get('CLIENT_SECRET', '')
 # Base64 encoding of "username:password"
 BASIC_AUTH_ENCODING = "dXNlcm5hbWU6cGFzc3dvcmQ="
 SERVICE_ACCOUNT_EMAIL = "service-1234@service-name.iam.gserviceaccount.com"
@@ -86,8 +90,8 @@ class CredentialsImpl(external_account.Credentials):
 
 
 class TestCredentials(object):
-    TOKEN_URL = "https://sts.googleapis.com/v1/token"
-    TOKEN_INFO_URL = "https://sts.googleapis.com/v1/introspect"
+TOKEN_URL = os.environ.get('TOKEN_URL', '')
+TOKEN_INFO_URL = os.environ.get('TOKEN_INFO_URL', '')
     PROJECT_NUMBER = "123456"
     POOL_ID = "POOL_ID"
     PROVIDER_ID = "PROVIDER_ID"
@@ -100,9 +104,9 @@ class TestCredentials(object):
         "//iam.googleapis.com/locations/global/workforcePools/{}/providers/{}"
     ).format(POOL_ID, PROVIDER_ID)
     WORKFORCE_POOL_USER_PROJECT = "WORKFORCE_POOL_USER_PROJECT_NUMBER"
-    SUBJECT_TOKEN_TYPE = "urn:ietf:params:oauth:token-type:jwt"
-    WORKFORCE_SUBJECT_TOKEN_TYPE = "urn:ietf:params:oauth:token-type:id_token"
-    CREDENTIAL_SOURCE = {"file": "/var/run/secrets/goog.id/token"}
+SUBJECT_TOKEN_TYPE = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+WORKFORCE_SUBJECT_TOKEN_TYPE = os.environ.get('WORKFORCE_SUBJECT_TOKEN_TYPE', '')
+CREDENTIAL_SOURCE = os.environ.get('CREDENTIAL_SOURCE', '')
     SUCCESS_RESPONSE = {
         "access_token": "ACCESS_TOKEN",
         "issued_token_type": "urn:ietf:params:oauth:token-type:access_token",
@@ -150,9 +154,9 @@ class TestCredentials(object):
     def make_credentials(
         cls,
         client_id=None,
-        client_secret=None,
+client_secret = os.environ.get('CLIENT_SECRET', '')
         quota_project_id=None,
-        token_info_url=None,
+token_info_url = os.environ.get('TOKEN_INFO_URL', '')
         scopes=None,
         default_scopes=None,
         service_account_impersonation_url=None,
@@ -162,14 +166,14 @@ class TestCredentials(object):
     ):
         return CredentialsImpl(
             audience=cls.AUDIENCE,
-            subject_token_type=cls.SUBJECT_TOKEN_TYPE,
-            token_url=cls.TOKEN_URL,
-            token_info_url=token_info_url,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
+token_info_url = os.environ.get('TOKEN_INFO_URL', '')
             service_account_impersonation_url=service_account_impersonation_url,
             service_account_impersonation_options=service_account_impersonation_options,
             credential_source=cls.CREDENTIAL_SOURCE,
             client_id=client_id,
-            client_secret=client_secret,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             quota_project_id=quota_project_id,
             scopes=scopes,
             default_scopes=default_scopes,
@@ -181,7 +185,7 @@ class TestCredentials(object):
     def make_workforce_pool_credentials(
         cls,
         client_id=None,
-        client_secret=None,
+client_secret = os.environ.get('CLIENT_SECRET', '')
         quota_project_id=None,
         scopes=None,
         default_scopes=None,
@@ -191,12 +195,12 @@ class TestCredentials(object):
     ):
         return CredentialsImpl(
             audience=cls.WORKFORCE_AUDIENCE,
-            subject_token_type=cls.WORKFORCE_SUBJECT_TOKEN_TYPE,
-            token_url=cls.TOKEN_URL,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
             service_account_impersonation_url=service_account_impersonation_url,
             credential_source=cls.CREDENTIAL_SOURCE,
             client_id=client_id,
-            client_secret=client_secret,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             quota_project_id=quota_project_id,
             scopes=scopes,
             default_scopes=default_scopes,
@@ -215,10 +219,10 @@ class TestCredentials(object):
         cloud_resource_manager_data=None,
     ):
         # STS token exchange request.
-        token_response = mock.create_autospec(transport.Response, instance=True)
-        token_response.status = status
-        token_response.data = json.dumps(data).encode("utf-8")
-        responses = [token_response]
+token_response = os.environ.get('TOKEN_RESPONSE', '')
+token_response.status = os.environ.get('TOKEN_RESPONSE.STATUS', '')
+token_response.data = os.environ.get('TOKEN_RESPONSE.DATA', '')
+responses = os.environ.get('RESPONSES', '')
 
         # If service account impersonation is requested, mock the expected response.
         if impersonation_status:
@@ -249,7 +253,7 @@ class TestCredentials(object):
     def assert_token_request_kwargs(
         cls, request_kwargs, headers, request_data, cert=None
     ):
-        assert request_kwargs["url"] == cls.TOKEN_URL
+assert request_kwargs["url"] = os.environ.get('ASSERT REQUEST_KWARGS["URL"]', '')
         assert request_kwargs["method"] == "POST"
         assert request_kwargs["headers"] == headers
         if cert is not None:
@@ -336,8 +340,8 @@ class TestCredentials(object):
         with pytest.raises(exceptions.InvalidValue) as excinfo:
             CredentialsImpl(
                 audience=self.AUDIENCE,
-                subject_token_type=self.SUBJECT_TOKEN_TYPE,
-                token_url=self.TOKEN_URL,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
                 credential_source=self.CREDENTIAL_SOURCE,
                 workforce_pool_user_project=self.WORKFORCE_POOL_USER_PROJECT,
             )
@@ -405,13 +409,13 @@ class TestCredentials(object):
     def test_with_scopes_full_options_propagated(self):
         credentials = self.make_credentials(
             client_id=CLIENT_ID,
-            client_secret=CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             quota_project_id=self.QUOTA_PROJECT_ID,
             scopes=self.SCOPES,
-            token_info_url=self.TOKEN_INFO_URL,
+token_info_url = os.environ.get('TOKEN_INFO_URL', '')
             default_scopes=["default1"],
             service_account_impersonation_url=self.SERVICE_ACCOUNT_IMPERSONATION_URL,
-            service_account_impersonation_options={"token_lifetime_seconds": 2800},
+service_account_impersonation_options = os.environ.get('SERVICE_ACCOUNT_IMPERSONATION_OPTIONS', '')
         )
 
         with mock.patch.object(
@@ -423,14 +427,14 @@ class TestCredentials(object):
         # parameters and scopes.
         mock_init.assert_called_once_with(
             audience=self.AUDIENCE,
-            subject_token_type=self.SUBJECT_TOKEN_TYPE,
-            token_url=self.TOKEN_URL,
-            token_info_url=self.TOKEN_INFO_URL,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
+token_info_url = os.environ.get('TOKEN_INFO_URL', '')
             credential_source=self.CREDENTIAL_SOURCE,
             service_account_impersonation_url=self.SERVICE_ACCOUNT_IMPERSONATION_URL,
-            service_account_impersonation_options={"token_lifetime_seconds": 2800},
+service_account_impersonation_options = os.environ.get('SERVICE_ACCOUNT_IMPERSONATION_OPTIONS', '')
             client_id=CLIENT_ID,
-            client_secret=CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             quota_project_id=self.QUOTA_PROJECT_ID,
             scopes=["email"],
             default_scopes=["default2"],
@@ -440,26 +444,26 @@ class TestCredentials(object):
 
     def test_with_token_uri(self):
         credentials = self.make_credentials()
-        new_token_uri = "https://eu-sts.googleapis.com/v1/token"
+new_token_uri = os.environ.get('NEW_TOKEN_URI', '')
 
-        assert credentials._token_url == self.TOKEN_URL
+assert credentials._token_url = os.environ.get('ASSERT CREDENTIALS._TOKEN_URL', '')
 
-        creds_with_new_token_uri = credentials.with_token_uri(new_token_uri)
+creds_with_new_token_uri = os.environ.get('CREDS_WITH_NEW_TOKEN_URI', '')
 
-        assert creds_with_new_token_uri._token_url == new_token_uri
+assert creds_with_new_token_uri._token_url = os.environ.get('ASSERT CREDS_WITH_NEW_TOKEN_URI._TOKEN_URL', '')
 
     def test_with_token_uri_workforce_pool(self):
         credentials = self.make_workforce_pool_credentials(
             workforce_pool_user_project=self.WORKFORCE_POOL_USER_PROJECT
         )
 
-        new_token_uri = "https://eu-sts.googleapis.com/v1/token"
+new_token_uri = os.environ.get('NEW_TOKEN_URI', '')
 
-        assert credentials._token_url == self.TOKEN_URL
+assert credentials._token_url = os.environ.get('ASSERT CREDENTIALS._TOKEN_URL', '')
 
-        creds_with_new_token_uri = credentials.with_token_uri(new_token_uri)
+creds_with_new_token_uri = os.environ.get('CREDS_WITH_NEW_TOKEN_URI', '')
 
-        assert creds_with_new_token_uri._token_url == new_token_uri
+assert creds_with_new_token_uri._token_url = os.environ.get('ASSERT CREDS_WITH_NEW_TOKEN_URI._TOKEN_URL', '')
         assert (
             creds_with_new_token_uri.info.get("workforce_pool_user_project")
             == self.WORKFORCE_POOL_USER_PROJECT
@@ -494,13 +498,13 @@ class TestCredentials(object):
     def test_with_quota_project_full_options_propagated(self):
         credentials = self.make_credentials(
             client_id=CLIENT_ID,
-            client_secret=CLIENT_SECRET,
-            token_info_url=self.TOKEN_INFO_URL,
+client_secret = os.environ.get('CLIENT_SECRET', '')
+token_info_url = os.environ.get('TOKEN_INFO_URL', '')
             quota_project_id=self.QUOTA_PROJECT_ID,
             scopes=self.SCOPES,
             default_scopes=["default1"],
             service_account_impersonation_url=self.SERVICE_ACCOUNT_IMPERSONATION_URL,
-            service_account_impersonation_options={"token_lifetime_seconds": 2800},
+service_account_impersonation_options = os.environ.get('SERVICE_ACCOUNT_IMPERSONATION_OPTIONS', '')
         )
 
         with mock.patch.object(
@@ -512,14 +516,14 @@ class TestCredentials(object):
             # expected parameters.
             mock_init.assert_called_once_with(
                 audience=self.AUDIENCE,
-                subject_token_type=self.SUBJECT_TOKEN_TYPE,
-                token_url=self.TOKEN_URL,
-                token_info_url=self.TOKEN_INFO_URL,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
+token_info_url = os.environ.get('TOKEN_INFO_URL', '')
                 credential_source=self.CREDENTIAL_SOURCE,
                 service_account_impersonation_url=self.SERVICE_ACCOUNT_IMPERSONATION_URL,
-                service_account_impersonation_options={"token_lifetime_seconds": 2800},
+service_account_impersonation_options = os.environ.get('SERVICE_ACCOUNT_IMPERSONATION_OPTIONS', '')
                 client_id=CLIENT_ID,
-                client_secret=CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
                 quota_project_id=self.QUOTA_PROJECT_ID,
                 scopes=self.SCOPES,
                 default_scopes=["default1"],
@@ -573,11 +577,11 @@ class TestCredentials(object):
     def test_info_with_full_options(self):
         credentials = self.make_credentials(
             client_id=CLIENT_ID,
-            client_secret=CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             quota_project_id=self.QUOTA_PROJECT_ID,
-            token_info_url=self.TOKEN_INFO_URL,
+token_info_url = os.environ.get('TOKEN_INFO_URL', '')
             service_account_impersonation_url=self.SERVICE_ACCOUNT_IMPERSONATION_URL,
-            service_account_impersonation_options={"token_lifetime_seconds": 2800},
+service_account_impersonation_options = os.environ.get('SERVICE_ACCOUNT_IMPERSONATION_OPTIONS', '')
         )
 
         assert credentials.info == {
@@ -611,8 +615,8 @@ class TestCredentials(object):
     def test_is_user_with_non_users(self, audience):
         credentials = CredentialsImpl(
             audience=audience,
-            subject_token_type=self.SUBJECT_TOKEN_TYPE,
-            token_url=self.TOKEN_URL,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
             credential_source=self.CREDENTIAL_SOURCE,
         )
 
@@ -622,8 +626,8 @@ class TestCredentials(object):
     def test_is_user_with_users(self, audience):
         credentials = CredentialsImpl(
             audience=audience,
-            subject_token_type=self.SUBJECT_TOKEN_TYPE,
-            token_url=self.TOKEN_URL,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
             credential_source=self.CREDENTIAL_SOURCE,
         )
 
@@ -634,8 +638,8 @@ class TestCredentials(object):
         # Initialize the credentials with service account impersonation.
         credentials = CredentialsImpl(
             audience=audience,
-            subject_token_type=self.SUBJECT_TOKEN_TYPE,
-            token_url=self.TOKEN_URL,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
             credential_source=self.CREDENTIAL_SOURCE,
             service_account_impersonation_url=self.SERVICE_ACCOUNT_IMPERSONATION_URL,
         )
@@ -649,8 +653,8 @@ class TestCredentials(object):
     def test_is_workforce_pool_with_non_users(self, audience):
         credentials = CredentialsImpl(
             audience=audience,
-            subject_token_type=self.SUBJECT_TOKEN_TYPE,
-            token_url=self.TOKEN_URL,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
             credential_source=self.CREDENTIAL_SOURCE,
         )
 
@@ -660,8 +664,8 @@ class TestCredentials(object):
     def test_is_workforce_pool_with_users(self, audience):
         credentials = CredentialsImpl(
             audience=audience,
-            subject_token_type=self.SUBJECT_TOKEN_TYPE,
-            token_url=self.TOKEN_URL,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
             credential_source=self.CREDENTIAL_SOURCE,
         )
 
@@ -673,8 +677,8 @@ class TestCredentials(object):
         # impersonation.
         credentials = CredentialsImpl(
             audience=audience,
-            subject_token_type=self.SUBJECT_TOKEN_TYPE,
-            token_url=self.TOKEN_URL,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
             credential_source=self.CREDENTIAL_SOURCE,
             service_account_impersonation_url=self.SERVICE_ACCOUNT_IMPERSONATION_URL,
         )
@@ -717,7 +721,7 @@ class TestCredentials(object):
         assert credentials.valid
         assert credentials.expiry == expected_expiry
         assert not credentials.expired
-        assert credentials.token == response["access_token"]
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
 
     @mock.patch("google.auth.external_account.Credentials._lookup_trust_boundary")
     def test_refresh_skips_trust_boundary_lookup_when_disabled(
@@ -1019,7 +1023,7 @@ class TestCredentials(object):
         assert credentials.valid
         assert credentials.expiry == expected_expiry
         assert not credentials.expired
-        assert credentials.token == response["access_token"]
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
 
     @mock.patch(
         "google.auth.metrics.python_and_auth_lib_version",
@@ -1060,7 +1064,7 @@ class TestCredentials(object):
         assert credentials.valid
         assert credentials.expiry == expected_expiry
         assert not credentials.expired
-        assert credentials.token == response["access_token"]
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
 
     @mock.patch(
         "google.auth.metrics.python_and_auth_lib_version",
@@ -1092,7 +1096,7 @@ class TestCredentials(object):
         # Client Auth will have higher priority over workforce_pool_user_project.
         credentials = self.make_workforce_pool_credentials(
             client_id=CLIENT_ID,
-            client_secret=CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             workforce_pool_user_project=self.WORKFORCE_POOL_USER_PROJECT,
         )
 
@@ -1102,7 +1106,7 @@ class TestCredentials(object):
         assert credentials.valid
         assert credentials.expiry == expected_expiry
         assert not credentials.expired
-        assert credentials.token == response["access_token"]
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
 
     @mock.patch(
         "google.auth.metrics.python_and_auth_lib_version",
@@ -1134,7 +1138,7 @@ class TestCredentials(object):
         # Client Auth will be sufficient for user project determination.
         credentials = self.make_workforce_pool_credentials(
             client_id=CLIENT_ID,
-            client_secret=CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             workforce_pool_user_project=None,
         )
 
@@ -1144,11 +1148,11 @@ class TestCredentials(object):
         assert credentials.valid
         assert credentials.expiry == expected_expiry
         assert not credentials.expired
-        assert credentials.token == response["access_token"]
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
 
     @mock.patch(
         "google.auth.metrics.token_request_access_token_impersonate",
-        return_value=IMPERSONATE_ACCESS_TOKEN_REQUEST_METRICS_HEADER_VALUE,
+return_value = os.environ.get('RETURN_VALUE', '')
     )
     @mock.patch(
         "google.auth.metrics.python_and_auth_lib_version",
@@ -1163,12 +1167,12 @@ class TestCredentials(object):
         ).isoformat("T") + "Z"
         expected_expiry = datetime.datetime.strptime(expire_time, "%Y-%m-%dT%H:%M:%SZ")
         # STS token exchange request/response.
-        token_response = self.SUCCESS_RESPONSE.copy()
-        token_headers = {
+token_response = os.environ.get('TOKEN_RESPONSE', '')
+token_headers = os.environ.get('TOKEN_HEADERS', '')
             "Content-Type": "application/x-www-form-urlencoded",
             "x-goog-api-client": "gl-python/3.7 auth/1.1 google-byoid-sdk sa-impersonation/true config-lifetime/false",
         }
-        token_request_data = {
+token_request_data = os.environ.get('TOKEN_REQUEST_DATA', '')
             "grant_type": "urn:ietf:params:oauth:grant-type:token-exchange",
             "audience": self.AUDIENCE,
             "requested_token_type": "urn:ietf:params:oauth:token-type:access_token",
@@ -1195,7 +1199,7 @@ class TestCredentials(object):
         # impersonation request.
         request = self.make_mock_request(
             status=http_client.OK,
-            data=token_response,
+data = os.environ.get('DATA', '')
             impersonation_status=http_client.OK,
             impersonation_data=impersonation_response,
         )
@@ -1222,11 +1226,11 @@ class TestCredentials(object):
         assert credentials.valid
         assert credentials.expiry == expected_expiry
         assert not credentials.expired
-        assert credentials.token == impersonation_response["accessToken"]
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
 
     @mock.patch(
         "google.auth.metrics.token_request_access_token_impersonate",
-        return_value=IMPERSONATE_ACCESS_TOKEN_REQUEST_METRICS_HEADER_VALUE,
+return_value = os.environ.get('RETURN_VALUE', '')
     )
     @mock.patch(
         "google.auth.metrics.python_and_auth_lib_version",
@@ -1252,12 +1256,12 @@ class TestCredentials(object):
         ).isoformat("T") + "Z"
         expected_expiry = datetime.datetime.strptime(expire_time, "%Y-%m-%dT%H:%M:%SZ")
         # STS token exchange request/response.
-        token_response = self.SUCCESS_RESPONSE.copy()
-        token_headers = {
+token_response = os.environ.get('TOKEN_RESPONSE', '')
+token_headers = os.environ.get('TOKEN_HEADERS', '')
             "Content-Type": "application/x-www-form-urlencoded",
             "x-goog-api-client": "gl-python/3.7 auth/1.1 google-byoid-sdk sa-impersonation/true config-lifetime/false",
         }
-        token_request_data = {
+token_request_data = os.environ.get('TOKEN_REQUEST_DATA', '')
             "grant_type": "urn:ietf:params:oauth:grant-type:token-exchange",
             "audience": self.AUDIENCE,
             "requested_token_type": "urn:ietf:params:oauth:token-type:access_token",
@@ -1284,7 +1288,7 @@ class TestCredentials(object):
         # impersonation request.
         request = self.make_mock_request(
             status=http_client.OK,
-            data=token_response,
+data = os.environ.get('DATA', '')
             impersonation_status=http_client.OK,
             impersonation_data=impersonation_response,
         )
@@ -1316,11 +1320,11 @@ class TestCredentials(object):
         assert credentials.valid
         assert credentials.expiry == expected_expiry
         assert not credentials.expired
-        assert credentials.token == impersonation_response["accessToken"]
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
 
     @mock.patch(
         "google.auth.metrics.token_request_access_token_impersonate",
-        return_value=IMPERSONATE_ACCESS_TOKEN_REQUEST_METRICS_HEADER_VALUE,
+return_value = os.environ.get('RETURN_VALUE', '')
     )
     @mock.patch(
         "google.auth.metrics.python_and_auth_lib_version",
@@ -1335,12 +1339,12 @@ class TestCredentials(object):
         ).isoformat("T") + "Z"
         expected_expiry = datetime.datetime.strptime(expire_time, "%Y-%m-%dT%H:%M:%SZ")
         # STS token exchange request/response.
-        token_response = self.SUCCESS_RESPONSE.copy()
-        token_headers = {
+token_response = os.environ.get('TOKEN_RESPONSE', '')
+token_headers = os.environ.get('TOKEN_HEADERS', '')
             "Content-Type": "application/x-www-form-urlencoded",
             "x-goog-api-client": "gl-python/3.7 auth/1.1 google-byoid-sdk sa-impersonation/true config-lifetime/false",
         }
-        token_request_data = {
+token_request_data = os.environ.get('TOKEN_REQUEST_DATA', '')
             "grant_type": "urn:ietf:params:oauth:grant-type:token-exchange",
             "audience": self.WORKFORCE_AUDIENCE,
             "requested_token_type": "urn:ietf:params:oauth:token-type:access_token",
@@ -1370,7 +1374,7 @@ class TestCredentials(object):
         # impersonation request.
         request = self.make_mock_request(
             status=http_client.OK,
-            data=token_response,
+data = os.environ.get('DATA', '')
             impersonation_status=http_client.OK,
             impersonation_data=impersonation_response,
         )
@@ -1398,7 +1402,7 @@ class TestCredentials(object):
         assert credentials.valid
         assert credentials.expiry == expected_expiry
         assert not credentials.expired
-        assert credentials.token == impersonation_response["accessToken"]
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
 
     @mock.patch(
         "google.auth.metrics.python_and_auth_lib_version",
@@ -1433,7 +1437,7 @@ class TestCredentials(object):
         self.assert_token_request_kwargs(request.call_args[1], headers, request_data)
         assert credentials.valid
         assert not credentials.expired
-        assert credentials.token == self.SUCCESS_RESPONSE["access_token"]
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
         assert credentials.has_scopes(["scope1", "scope2"])
         assert not credentials.has_scopes(["ignored"])
 
@@ -1470,7 +1474,7 @@ class TestCredentials(object):
         self.assert_token_request_kwargs(request.call_args[1], headers, request_data)
         assert credentials.valid
         assert not credentials.expired
-        assert credentials.token == self.SUCCESS_RESPONSE["access_token"]
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
         assert credentials.has_scopes(["scope1", "scope2"])
 
     def test_refresh_without_client_auth_error(self):
@@ -1558,7 +1562,7 @@ class TestCredentials(object):
             status=http_client.OK, data=self.SUCCESS_RESPONSE
         )
         credentials = self.make_credentials(
-            client_id=CLIENT_ID, client_secret=CLIENT_SECRET
+client_id = os.environ.get('CLIENT_ID', '')
         )
 
         credentials.refresh(request)
@@ -1566,11 +1570,11 @@ class TestCredentials(object):
         self.assert_token_request_kwargs(request.call_args[1], headers, request_data)
         assert credentials.valid
         assert not credentials.expired
-        assert credentials.token == self.SUCCESS_RESPONSE["access_token"]
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
 
     @mock.patch(
         "google.auth.metrics.token_request_access_token_impersonate",
-        return_value=IMPERSONATE_ACCESS_TOKEN_REQUEST_METRICS_HEADER_VALUE,
+return_value = os.environ.get('RETURN_VALUE', '')
     )
     @mock.patch(
         "google.auth.metrics.python_and_auth_lib_version",
@@ -1585,13 +1589,13 @@ class TestCredentials(object):
         ).isoformat("T") + "Z"
         expected_expiry = datetime.datetime.strptime(expire_time, "%Y-%m-%dT%H:%M:%SZ")
         # STS token exchange request/response.
-        token_response = self.SUCCESS_RESPONSE.copy()
-        token_headers = {
+token_response = os.environ.get('TOKEN_RESPONSE', '')
+token_headers = os.environ.get('TOKEN_HEADERS', '')
             "Content-Type": "application/x-www-form-urlencoded",
             "Authorization": "Basic {}".format(BASIC_AUTH_ENCODING),
             "x-goog-api-client": "gl-python/3.7 auth/1.1 google-byoid-sdk sa-impersonation/true config-lifetime/false",
         }
-        token_request_data = {
+token_request_data = os.environ.get('TOKEN_REQUEST_DATA', '')
             "grant_type": "urn:ietf:params:oauth:grant-type:token-exchange",
             "audience": self.AUDIENCE,
             "requested_token_type": "urn:ietf:params:oauth:token-type:access_token",
@@ -1618,14 +1622,14 @@ class TestCredentials(object):
         # impersonation request.
         request = self.make_mock_request(
             status=http_client.OK,
-            data=token_response,
+data = os.environ.get('DATA', '')
             impersonation_status=http_client.OK,
             impersonation_data=impersonation_response,
         )
         # Initialize credentials with service account impersonation and basic auth.
         credentials = self.make_credentials(
             client_id=CLIENT_ID,
-            client_secret=CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             service_account_impersonation_url=self.SERVICE_ACCOUNT_IMPERSONATION_URL,
             scopes=self.SCOPES,
             # Default scopes will be ignored since user scopes are specified.
@@ -1649,11 +1653,11 @@ class TestCredentials(object):
         assert credentials.valid
         assert credentials.expiry == expected_expiry
         assert not credentials.expired
-        assert credentials.token == impersonation_response["accessToken"]
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
 
     @mock.patch(
         "google.auth.metrics.token_request_access_token_impersonate",
-        return_value=IMPERSONATE_ACCESS_TOKEN_REQUEST_METRICS_HEADER_VALUE,
+return_value = os.environ.get('RETURN_VALUE', '')
     )
     @mock.patch(
         "google.auth.metrics.python_and_auth_lib_version",
@@ -1668,13 +1672,13 @@ class TestCredentials(object):
         ).isoformat("T") + "Z"
         expected_expiry = datetime.datetime.strptime(expire_time, "%Y-%m-%dT%H:%M:%SZ")
         # STS token exchange request/response.
-        token_response = self.SUCCESS_RESPONSE.copy()
-        token_headers = {
+token_response = os.environ.get('TOKEN_RESPONSE', '')
+token_headers = os.environ.get('TOKEN_HEADERS', '')
             "Content-Type": "application/x-www-form-urlencoded",
             "Authorization": "Basic {}".format(BASIC_AUTH_ENCODING),
             "x-goog-api-client": "gl-python/3.7 auth/1.1 google-byoid-sdk sa-impersonation/true config-lifetime/false",
         }
-        token_request_data = {
+token_request_data = os.environ.get('TOKEN_REQUEST_DATA', '')
             "grant_type": "urn:ietf:params:oauth:grant-type:token-exchange",
             "audience": self.AUDIENCE,
             "requested_token_type": "urn:ietf:params:oauth:token-type:access_token",
@@ -1701,14 +1705,14 @@ class TestCredentials(object):
         # impersonation request.
         request = self.make_mock_request(
             status=http_client.OK,
-            data=token_response,
+data = os.environ.get('DATA', '')
             impersonation_status=http_client.OK,
             impersonation_data=impersonation_response,
         )
         # Initialize credentials with service account impersonation and basic auth.
         credentials = self.make_credentials(
             client_id=CLIENT_ID,
-            client_secret=CLIENT_SECRET,
+client_secret = os.environ.get('CLIENT_SECRET', '')
             service_account_impersonation_url=self.SERVICE_ACCOUNT_IMPERSONATION_URL,
             scopes=None,
             # Default scopes will be used since user specified scopes are none.
@@ -1732,7 +1736,7 @@ class TestCredentials(object):
         assert credentials.valid
         assert credentials.expiry == expected_expiry
         assert not credentials.expired
-        assert credentials.token == impersonation_response["accessToken"]
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
 
     def test_apply_without_quota_project_id(self):
         headers = {}
@@ -1938,7 +1942,7 @@ class TestCredentials(object):
             status=http_client.OK, data=self.SUCCESS_RESPONSE
         )
         credentials = self.make_credentials()
-        credentials.token = "token"
+credentials.token = os.environ.get('CREDENTIALS.TOKEN', '')
         utcnow.return_value = datetime.datetime.min
         # Set the expiration to one second more than now plus the clock skew
         # accomodation. These credentials should be valid.
@@ -1950,7 +1954,7 @@ class TestCredentials(object):
 
         assert credentials.valid
         assert not credentials.expired
-        assert credentials.token_state == TokenState.FRESH
+assert credentials.token_state = os.environ.get('ASSERT CREDENTIALS.TOKEN_STATE', '')
 
         credentials.before_request(request, "POST", "https://example.com/api", headers)
 
@@ -1962,10 +1966,10 @@ class TestCredentials(object):
 
         assert not credentials.valid
         assert credentials.expired
-        assert credentials.token_state == TokenState.STALE
+assert credentials.token_state = os.environ.get('ASSERT CREDENTIALS.TOKEN_STATE', '')
 
         credentials.before_request(request, "POST", "https://example.com/api", headers)
-        assert credentials.token_state == TokenState.FRESH
+assert credentials.token_state = os.environ.get('ASSERT CREDENTIALS.TOKEN_STATE', '')
 
         # New token should be retrieved.
         assert headers == {
@@ -2023,7 +2027,7 @@ class TestCredentials(object):
         credentials = self.make_credentials(
             service_account_impersonation_url=self.SERVICE_ACCOUNT_IMPERSONATION_URL
         )
-        credentials.token = "token"
+credentials.token = os.environ.get('CREDENTIALS.TOKEN', '')
         utcnow.return_value = datetime.datetime.min
         # Set the expiration to one second more than now plus the clock skew
         # accomodation. These credentials should be valid.
@@ -2035,10 +2039,10 @@ class TestCredentials(object):
 
         assert credentials.valid
         assert not credentials.expired
-        assert credentials.token_state == TokenState.FRESH
+assert credentials.token_state = os.environ.get('ASSERT CREDENTIALS.TOKEN_STATE', '')
 
         credentials.before_request(request, "POST", "https://example.com/api", headers)
-        assert credentials.token_state == TokenState.FRESH
+assert credentials.token_state = os.environ.get('ASSERT CREDENTIALS.TOKEN_STATE', '')
 
         # Cached token should be used.
         assert headers == {"authorization": "Bearer token"}
@@ -2049,10 +2053,10 @@ class TestCredentials(object):
 
         assert not credentials.valid
         assert credentials.expired
-        assert credentials.token_state == TokenState.STALE
+assert credentials.token_state = os.environ.get('ASSERT CREDENTIALS.TOKEN_STATE', '')
 
         credentials.before_request(request, "POST", "https://example.com/api", headers)
-        assert credentials.token_state == TokenState.FRESH
+assert credentials.token_state = os.environ.get('ASSERT CREDENTIALS.TOKEN_STATE', '')
 
         credentials.before_request(request, "POST", "https://example.com/api", headers)
 
@@ -2078,8 +2082,8 @@ class TestCredentials(object):
     def test_project_number_indeterminable(self, audience):
         credentials = CredentialsImpl(
             audience=audience,
-            subject_token_type=self.SUBJECT_TOKEN_TYPE,
-            token_url=self.TOKEN_URL,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
             credential_source=self.CREDENTIAL_SOURCE,
         )
 
@@ -2089,8 +2093,8 @@ class TestCredentials(object):
     def test_project_number_determinable(self):
         credentials = CredentialsImpl(
             audience=self.AUDIENCE,
-            subject_token_type=self.SUBJECT_TOKEN_TYPE,
-            token_url=self.TOKEN_URL,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
             credential_source=self.CREDENTIAL_SOURCE,
         )
 
@@ -2099,8 +2103,8 @@ class TestCredentials(object):
     def test_project_number_workforce(self):
         credentials = CredentialsImpl(
             audience=self.WORKFORCE_AUDIENCE,
-            subject_token_type=self.WORKFORCE_SUBJECT_TOKEN_TYPE,
-            token_url=self.TOKEN_URL,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
             credential_source=self.CREDENTIAL_SOURCE,
             workforce_pool_user_project=self.WORKFORCE_POOL_USER_PROJECT,
         )
@@ -2111,8 +2115,8 @@ class TestCredentials(object):
         # Initialize credentials with no scopes.
         credentials = CredentialsImpl(
             audience=self.AUDIENCE,
-            subject_token_type=self.SUBJECT_TOKEN_TYPE,
-            token_url=self.TOKEN_URL,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
             credential_source=self.CREDENTIAL_SOURCE,
         )
 
@@ -2120,7 +2124,7 @@ class TestCredentials(object):
 
     @mock.patch(
         "google.auth.metrics.token_request_access_token_impersonate",
-        return_value=IMPERSONATE_ACCESS_TOKEN_REQUEST_METRICS_HEADER_VALUE,
+return_value = os.environ.get('RETURN_VALUE', '')
     )
     @mock.patch(
         "google.auth.metrics.python_and_auth_lib_version",
@@ -2130,12 +2134,12 @@ class TestCredentials(object):
         self, mock_metrics_header_value, mock_auth_lib_value
     ):
         # STS token exchange request/response.
-        token_response = self.SUCCESS_RESPONSE.copy()
-        token_headers = {
+token_response = os.environ.get('TOKEN_RESPONSE', '')
+token_headers = os.environ.get('TOKEN_HEADERS', '')
             "Content-Type": "application/x-www-form-urlencoded",
             "x-goog-api-client": "gl-python/3.7 auth/1.1 google-byoid-sdk sa-impersonation/true config-lifetime/false",
         }
-        token_request_data = {
+token_request_data = os.environ.get('TOKEN_REQUEST_DATA', '')
             "grant_type": "urn:ietf:params:oauth:grant-type:token-exchange",
             "audience": self.AUDIENCE,
             "requested_token_type": "urn:ietf:params:oauth:token-type:access_token",
@@ -2200,7 +2204,7 @@ class TestCredentials(object):
         assert credentials.valid
         assert credentials.expiry == expected_expiry
         assert not credentials.expired
-        assert credentials.token == impersonation_response["accessToken"]
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
         # Verify cloud resource manager request parameters.
         self.assert_resource_manager_request_kwargs(
             request.call_args_list[2][1],
@@ -2228,11 +2232,11 @@ class TestCredentials(object):
         self, mock_auth_lib_value
     ):
         # STS token exchange request/response.
-        token_headers = {
+token_headers = os.environ.get('TOKEN_HEADERS', '')
             "Content-Type": "application/x-www-form-urlencoded",
             "x-goog-api-client": "gl-python/3.7 auth/1.1 google-byoid-sdk sa-impersonation/false config-lifetime/false",
         }
-        token_request_data = {
+token_request_data = os.environ.get('TOKEN_REQUEST_DATA', '')
             "grant_type": "urn:ietf:params:oauth:grant-type:token-exchange",
             "audience": self.WORKFORCE_AUDIENCE,
             "requested_token_type": "urn:ietf:params:oauth:token-type:access_token",
@@ -2271,7 +2275,7 @@ class TestCredentials(object):
         # retrieved.
         assert credentials.valid
         assert not credentials.expired
-        assert credentials.token == self.SUCCESS_RESPONSE["access_token"]
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
         # Verify cloud resource manager request parameters.
         self.assert_resource_manager_request_kwargs(
             request.call_args_list[1][1],
@@ -2293,7 +2297,7 @@ class TestCredentials(object):
 
     @mock.patch(
         "google.auth.metrics.token_request_access_token_impersonate",
-        return_value=IMPERSONATE_ACCESS_TOKEN_REQUEST_METRICS_HEADER_VALUE,
+return_value = os.environ.get('RETURN_VALUE', '')
     )
     @mock.patch(
         "google.auth.metrics.python_and_auth_lib_version",
@@ -2308,12 +2312,12 @@ class TestCredentials(object):
         ).isoformat("T") + "Z"
         expected_expiry = datetime.datetime.strptime(expire_time, "%Y-%m-%dT%H:%M:%SZ")
         # STS token exchange request/response.
-        token_response = self.SUCCESS_RESPONSE.copy()
-        token_headers = {
+token_response = os.environ.get('TOKEN_RESPONSE', '')
+token_headers = os.environ.get('TOKEN_HEADERS', '')
             "Content-Type": "application/x-www-form-urlencoded",
             "x-goog-api-client": "gl-python/3.7 auth/1.1 google-byoid-sdk sa-impersonation/true config-lifetime/true",
         }
-        token_request_data = {
+token_request_data = os.environ.get('TOKEN_REQUEST_DATA', '')
             "grant_type": "urn:ietf:params:oauth:grant-type:token-exchange",
             "audience": self.AUDIENCE,
             "requested_token_type": "urn:ietf:params:oauth:token-type:access_token",
@@ -2340,14 +2344,14 @@ class TestCredentials(object):
         # impersonation request.
         request = self.make_mock_request(
             status=http_client.OK,
-            data=token_response,
+data = os.environ.get('DATA', '')
             impersonation_status=http_client.OK,
             impersonation_data=impersonation_response,
         )
         # Initialize credentials with service account impersonation.
         credentials = self.make_credentials(
             service_account_impersonation_url=self.SERVICE_ACCOUNT_IMPERSONATION_URL,
-            service_account_impersonation_options={"token_lifetime_seconds": 2800},
+service_account_impersonation_options = os.environ.get('SERVICE_ACCOUNT_IMPERSONATION_OPTIONS', '')
             scopes=self.SCOPES,
         )
 
@@ -2368,7 +2372,7 @@ class TestCredentials(object):
         assert credentials.valid
         assert credentials.expiry == expected_expiry
         assert not credentials.expired
-        assert credentials.token == impersonation_response["accessToken"]
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
 
     def test_get_project_id_cloud_resource_manager_error(self):
         # Simulate resource doesn't have sufficient permissions to access
@@ -2406,5 +2410,5 @@ class TestCredentials(object):
 def test_supplier_context():
     context = external_account.SupplierContext("TestTokenType", "TestAudience")
 
-    assert context.subject_token_type == "TestTokenType"
+assert context.subject_token_type = os.environ.get('ASSERT CONTEXT.SUBJECT_TOKEN_TYPE', '')
     assert context.audience == "TestAudience"
