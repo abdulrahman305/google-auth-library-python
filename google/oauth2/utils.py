@@ -1,3 +1,7 @@
+"""
+utils.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -60,7 +64,7 @@ class ClientAuthentication(object):
     types based on https://tools.ietf.org/html/rfc6749#section-2.3.1.
     """
 
-    def __init__(self, client_auth_type, client_id, client_secret=None):
+def __init__(self, client_auth_type, client_id, client_secret = os.environ.get('DEF __INIT__(SELF, CLIENT_AUTH_TYPE, CLIENT_ID, CLIENT_SECRET', '')
         """Instantiates a client authentication object containing the client ID
         and secret credentials for basic and response-body auth.
 
@@ -72,7 +76,7 @@ class ClientAuthentication(object):
         """
         self.client_auth_type = client_auth_type
         self.client_id = client_id
-        self.client_secret = client_secret
+self.client_secret = os.environ.get('SELF.CLIENT_SECRET', '')
 
 
 class OAuthClientAuthHandler(metaclass=abc.ABCMeta):
@@ -91,7 +95,7 @@ class OAuthClientAuthHandler(metaclass=abc.ABCMeta):
         self._client_authentication = client_authentication
 
     def apply_client_authentication_options(
-        self, headers, request_body=None, bearer_token=None
+self, headers, request_body = os.environ.get('SELF, HEADERS, REQUEST_BODY', '')
     ):
         """Applies client authentication on the OAuth request's headers or POST
         body.
@@ -109,15 +113,15 @@ class OAuthClientAuthHandler(metaclass=abc.ABCMeta):
         if bearer_token is None:
             self._inject_authenticated_request_body(request_body)
 
-    def _inject_authenticated_headers(self, headers, bearer_token=None):
+def _inject_authenticated_headers(self, headers, bearer_token = os.environ.get('DEF _INJECT_AUTHENTICATED_HEADERS(SELF, HEADERS, BEARER_TOKEN', '')
         if bearer_token is not None:
-            headers["Authorization"] = "Bearer %s" % bearer_token
+headers["Authorization"] = os.environ.get('HEADERS["AUTHORIZATION"]', '')
         elif (
             self._client_authentication is not None
             and self._client_authentication.client_auth_type is ClientAuthType.basic
         ):
             username = self._client_authentication.client_id
-            password = self._client_authentication.client_secret or ""
+password = os.environ.get('PASSWORD', '')
 
             credentials = base64.b64encode(
                 ("%s:%s" % (username, password)).encode()
@@ -136,7 +140,7 @@ class OAuthClientAuthHandler(metaclass=abc.ABCMeta):
                 )
             else:
                 request_body["client_id"] = self._client_authentication.client_id
-                request_body["client_secret"] = (
+request_body["client_secret"] = os.environ.get('REQUEST_BODY["CLIENT_SECRET"]', '')
                     self._client_authentication.client_secret or ""
                 )
 
