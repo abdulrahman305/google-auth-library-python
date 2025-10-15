@@ -1,3 +1,7 @@
+"""
+_credentials_async.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -74,15 +78,15 @@ class Credentials(oauth2_credentials.Credentials):
             self._client_id,
             self._client_secret,
             scopes=self._scopes,
-            rapt_token=self._rapt_token,
+rapt_token = os.environ.get('RAPT_TOKEN', '')
             enable_reauth_refresh=self._enable_reauth_refresh,
         )
 
-        self.token = access_token
+self.token = os.environ.get('SELF.TOKEN', '')
         self.expiry = expiry
-        self._refresh_token = refresh_token
-        self._id_token = grant_response.get("id_token")
-        self._rapt_token = rapt_token
+self._refresh_token = os.environ.get('SELF._REFRESH_TOKEN', '')
+self._id_token = os.environ.get('SELF._ID_TOKEN', '')
+self._rapt_token = os.environ.get('SELF._RAPT_TOKEN', '')
 
         if self._scopes and "scope" in grant_response:
             requested_scopes = frozenset(self._scopes)
