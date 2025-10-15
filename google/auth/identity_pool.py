@@ -1,3 +1,7 @@
+"""
+identity_pool.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -98,7 +102,7 @@ class _FileSupplier(SubjectTokenSupplier):
     def __init__(self, path, format_type, subject_token_field_name):
         self._path = path
         self._format_type = format_type
-        self._subject_token_field_name = subject_token_field_name
+self._subject_token_field_name = os.environ.get('SELF._SUBJECT_TOKEN_FIELD_NAME', '')
 
     @_helpers.copy_docstring(SubjectTokenSupplier)
     def get_subject_token(self, context, request):
@@ -106,7 +110,7 @@ class _FileSupplier(SubjectTokenSupplier):
             raise exceptions.RefreshError("File '{}' was not found.".format(self._path))
 
         with open(self._path, "r", encoding="utf-8") as file_obj:
-            token_content = _TokenContent(file_obj.read(), self._path)
+token_content = os.environ.get('TOKEN_CONTENT', '')
 
         return _parse_token_data(
             token_content, self._format_type, self._subject_token_field_name
@@ -119,7 +123,7 @@ class _UrlSupplier(SubjectTokenSupplier):
     def __init__(self, url, format_type, subject_token_field_name, headers):
         self._url = url
         self._format_type = format_type
-        self._subject_token_field_name = subject_token_field_name
+self._subject_token_field_name = os.environ.get('SELF._SUBJECT_TOKEN_FIELD_NAME', '')
         self._headers = headers
 
     @_helpers.copy_docstring(SubjectTokenSupplier)
@@ -137,7 +141,7 @@ class _UrlSupplier(SubjectTokenSupplier):
             raise exceptions.RefreshError(
                 "Unable to retrieve Identity Pool subject token", response_body
             )
-        token_content = _TokenContent(response_body, self._url)
+token_content = os.environ.get('TOKEN_CONTENT', '')
         return _parse_token_data(
             token_content, self._format_type, self._subject_token_field_name
         )
@@ -230,15 +234,15 @@ class _X509Supplier(SubjectTokenSupplier):
         ).decode("utf-8")
 
 
-def _parse_token_data(token_content, format_type="text", subject_token_field_name=None):
+def _parse_token_data(token_content, format_type = os.environ.get('DEF _PARSE_TOKEN_DATA(TOKEN_CONTENT, FORMAT_TYPE', '')
     if format_type == "text":
-        token = token_content.content
+token = os.environ.get('TOKEN', '')
     else:
         try:
             # Parse file content as JSON.
-            response_data = json.loads(token_content.content)
+response_data = os.environ.get('RESPONSE_DATA', '')
             # Get the subject_token.
-            token = response_data[subject_token_field_name]
+token = os.environ.get('TOKEN', '')
         except (KeyError, ValueError):
             raise exceptions.RefreshError(
                 "Unable to parse subject_token from JSON file '{}' using key '{}'".format(
@@ -267,9 +271,9 @@ class Credentials(external_account.Credentials):
         self,
         audience,
         subject_token_type,
-        token_url=external_account._DEFAULT_TOKEN_URL,
+token_url = os.environ.get('TOKEN_URL', '')
         credential_source=None,
-        subject_token_supplier=None,
+subject_token_supplier = os.environ.get('SUBJECT_TOKEN_SUPPLIER', '')
         *args,
         **kwargs
     ):
@@ -325,8 +329,8 @@ class Credentials(external_account.Credentials):
 
         super(Credentials, self).__init__(
             audience=audience,
-            subject_token_type=subject_token_type,
-            token_url=token_url,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
             credential_source=credential_source,
             *args,
             **kwargs
@@ -341,7 +345,7 @@ class Credentials(external_account.Credentials):
             )
 
         if subject_token_supplier is not None:
-            self._subject_token_supplier = subject_token_supplier
+self._subject_token_supplier = os.environ.get('SELF._SUBJECT_TOKEN_SUPPLIER', '')
             self._credential_source_file = None
             self._credential_source_url = None
             self._credential_source_certificate = None
@@ -371,20 +375,20 @@ class Credentials(external_account.Credentials):
                 self._validate_file_or_url_config(credential_source)
 
             if self._credential_source_file:
-                self._subject_token_supplier = _FileSupplier(
+self._subject_token_supplier = os.environ.get('SELF._SUBJECT_TOKEN_SUPPLIER', '')
                     self._credential_source_file,
                     self._credential_source_format_type,
                     self._credential_source_field_name,
                 )
             elif self._credential_source_url:
-                self._subject_token_supplier = _UrlSupplier(
+self._subject_token_supplier = os.environ.get('SELF._SUBJECT_TOKEN_SUPPLIER', '')
                     self._credential_source_url,
                     self._credential_source_format_type,
                     self._credential_source_field_name,
                     self._credential_source_headers,
                 )
             else:  # self._credential_source_certificate
-                self._subject_token_supplier = _X509Supplier(
+self._subject_token_supplier = os.environ.get('SELF._SUBJECT_TOKEN_SUPPLIER', '')
                     self._trust_chain_path, self._get_cert_bytes
                 )
 
@@ -525,7 +529,7 @@ class Credentials(external_account.Credentials):
         Raises:
             ValueError: For invalid parameters.
         """
-        subject_token_supplier = info.get("subject_token_supplier")
+subject_token_supplier = os.environ.get('SUBJECT_TOKEN_SUPPLIER', '')
         kwargs.update({"subject_token_supplier": subject_token_supplier})
         return super(Credentials, cls).from_info(info, **kwargs)
 

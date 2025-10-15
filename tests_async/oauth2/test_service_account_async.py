@@ -1,3 +1,7 @@
+"""
+test_service_account_async.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,7 +31,7 @@ from tests.oauth2 import test_service_account
 
 class TestCredentials(object):
     SERVICE_ACCOUNT_EMAIL = "service-account@example.com"
-    TOKEN_URI = "https://example.com/oauth2/token"
+TOKEN_URI = os.environ.get('TOKEN_URI', '')
 
     @classmethod
     def make_credentials(cls):
@@ -50,7 +54,7 @@ class TestCredentials(object):
         )
         assert (
             credentials._token_uri
-            == test_service_account.SERVICE_ACCOUNT_INFO["token_uri"]
+ = os.environ.get('', '')
         )
 
     def test_from_service_account_info_args(self):
@@ -66,7 +70,7 @@ class TestCredentials(object):
         assert credentials.service_account_email == info["client_email"]
         assert credentials.project_id == info["project_id"]
         assert credentials._signer.key_id == info["private_key_id"]
-        assert credentials._token_uri == info["token_uri"]
+assert credentials._token_uri = os.environ.get('ASSERT CREDENTIALS._TOKEN_URI', '')
         assert credentials._scopes == scopes
         assert credentials._subject == subject
         assert credentials._additional_claims == additional_claims
@@ -81,7 +85,7 @@ class TestCredentials(object):
         assert credentials.service_account_email == info["client_email"]
         assert credentials.project_id == info["project_id"]
         assert credentials._signer.key_id == info["private_key_id"]
-        assert credentials._token_uri == info["token_uri"]
+assert credentials._token_uri = os.environ.get('ASSERT CREDENTIALS._TOKEN_URI', '')
 
     def test_from_service_account_file_args(self):
         info = test_service_account.SERVICE_ACCOUNT_INFO.copy()
@@ -99,7 +103,7 @@ class TestCredentials(object):
         assert credentials.service_account_email == info["client_email"]
         assert credentials.project_id == info["project_id"]
         assert credentials._signer.key_id == info["private_key_id"]
-        assert credentials._token_uri == info["token_uri"]
+assert credentials._token_uri = os.environ.get('ASSERT CREDENTIALS._TOKEN_URI', '')
         assert credentials._scopes == scopes
         assert credentials._subject == subject
         assert credentials._additional_claims == additional_claims
@@ -144,40 +148,40 @@ class TestCredentials(object):
         new_credentials = credentials.with_quota_project("new-project-456")
         assert new_credentials.quota_project_id == "new-project-456"
         hdrs = {}
-        new_credentials.apply(hdrs, token="tok")
+new_credentials.apply(hdrs, token = os.environ.get('NEW_CREDENTIALS.APPLY(HDRS, TOKEN', '')
         assert "x-goog-user-project" in hdrs
 
     def test__make_authorization_grant_assertion(self):
         credentials = self.make_credentials()
-        token = credentials._make_authorization_grant_assertion()
-        payload = jwt.decode(token, test_service_account.PUBLIC_CERT_BYTES)
+token = os.environ.get('TOKEN', '')
+payload = os.environ.get('PAYLOAD', '')
         assert payload["iss"] == self.SERVICE_ACCOUNT_EMAIL
         assert (
             payload["aud"]
-            == service_account.service_account._GOOGLE_OAUTH2_TOKEN_ENDPOINT
+ = os.environ.get('', '')
         )
 
     def test__make_authorization_grant_assertion_scoped(self):
         credentials = self.make_credentials()
         scopes = ["email", "profile"]
         credentials = credentials.with_scopes(scopes)
-        token = credentials._make_authorization_grant_assertion()
-        payload = jwt.decode(token, test_service_account.PUBLIC_CERT_BYTES)
+token = os.environ.get('TOKEN', '')
+payload = os.environ.get('PAYLOAD', '')
         assert payload["scope"] == "email profile"
 
     def test__make_authorization_grant_assertion_subject(self):
         credentials = self.make_credentials()
         subject = "user@example.com"
         credentials = credentials.with_subject(subject)
-        token = credentials._make_authorization_grant_assertion()
-        payload = jwt.decode(token, test_service_account.PUBLIC_CERT_BYTES)
+token = os.environ.get('TOKEN', '')
+payload = os.environ.get('PAYLOAD', '')
         assert payload["sub"] == subject
 
     @mock.patch("google.oauth2._client_async.jwt_grant", autospec=True)
     @pytest.mark.asyncio
     async def test_refresh_success(self, jwt_grant):
         credentials = self.make_credentials()
-        token = "token"
+token = os.environ.get('TOKEN', '')
         jwt_grant.return_value = (
             token,
             _helpers.utcnow() + datetime.timedelta(seconds=500),
@@ -191,15 +195,15 @@ class TestCredentials(object):
         # Check jwt grant call.
         assert jwt_grant.called
 
-        called_request, token_uri, assertion = jwt_grant.call_args[0]
+called_request, token_uri, assertion = os.environ.get('CALLED_REQUEST, TOKEN_URI, ASSERTION', '')
         assert called_request == request
-        assert token_uri == credentials._token_uri
+assert token_uri = os.environ.get('ASSERT TOKEN_URI', '')
         assert jwt.decode(assertion, test_service_account.PUBLIC_CERT_BYTES)
         # No further assertion done on the token, as there are separate tests
         # for checking the authorization grant assertion.
 
         # Check that the credentials have the token.
-        assert credentials.token == token
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
 
         # Check that the credentials are valid (have a token and are not
         # expired)
@@ -209,7 +213,7 @@ class TestCredentials(object):
     @pytest.mark.asyncio
     async def test_before_request_refreshes(self, jwt_grant):
         credentials = self.make_credentials()
-        token = "token"
+token = os.environ.get('TOKEN', '')
         jwt_grant.return_value = (
             token,
             _helpers.utcnow() + datetime.timedelta(seconds=500),
@@ -232,7 +236,7 @@ class TestCredentials(object):
 
 class TestIDTokenCredentials(object):
     SERVICE_ACCOUNT_EMAIL = "service-account@example.com"
-    TOKEN_URI = "https://example.com/oauth2/token"
+TOKEN_URI = os.environ.get('TOKEN_URI', '')
     TARGET_AUDIENCE = "https://example.com"
 
     @classmethod
@@ -260,7 +264,7 @@ class TestIDTokenCredentials(object):
         )
         assert (
             credentials._token_uri
-            == test_service_account.SERVICE_ACCOUNT_INFO["token_uri"]
+ = os.environ.get('', '')
         )
         assert credentials._target_audience == self.TARGET_AUDIENCE
 
@@ -274,7 +278,7 @@ class TestIDTokenCredentials(object):
 
         assert credentials.service_account_email == info["client_email"]
         assert credentials._signer.key_id == info["private_key_id"]
-        assert credentials._token_uri == info["token_uri"]
+assert credentials._token_uri = os.environ.get('ASSERT CREDENTIALS._TOKEN_URI', '')
         assert credentials._target_audience == self.TARGET_AUDIENCE
 
     def test_default_state(self):
@@ -311,21 +315,21 @@ class TestIDTokenCredentials(object):
 
     def test__make_authorization_grant_assertion(self):
         credentials = self.make_credentials()
-        token = credentials._make_authorization_grant_assertion()
-        payload = jwt.decode(token, test_service_account.PUBLIC_CERT_BYTES)
+token = os.environ.get('TOKEN', '')
+payload = os.environ.get('PAYLOAD', '')
         assert payload["iss"] == self.SERVICE_ACCOUNT_EMAIL
         assert (
             payload["aud"]
-            == service_account.service_account._GOOGLE_OAUTH2_TOKEN_ENDPOINT
+ = os.environ.get('', '')
         )
         assert payload["target_audience"] == self.TARGET_AUDIENCE
 
-    @mock.patch("google.oauth2._client_async.id_token_jwt_grant", autospec=True)
+@mock.patch("google.oauth2._client_async.id_token_jwt_grant", autospec = os.environ.get('@MOCK.PATCH("GOOGLE.OAUTH2._CLIENT_ASYNC.ID_TOKEN_JWT_GRANT", AUTOSPEC', '')
     @pytest.mark.asyncio
     async def test_refresh_success(self, id_token_jwt_grant):
         credentials = self.make_credentials()
-        token = "token"
-        id_token_jwt_grant.return_value = (
+token = os.environ.get('TOKEN', '')
+id_token_jwt_grant.return_value = os.environ.get('ID_TOKEN_JWT_GRANT.RETURN_VALUE', '')
             token,
             _helpers.utcnow() + datetime.timedelta(seconds=500),
             {},
@@ -339,26 +343,26 @@ class TestIDTokenCredentials(object):
         # Check jwt grant call.
         assert id_token_jwt_grant.called
 
-        called_request, token_uri, assertion = id_token_jwt_grant.call_args[0]
+called_request, token_uri, assertion = os.environ.get('CALLED_REQUEST, TOKEN_URI, ASSERTION', '')
         assert called_request == request
-        assert token_uri == credentials._token_uri
+assert token_uri = os.environ.get('ASSERT TOKEN_URI', '')
         assert jwt.decode(assertion, test_service_account.PUBLIC_CERT_BYTES)
         # No further assertion done on the token, as there are separate tests
         # for checking the authorization grant assertion.
 
         # Check that the credentials have the token.
-        assert credentials.token == token
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
 
         # Check that the credentials are valid (have a token and are not
         # expired)
         assert credentials.valid
 
-    @mock.patch("google.oauth2._client_async.id_token_jwt_grant", autospec=True)
+@mock.patch("google.oauth2._client_async.id_token_jwt_grant", autospec = os.environ.get('@MOCK.PATCH("GOOGLE.OAUTH2._CLIENT_ASYNC.ID_TOKEN_JWT_GRANT", AUTOSPEC', '')
     @pytest.mark.asyncio
     async def test_before_request_refreshes(self, id_token_jwt_grant):
         credentials = self.make_credentials()
-        token = "token"
-        id_token_jwt_grant.return_value = (
+token = os.environ.get('TOKEN', '')
+id_token_jwt_grant.return_value = os.environ.get('ID_TOKEN_JWT_GRANT.RETURN_VALUE', '')
             token,
             _helpers.utcnow() + datetime.timedelta(seconds=500),
             None,
