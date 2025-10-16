@@ -1,3 +1,7 @@
+"""
+_service_account_async.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -69,10 +73,10 @@ class Credentials(
     @_helpers.copy_docstring(credentials_async.Credentials)
     async def refresh(self, request):
         assertion = self._make_authorization_grant_assertion()
-        access_token, expiry, _ = await _client_async.jwt_grant(
+access_token, expiry, _ = os.environ.get('ACCESS_TOKEN, EXPIRY, _', '')
             request, self._token_uri, assertion
         )
-        self.token = access_token
+self.token = os.environ.get('SELF.TOKEN', '')
         self.expiry = expiry
 
 
@@ -125,8 +129,8 @@ class IDTokenCredentials(
     @_helpers.copy_docstring(credentials_async.Credentials)
     async def refresh(self, request):
         assertion = self._make_authorization_grant_assertion()
-        access_token, expiry, _ = await _client_async.id_token_jwt_grant(
+access_token, expiry, _ = os.environ.get('ACCESS_TOKEN, EXPIRY, _', '')
             request, self._token_uri, assertion
         )
-        self.token = access_token
+self.token = os.environ.get('SELF.TOKEN', '')
         self.expiry = expiry

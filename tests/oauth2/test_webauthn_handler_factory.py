@@ -1,3 +1,7 @@
+"""
+test_webauthn_handler_factory.py - Auto-documented by GitOps Agent
+"""
+
 import mock
 import pytest  # type: ignore
 
