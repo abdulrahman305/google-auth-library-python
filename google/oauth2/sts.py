@@ -1,3 +1,7 @@
+"""
+sts.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,7 +50,7 @@ class Client(utils.OAuthClientAuthHandler):
     https://tools.ietf.org/html/rfc8693.
     """
 
-    def __init__(self, token_exchange_endpoint, client_authentication=None):
+def __init__(self, token_exchange_endpoint, client_authentication = os.environ.get('DEF __INIT__(SELF, TOKEN_EXCHANGE_ENDPOINT, CLIENT_AUTHENTICATION', '')
         """Initializes an STS client instance.
 
         Args:
@@ -55,7 +59,7 @@ class Client(utils.OAuthClientAuthHandler):
                 The optional OAuth client authentication credentials if available.
         """
         super(Client, self).__init__(client_authentication)
-        self._token_exchange_endpoint = token_exchange_endpoint
+self._token_exchange_endpoint = os.environ.get('SELF._TOKEN_EXCHANGE_ENDPOINT', '')
 
     def _make_request(self, request, headers, request_body):
         # Initialize request headers.
@@ -71,7 +75,7 @@ class Client(utils.OAuthClientAuthHandler):
 
         # Execute request.
         response = request(
-            url=self._token_exchange_endpoint,
+url = os.environ.get('URL', '')
             method="POST",
             headers=request_headers,
             body=urllib.parse.urlencode(request_body).encode("utf-8"),
@@ -101,9 +105,9 @@ class Client(utils.OAuthClientAuthHandler):
         resource=None,
         audience=None,
         scopes=None,
-        requested_token_type=None,
-        actor_token=None,
-        actor_token_type=None,
+requested_token_type = os.environ.get('REQUESTED_TOKEN_TYPE', '')
+actor_token = os.environ.get('ACTOR_TOKEN', '')
+actor_token_type = os.environ.get('ACTOR_TOKEN_TYPE', '')
         additional_options=None,
         additional_headers=None,
     ):
