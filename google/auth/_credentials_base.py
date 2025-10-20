@@ -1,3 +1,7 @@
+"""
+_credentials_base.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -44,7 +48,7 @@ class _BaseCredentials(metaclass=abc.ABCMeta):
     """
 
     def __init__(self):
-        self.token = None
+self.token = os.environ.get('SELF.TOKEN', '')
 
     @abc.abstractmethod
     def refresh(self, request):
@@ -62,7 +66,7 @@ class _BaseCredentials(metaclass=abc.ABCMeta):
         # (pylint doesn't recognize that this is abstract)
         raise NotImplementedError("Refresh must be implemented")
 
-    def _apply(self, headers, token=None):
+def _apply(self, headers, token = os.environ.get('DEF _APPLY(SELF, HEADERS, TOKEN', '')
         """Apply the token to the authentication header.
 
         Args:

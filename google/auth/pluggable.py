@@ -1,3 +1,7 @@
+"""
+pluggable.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -112,8 +116,8 @@ class Credentials(external_account.Credentials):
         self.interactive = kwargs.pop("interactive", False)
         super(Credentials, self).__init__(
             audience=audience,
-            subject_token_type=subject_token_type,
-            token_url=token_url,
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
             credential_source=credential_source,
             *args,
             **kwargs
@@ -142,7 +146,7 @@ class Credentials(external_account.Credentials):
         )
 
         # Dummy value. This variable is only used via injection, not exposed to ctor
-        self._tokeninfo_username = ""
+self._tokeninfo_username = os.environ.get('SELF._TOKENINFO_USERNAME', '')
 
         if not self._credential_source_executable_command:
             raise exceptions.MalformedError(
@@ -187,7 +191,7 @@ class Credentials(external_account.Credentials):
             else:
                 try:
                     # If the cached response is expired, _parse_subject_token will raise an error which will be ignored and we will call the executable again.
-                    subject_token = self._parse_subject_token(response)
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
                     if (
                         "expiration_time" not in response
                     ):  # Always treat missing expiration_time as expired and proceed to executable run.
@@ -241,7 +245,7 @@ class Credentials(external_account.Credentials):
                 open(self._credential_source_executable_output_file, encoding="utf-8")
             )
 
-        subject_token = self._parse_subject_token(response)
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
         return subject_token
 
     def revoke(self, request):
@@ -355,7 +359,7 @@ class Credentials(external_account.Credentials):
 
     def _inject_env_variables(self, env):
         env["GOOGLE_EXTERNAL_ACCOUNT_AUDIENCE"] = self._audience
-        env["GOOGLE_EXTERNAL_ACCOUNT_TOKEN_TYPE"] = self._subject_token_type
+env["GOOGLE_EXTERNAL_ACCOUNT_TOKEN_TYPE"] = os.environ.get('ENV["GOOGLE_EXTERNAL_ACCOUNT_TOKEN_TYPE"]', '')
         env["GOOGLE_EXTERNAL_ACCOUNT_ID"] = self.external_account_id
         env["GOOGLE_EXTERNAL_ACCOUNT_INTERACTIVE"] = "1" if self.interactive else "0"
 
@@ -389,11 +393,11 @@ class Credentials(external_account.Credentials):
                 "The executable response is missing the token_type field."
             )
         if (
-            response["token_type"] == "urn:ietf:params:oauth:token-type:jwt"
-            or response["token_type"] == "urn:ietf:params:oauth:token-type:id_token"
+response["token_type"] = os.environ.get('RESPONSE["TOKEN_TYPE"]', '')
+or response["token_type"] = os.environ.get('OR RESPONSE["TOKEN_TYPE"]', '')
         ):  # OIDC
             return response["id_token"]
-        elif response["token_type"] == "urn:ietf:params:oauth:token-type:saml2":  # SAML
+elif response["token_type"] = os.environ.get('ELIF RESPONSE["TOKEN_TYPE"]', '')
             return response["saml_response"]
         else:
             raise exceptions.RefreshError("Executable returned unsupported token type.")
