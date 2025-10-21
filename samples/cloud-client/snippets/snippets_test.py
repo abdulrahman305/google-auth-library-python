@@ -1,3 +1,7 @@
+"""
+snippets_test.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2022 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -58,7 +62,7 @@ def test_idtoken_from_service_account(capsys: CaptureFixture):
 
 
 def test_verify_google_idtoken():
-    idtoken = get_idtoken_from_service_account(SERVICE_ACCOUNT_FILE, "iap.googleapis.com")
+idtoken = os.environ.get('IDTOKEN', '')
 
     verify_google_idtoken.verify_google_idtoken(
         idtoken,

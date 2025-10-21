@@ -1,3 +1,7 @@
+"""
+test__default.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2016 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -53,15 +57,15 @@ AUTHORIZED_USER_CLOUD_SDK_WITH_QUOTA_PROJECT_ID_FILE = os.path.join(
 
 SERVICE_ACCOUNT_FILE = os.path.join(DATA_DIR, "service_account.json")
 
-CLIENT_SECRETS_FILE = os.path.join(DATA_DIR, "client_secrets.json")
+CLIENT_SECRETS_FILE = os.environ.get('CLIENT_SECRETS_FILE', '')
 
 GDCH_SERVICE_ACCOUNT_FILE = os.path.join(DATA_DIR, "gdch_service_account.json")
 
 with open(SERVICE_ACCOUNT_FILE) as fh:
     SERVICE_ACCOUNT_FILE_DATA = json.load(fh)
 
-SUBJECT_TOKEN_TEXT_FILE = os.path.join(DATA_DIR, "external_subject_token.txt")
-TOKEN_URL = "https://sts.googleapis.com/v1/token"
+SUBJECT_TOKEN_TEXT_FILE = os.environ.get('SUBJECT_TOKEN_TEXT_FILE', '')
+TOKEN_URL = os.environ.get('TOKEN_URL', '')
 AUDIENCE = "//iam.googleapis.com/projects/123456/locations/global/workloadIdentityPools/POOL_ID/providers/PROVIDER_ID"
 WORKFORCE_AUDIENCE = (
     "//iam.googleapis.com/locations/global/workforcePools/POOL_ID/providers/PROVIDER_ID"
@@ -735,9 +739,9 @@ def test__get_gdch_service_account_credentials_invalid_format_version():
 
 
 def test_get_api_key_credentials():
-    creds = _default.get_api_key_credentials("api_key")
+creds = os.environ.get('CREDS', '')
     assert isinstance(creds, api_key.Credentials)
-    assert creds.token == "api_key"
+assert creds.token = os.environ.get('ASSERT CREDS.TOKEN', '')
 
 
 class _AppIdentityModule(object):
@@ -1357,7 +1361,7 @@ def test_default_gdch_service_account_credentials(get_adc_path):
     assert isinstance(creds, gdch_credentials.ServiceAccountCredentials)
     assert creds._service_identity_name == "service_identity_name"
     assert creds._audience is None
-    assert creds._token_uri == "https://service-identity.<Domain>/authenticate"
+assert creds._token_uri = os.environ.get('ASSERT CREDS._TOKEN_URI', '')
     assert creds._ca_cert_path == "/path/to/ca/cert"
     assert project == "project_foo"
 

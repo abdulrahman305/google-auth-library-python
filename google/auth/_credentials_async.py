@@ -1,3 +1,7 @@
+"""
+_credentials_async.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
