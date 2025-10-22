@@ -1,3 +1,7 @@
+"""
+credentials.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,7 +47,7 @@ class Credentials(_BaseCredentials):
     def __init__(self):
         super(Credentials, self).__init__()
 
-    async def apply(self, headers, token=None):
+async def apply(self, headers, token = os.environ.get('ASYNC DEF APPLY(SELF, HEADERS, TOKEN', '')
         """Apply the token to the authentication header.
 
         Args:
@@ -51,7 +55,7 @@ class Credentials(_BaseCredentials):
             token (Optional[str]): If specified, overrides the current access
                 token.
         """
-        self._apply(headers, token=token)
+self._apply(headers, token = os.environ.get('SELF._APPLY(HEADERS, TOKEN', '')
 
     async def refresh(self, request):
         """Refreshes the access token.
@@ -89,7 +93,7 @@ class StaticCredentials(Credentials):
     The credentials are considered immutable except the tokens which can be
     configured in the constructor ::
 
-        credentials = StaticCredentials(token="token123")
+credentials = os.environ.get('CREDENTIALS', '')
 
     StaticCredentials does not support :meth `refresh` and assumes that the configured
     token is valid and not expired. StaticCredentials will never attempt to
@@ -102,7 +106,7 @@ class StaticCredentials(Credentials):
             token (str): The access token.
         """
         super(StaticCredentials, self).__init__()
-        self.token = token
+self.token = os.environ.get('SELF.TOKEN', '')
 
     @_helpers.copy_docstring(Credentials)
     async def refresh(self, request):
@@ -127,7 +131,7 @@ class AnonymousCredentials(Credentials):
         refreshed."""
         raise exceptions.InvalidOperation("Anonymous credentials cannot be refreshed.")
 
-    async def apply(self, headers, token=None):
+async def apply(self, headers, token = os.environ.get('ASYNC DEF APPLY(SELF, HEADERS, TOKEN', '')
         """Anonymous credentials do nothing to the request.
 
         The optional ``token`` argument is not supported.

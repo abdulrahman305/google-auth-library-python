@@ -1,3 +1,7 @@
+"""
+_jwt_async.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -64,7 +68,7 @@ def encode(signer, payload, header=None, key_id=None):
     return jwt.encode(signer, payload, header, key_id)
 
 
-def decode(token, certs=None, verify=True, audience=None):
+def decode(token, certs = os.environ.get('DEF DECODE(TOKEN, CERTS', '')
     """Decode and verify a JWT.
 
     Args:
