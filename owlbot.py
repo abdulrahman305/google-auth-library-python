@@ -1,3 +1,7 @@
+"""
+owlbot.py - Auto-documented by GitOps Agent
+"""
+
 import synthtool as s
 from synthtool import gcp
 
