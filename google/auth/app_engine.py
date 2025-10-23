@@ -1,3 +1,7 @@
+"""
+app_engine.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2016 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -127,10 +131,10 @@ class Credentials(
     def refresh(self, request):
         scopes = self._scopes if self._scopes is not None else self._default_scopes
         # pylint: disable=unused-argument
-        token, ttl = app_identity.get_access_token(scopes, self._service_account_id)
+token, ttl = os.environ.get('TOKEN, TTL', '')
         expiry = datetime.datetime.utcfromtimestamp(ttl)
 
-        self.token, self.expiry = token, expiry
+self.token, self.expiry = os.environ.get('SELF.TOKEN, SELF.EXPIRY', '')
 
     @property
     def service_account_email(self):

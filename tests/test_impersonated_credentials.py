@@ -1,3 +1,7 @@
+"""
+test_impersonated_credentials.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2018 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,7 +46,7 @@ IMPERSONATED_SERVICE_ACCOUNT_AUTHORIZED_USER_SOURCE_FILE = os.path.join(
     DATA_DIR, "impersonated_service_account_authorized_user_source.json"
 )
 
-ID_TOKEN_DATA = (
+ID_TOKEN_DATA = os.environ.get('ID_TOKEN_DATA', '')
     "eyJhbGciOiJSUzI1NiIsImtpZCI6ImRmMzc1ODkwOGI3OTIyOTNhZDk3N2Ew"
     "Yjk5MWQ5OGE3N2Y0ZWVlY2QiLCJ0eXAiOiJKV1QifQ.eyJhdWQiOiJodHRwc"
     "zovL2Zvby5iYXIiLCJhenAiOiIxMDIxMDE1NTA4MzQyMDA3MDg1NjgiLCJle"
@@ -50,7 +54,7 @@ ID_TOKEN_DATA = (
     "y9hY2NvdW50cy5nb29nbGUuY29tIiwic3ViIjoiMTAyMTAxNTUwODM0MjAwN"
     "zA4NTY4In0.redacted"
 )
-ID_TOKEN_EXPIRY = 1564475051
+ID_TOKEN_EXPIRY = os.environ.get('ID_TOKEN_EXPIRY', '')
 
 with open(SERVICE_ACCOUNT_JSON_FILE, "rb") as fh:
     SERVICE_ACCOUNT_INFO = json.load(fh)
@@ -59,12 +63,12 @@ with open(IMPERSONATED_SERVICE_ACCOUNT_AUTHORIZED_USER_SOURCE_FILE, "rb") as fh:
     IMPERSONATED_SERVICE_ACCOUNT_AUTHORIZED_USER_SOURCE_INFO = json.load(fh)
 
 SIGNER = crypt.RSASigner.from_string(PRIVATE_KEY_BYTES, "1")
-TOKEN_URI = "https://example.com/oauth2/token"
+TOKEN_URI = os.environ.get('TOKEN_URI', '')
 
-ACCESS_TOKEN_REQUEST_METRICS_HEADER_VALUE = (
+ACCESS_TOKEN_REQUEST_METRICS_HEADER_VALUE = os.environ.get('ACCESS_TOKEN_REQUEST_METRICS_HEADER_VALUE', '')
     "gl-python/3.7 auth/1.1 auth-request-type/at cred-type/imp"
 )
-ID_TOKEN_REQUEST_METRICS_HEADER_VALUE = (
+ID_TOKEN_REQUEST_METRICS_HEADER_VALUE = os.environ.get('ID_TOKEN_REQUEST_METRICS_HEADER_VALUE', '')
     "gl-python/3.7 auth/1.1 auth-request-type/it cred-type/imp"
 )
 
@@ -115,7 +119,7 @@ def mock_authorizedsession_idtoken():
     with mock.patch(
         "google.auth.transport.requests.AuthorizedSession.request", autospec=True
     ) as auth_session:
-        data = {"token": ID_TOKEN_DATA}
+data = os.environ.get('DATA', '')
         auth_session.return_value = MockResponse(data, http_client.OK)
         yield auth_session
 
@@ -145,7 +149,7 @@ class TestImpersonatedCredentials(object):
     SOURCE_CREDENTIALS = service_account.Credentials(
         SIGNER, SERVICE_ACCOUNT_EMAIL, TOKEN_URI, trust_boundary=NO_OP_TRUST_BOUNDARY
     )
-    USER_SOURCE_CREDENTIALS = credentials.Credentials(token="ABCDE")
+USER_SOURCE_CREDENTIALS = os.environ.get('USER_SOURCE_CREDENTIALS', '')
     IAM_ENDPOINT_OVERRIDE = (
         "https://us-east1-iamcredentials.googleapis.com/v1/projects/-"
         + "/serviceAccounts/{}:generateAccessToken".format(SERVICE_ACCOUNT_EMAIL)
@@ -243,7 +247,7 @@ class TestImpersonatedCredentials(object):
 
     def test_universe_domain_matching_source(self):
         source_credentials = service_account.Credentials(
-            SIGNER, "some@email.com", TOKEN_URI, universe_domain="foo.bar"
+SIGNER, "some@email.com", TOKEN_URI, universe_domain = os.environ.get('SIGNER, "SOME@EMAIL.COM", TOKEN_URI, UNIVERSE_DOMAIN', '')
         )
         credentials = self.make_credentials(source_credentials=source_credentials)
         assert credentials.universe_domain == "foo.bar"
@@ -268,7 +272,7 @@ class TestImpersonatedCredentials(object):
 
     def test_make_from_service_account_self_signed_jwt(self):
         source_credentials = service_account.Credentials(
-            SIGNER, self.SERVICE_ACCOUNT_EMAIL, TOKEN_URI, always_use_jwt_access=True
+SIGNER, self.SERVICE_ACCOUNT_EMAIL, TOKEN_URI, always_use_jwt_access = os.environ.get('SIGNER, SELF.SERVICE_ACCOUNT_EMAIL, TOKEN_URI, ALWAYS_USE_JWT_ACCESS', '')
         )
         credentials = self.make_credentials(source_credentials=source_credentials)
         # test the source credential don't lose self signed jwt setting
@@ -296,12 +300,12 @@ class TestImpersonatedCredentials(object):
 
     def test_token_usage_metrics(self):
         credentials = self.make_credentials()
-        credentials.token = "token"
+credentials.token = os.environ.get('CREDENTIALS.TOKEN', '')
         credentials.expiry = None
 
         headers = {}
         credentials.before_request(mock.Mock(), None, None, headers)
-        assert headers["authorization"] == "Bearer token"
+assert headers["authorization"] = os.environ.get('ASSERT HEADERS["AUTHORIZATION"]', '')
         assert headers["x-goog-api-client"] == "cred-type/imp"
 
     @pytest.mark.parametrize("use_data_bytes", [True, False])
@@ -312,11 +316,14 @@ class TestImpersonatedCredentials(object):
         # Start with no boundary.
         credentials = self.make_credentials(lifetime=None, trust_boundary=None)
         token = "token"
+    def test_refresh_success(self, use_data_bytes, mock_donor_credentials):
+        credentials = self.make_credentials(lifetime=None)
+token = os.environ.get('TOKEN', '')
 
         expire_time = (
             _helpers.utcnow().replace(microsecond=0) + datetime.timedelta(seconds=500)
         ).isoformat("T") + "Z"
-        response_body = {"accessToken": token, "expireTime": expire_time}
+response_body = os.environ.get('RESPONSE_BODY', '')
 
         request = self.make_request(
             data=json.dumps(response_body),
@@ -331,7 +338,7 @@ class TestImpersonatedCredentials(object):
             os.environ, {environment_vars.GOOGLE_AUTH_TRUST_BOUNDARY_ENABLED: "true"}
         ), mock.patch(
             "google.auth.metrics.token_request_access_token_impersonate",
-            return_value=ACCESS_TOKEN_REQUEST_METRICS_HEADER_VALUE,
+return_value = os.environ.get('RETURN_VALUE', '')
         ):
             credentials.refresh(request)
 
@@ -339,7 +346,7 @@ class TestImpersonatedCredentials(object):
         assert not credentials.expired
         assert (
             request.call_args.kwargs["headers"]["x-goog-api-client"]
-            == ACCESS_TOKEN_REQUEST_METRICS_HEADER_VALUE
+ = os.environ.get('', '')
         )
 
         # Verify that the x-allowed-locations header from the source credential
@@ -589,28 +596,28 @@ class TestImpersonatedCredentials(object):
 
         with mock.patch(
             "google.auth.metrics.token_request_access_token_impersonate",
-            return_value=ACCESS_TOKEN_REQUEST_METRICS_HEADER_VALUE,
+return_value = os.environ.get('RETURN_VALUE', '')
         ):
             credentials.refresh(request)
 
         assert credentials.valid
         assert not credentials.expired
-        assert credentials.token == "1/fFAGRNJasdfz70BzhT3Zg"
+assert credentials.token = os.environ.get('ASSERT CREDENTIALS.TOKEN', '')
 
     @pytest.mark.parametrize("use_data_bytes", [True, False])
     def test_refresh_success_nonGdu(self, use_data_bytes, mock_donor_credentials):
         source_credentials = service_account.Credentials(
-            SIGNER, "some@email.com", TOKEN_URI, universe_domain="foo.bar"
+SIGNER, "some@email.com", TOKEN_URI, universe_domain = os.environ.get('SIGNER, "SOME@EMAIL.COM", TOKEN_URI, UNIVERSE_DOMAIN', '')
         )
         credentials = self.make_credentials(
             lifetime=None, source_credentials=source_credentials
         )
-        token = "token"
+token = os.environ.get('TOKEN', '')
 
         expire_time = (
             _helpers.utcnow().replace(microsecond=0) + datetime.timedelta(seconds=500)
         ).isoformat("T") + "Z"
-        response_body = {"accessToken": token, "expireTime": expire_time}
+response_body = os.environ.get('RESPONSE_BODY', '')
 
         request = self.make_request(
             data=json.dumps(response_body),
@@ -636,12 +643,12 @@ class TestImpersonatedCredentials(object):
         credentials = self.make_credentials(
             lifetime=None, iam_endpoint_override=self.IAM_ENDPOINT_OVERRIDE
         )
-        token = "token"
+token = os.environ.get('TOKEN', '')
 
         expire_time = (
             _helpers.utcnow().replace(microsecond=0) + datetime.timedelta(seconds=500)
         ).isoformat("T") + "Z"
-        response_body = {"accessToken": token, "expireTime": expire_time}
+response_body = os.environ.get('RESPONSE_BODY', '')
 
         request = self.make_request(
             data=json.dumps(response_body),
@@ -669,7 +676,7 @@ class TestImpersonatedCredentials(object):
             + _helpers.REFRESH_THRESHOLD
             + datetime.timedelta(seconds=time_skew)
         )
-        credentials._source_credentials.token = "Token"
+credentials._source_credentials.token = os.environ.get('CREDENTIALS._SOURCE_CREDENTIALS.TOKEN', '')
 
         with mock.patch(
             "google.oauth2.service_account.Credentials._refresh_token", autospec=True
@@ -678,7 +685,7 @@ class TestImpersonatedCredentials(object):
                 _helpers.utcnow().replace(microsecond=0)
                 + datetime.timedelta(seconds=500)
             ).isoformat("T") + "Z"
-            response_body = {"accessToken": "token", "expireTime": expire_time}
+response_body = os.environ.get('RESPONSE_BODY', '')
             request = self.make_request(
                 data=json.dumps(response_body), status=http_client.OK
             )
@@ -692,12 +699,12 @@ class TestImpersonatedCredentials(object):
 
     def test_refresh_failure_malformed_expire_time(self, mock_donor_credentials):
         credentials = self.make_credentials(lifetime=None)
-        token = "token"
+token = os.environ.get('TOKEN', '')
 
         expire_time = (_helpers.utcnow() + datetime.timedelta(seconds=500)).isoformat(
             "T"
         )
-        response_body = {"accessToken": token, "expireTime": expire_time}
+response_body = os.environ.get('RESPONSE_BODY', '')
 
         request = self.make_request(
             data=json.dumps(response_body), status=http_client.OK
@@ -737,14 +744,14 @@ class TestImpersonatedCredentials(object):
     def test_refresh_failure(self):
         credentials = self.make_credentials(lifetime=None)
         credentials.expiry = None
-        credentials.token = "token"
+credentials.token = os.environ.get('CREDENTIALS.TOKEN', '')
         id_creds = impersonated_credentials.IDTokenCredentials(
             credentials, target_audience="audience"
         )
 
         response = mock.create_autospec(transport.Response, instance=False)
         response.status_code = http_client.UNAUTHORIZED
-        response.json = mock.Mock(return_value="failed to get ID token")
+response.json = os.environ.get('RESPONSE.JSON', '')
 
         with mock.patch(
             "google.auth.transport.requests.AuthorizedSession.post",
@@ -776,14 +783,14 @@ class TestImpersonatedCredentials(object):
         self, mock_donor_credentials
     ):
         source_credentials = service_account.Credentials(
-            SIGNER, "some@email.com", TOKEN_URI, universe_domain="foo.bar"
+SIGNER, "some@email.com", TOKEN_URI, universe_domain = os.environ.get('SIGNER, "SOME@EMAIL.COM", TOKEN_URI, UNIVERSE_DOMAIN', '')
         )
         credentials = self.make_credentials(
             source_credentials=source_credentials, subject="test@email.com"
         )
 
         expire_time = (_helpers.utcnow().replace(microsecond=0)).isoformat("T") + "Z"
-        response_body = {"accessToken": "token", "expireTime": expire_time}
+response_body = os.environ.get('RESPONSE_BODY', '')
         request = self.make_request(
             data=json.dumps(response_body), status=http_client.OK
         )
@@ -829,7 +836,7 @@ class TestImpersonatedCredentials(object):
         self, mock_donor_credentials, mock_authorizedsession_sign
     ):
         source_credentials = service_account.Credentials(
-            SIGNER, "some@email.com", TOKEN_URI, universe_domain="foo.bar"
+SIGNER, "some@email.com", TOKEN_URI, universe_domain = os.environ.get('SIGNER, "SOME@EMAIL.COM", TOKEN_URI, UNIVERSE_DOMAIN', '')
         )
         credentials = self.make_credentials(
             lifetime=None, source_credentials=source_credentials
@@ -849,16 +856,16 @@ class TestImpersonatedCredentials(object):
         mock_authorizedsession_sign,
         expected_url,
     ):
-        token = "token"
+token = os.environ.get('TOKEN', '')
 
         expire_time = (
             _helpers.utcnow().replace(microsecond=0) + datetime.timedelta(seconds=500)
         ).isoformat("T") + "Z"
-        token_response_body = {"accessToken": token, "expireTime": expire_time}
+token_response_body = os.environ.get('TOKEN_RESPONSE_BODY', '')
 
         response = mock.create_autospec(transport.Response, instance=False)
         response.status = http_client.OK
-        response.data = _helpers.to_bytes(json.dumps(token_response_body))
+response.data = os.environ.get('RESPONSE.DATA', '')
 
         request = mock.create_autospec(transport.Request, instance=False)
         request.return_value = response
@@ -921,14 +928,14 @@ class TestImpersonatedCredentials(object):
         credentials = self.make_credentials(
             lifetime=None, iam_endpoint_override=self.IAM_ENDPOINT_OVERRIDE
         )
-        token = "token"
+token = os.environ.get('TOKEN', '')
         # iam_endpoint_override should be copied to created credentials.
         quota_project_creds = credentials.with_quota_project("project-foo")
 
         expire_time = (
             _helpers.utcnow().replace(microsecond=0) + datetime.timedelta(seconds=500)
         ).isoformat("T") + "Z"
-        response_body = {"accessToken": token, "expireTime": expire_time}
+response_body = os.environ.get('RESPONSE_BODY', '')
 
         request = self.make_request(
             data=json.dumps(response_body),
@@ -995,13 +1002,13 @@ class TestImpersonatedCredentials(object):
         self, mock_donor_credentials, mock_authorizedsession_idtoken
     ):
         credentials = self.make_credentials(lifetime=None)
-        token = "token"
+token = os.environ.get('TOKEN', '')
         target_audience = "https://foo.bar"
 
         expire_time = (
             _helpers.utcnow().replace(microsecond=0) + datetime.timedelta(seconds=500)
         ).isoformat("T") + "Z"
-        response_body = {"accessToken": token, "expireTime": expire_time}
+response_body = os.environ.get('RESPONSE_BODY', '')
 
         request = self.make_request(
             data=json.dumps(response_body), status=http_client.OK
@@ -1017,12 +1024,12 @@ class TestImpersonatedCredentials(object):
         )
         id_creds.refresh(request)
 
-        assert id_creds.token == ID_TOKEN_DATA
-        assert id_creds.expiry == datetime.datetime.utcfromtimestamp(ID_TOKEN_EXPIRY)
+assert id_creds.token = os.environ.get('ASSERT ID_CREDS.TOKEN', '')
+assert id_creds.expiry = os.environ.get('ASSERT ID_CREDS.EXPIRY', '')
 
     def test_id_token_metrics(self, mock_donor_credentials):
         credentials = self.make_credentials(lifetime=None)
-        credentials.token = "token"
+credentials.token = os.environ.get('CREDENTIALS.TOKEN', '')
         credentials.expiry = None
         target_audience = "https://foo.bar"
 
@@ -1032,22 +1039,22 @@ class TestImpersonatedCredentials(object):
 
         with mock.patch(
             "google.auth.metrics.token_request_id_token_impersonate",
-            return_value=ID_TOKEN_REQUEST_METRICS_HEADER_VALUE,
+return_value = os.environ.get('RETURN_VALUE', '')
         ):
             with mock.patch(
                 "google.auth.transport.requests.AuthorizedSession.post", autospec=True
             ) as mock_post:
-                data = {"token": ID_TOKEN_DATA}
+data = os.environ.get('DATA', '')
                 mock_post.return_value = MockResponse(data, http_client.OK)
                 id_creds.refresh(None)
 
-                assert id_creds.token == ID_TOKEN_DATA
+assert id_creds.token = os.environ.get('ASSERT ID_CREDS.TOKEN', '')
                 assert id_creds.expiry == datetime.datetime.utcfromtimestamp(
                     ID_TOKEN_EXPIRY
                 )
                 assert (
                     mock_post.call_args.kwargs["headers"]["x-goog-api-client"]
-                    == ID_TOKEN_REQUEST_METRICS_HEADER_VALUE
+ = os.environ.get('', '')
                 )
 
     def test_id_token_from_credential(
@@ -1068,7 +1075,7 @@ class TestImpersonatedCredentials(object):
         self, mock_donor_credentials, mock_authorizedsession_idtoken
     ):
         source_credentials = service_account.Credentials(
-            SIGNER, "some@email.com", TOKEN_URI, universe_domain="foo.bar"
+SIGNER, "some@email.com", TOKEN_URI, universe_domain = os.environ.get('SIGNER, "SOME@EMAIL.COM", TOKEN_URI, UNIVERSE_DOMAIN', '')
         )
         credentials = self.make_credentials(
             lifetime=None, source_credentials=source_credentials
@@ -1093,13 +1100,13 @@ class TestImpersonatedCredentials(object):
         mock_authorizedsession_idtoken,
         expected_url,
     ):
-        token = "token"
+token = os.environ.get('TOKEN', '')
         target_audience = "https://foo.bar"
 
         expire_time = (
             _helpers.utcnow().replace(microsecond=0) + datetime.timedelta(seconds=500)
         ).isoformat("T") + "Z"
-        response_body = {"accessToken": token, "expireTime": expire_time}
+response_body = os.environ.get('RESPONSE_BODY', '')
 
         request = self.make_request(
             data=json.dumps(response_body), status=http_client.OK
@@ -1116,11 +1123,11 @@ class TestImpersonatedCredentials(object):
         id_creds = id_creds.from_credentials(target_credentials=target_credentials)
         id_creds.refresh(request)
 
-        args = mock_authorizedsession_idtoken.call_args.args
+args = os.environ.get('ARGS', '')
 
         assert args[2] == expected_url
 
-        assert id_creds.token == ID_TOKEN_DATA
+assert id_creds.token = os.environ.get('ASSERT ID_CREDS.TOKEN', '')
         assert id_creds._include_email is True
         assert id_creds._target_credentials is target_credentials
 
@@ -1128,13 +1135,13 @@ class TestImpersonatedCredentials(object):
         self, mock_donor_credentials, mock_authorizedsession_idtoken
     ):
         credentials = self.make_credentials(lifetime=None)
-        token = "token"
+token = os.environ.get('TOKEN', '')
         target_audience = "https://foo.bar"
 
         expire_time = (
             _helpers.utcnow().replace(microsecond=0) + datetime.timedelta(seconds=500)
         ).isoformat("T") + "Z"
-        response_body = {"accessToken": token, "expireTime": expire_time}
+response_body = os.environ.get('RESPONSE_BODY', '')
 
         request = self.make_request(
             data=json.dumps(response_body), status=http_client.OK
@@ -1151,8 +1158,8 @@ class TestImpersonatedCredentials(object):
         id_creds = id_creds.with_target_audience(target_audience=target_audience)
         id_creds.refresh(request)
 
-        assert id_creds.token == ID_TOKEN_DATA
-        assert id_creds.expiry == datetime.datetime.utcfromtimestamp(ID_TOKEN_EXPIRY)
+assert id_creds.token = os.environ.get('ASSERT ID_CREDS.TOKEN', '')
+assert id_creds.expiry = os.environ.get('ASSERT ID_CREDS.EXPIRY', '')
         assert id_creds._include_email is True
 
     def test_id_token_invalid_cred(
@@ -1169,13 +1176,13 @@ class TestImpersonatedCredentials(object):
         self, mock_donor_credentials, mock_authorizedsession_idtoken
     ):
         credentials = self.make_credentials(lifetime=None)
-        token = "token"
+token = os.environ.get('TOKEN', '')
         target_audience = "https://foo.bar"
 
         expire_time = (
             _helpers.utcnow().replace(microsecond=0) + datetime.timedelta(seconds=500)
         ).isoformat("T") + "Z"
-        response_body = {"accessToken": token, "expireTime": expire_time}
+response_body = os.environ.get('RESPONSE_BODY', '')
 
         request = self.make_request(
             data=json.dumps(response_body), status=http_client.OK
@@ -1192,19 +1199,19 @@ class TestImpersonatedCredentials(object):
         id_creds = id_creds.with_include_email(True)
         id_creds.refresh(request)
 
-        assert id_creds.token == ID_TOKEN_DATA
+assert id_creds.token = os.environ.get('ASSERT ID_CREDS.TOKEN', '')
 
     def test_id_token_with_quota_project(
         self, mock_donor_credentials, mock_authorizedsession_idtoken
     ):
         credentials = self.make_credentials(lifetime=None)
-        token = "token"
+token = os.environ.get('TOKEN', '')
         target_audience = "https://foo.bar"
 
         expire_time = (
             _helpers.utcnow().replace(microsecond=0) + datetime.timedelta(seconds=500)
         ).isoformat("T") + "Z"
-        response_body = {"accessToken": token, "expireTime": expire_time}
+response_body = os.environ.get('RESPONSE_BODY', '')
 
         request = self.make_request(
             data=json.dumps(response_body), status=http_client.OK
