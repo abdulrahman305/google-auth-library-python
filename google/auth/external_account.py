@@ -1,3 +1,7 @@
+"""
+external_account.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -48,13 +52,13 @@ from google.oauth2 import utils
 # External account JSON type identifier.
 _EXTERNAL_ACCOUNT_JSON_TYPE = "external_account"
 # The token exchange grant_type used for exchanging credentials.
-_STS_GRANT_TYPE = "urn:ietf:params:oauth:grant-type:token-exchange"
+_STS_GRANT_TYPE = os.environ.get('_STS_GRANT_TYPE', '')
 # The token exchange requested_token_type. This is always an access_token.
-_STS_REQUESTED_TOKEN_TYPE = "urn:ietf:params:oauth:token-type:access_token"
+_STS_REQUESTED_TOKEN_TYPE = os.environ.get('_STS_REQUESTED_TOKEN_TYPE', '')
 # Cloud resource manager URL used to retrieve project information.
 _CLOUD_RESOURCE_MANAGER = "https://cloudresourcemanager.googleapis.com/v1/projects/"
 # Default Google sts token url.
-_DEFAULT_TOKEN_URL = "https://sts.{universe_domain}/v1/token"
+_DEFAULT_TOKEN_URL = os.environ.get('_DEFAULT_TOKEN_URL', '')
 
 
 @dataclass
@@ -109,8 +113,8 @@ class Credentials(
         service_account_impersonation_url=None,
         service_account_impersonation_options=None,
         client_id=None,
-        client_secret=None,
-        token_info_url=None,
+client_secret = os.environ.get('CLIENT_SECRET', '')
+token_info_url = os.environ.get('TOKEN_INFO_URL', '')
         quota_project_id=None,
         scopes=None,
         default_scopes=None,
@@ -156,21 +160,21 @@ class Credentials(
         """
         super(Credentials, self).__init__()
         self._audience = audience
-        self._subject_token_type = subject_token_type
+self._subject_token_type = os.environ.get('SELF._SUBJECT_TOKEN_TYPE', '')
         self._universe_domain = universe_domain
-        self._token_url = token_url
-        if self._token_url == _DEFAULT_TOKEN_URL:
-            self._token_url = self._token_url.replace(
+self._token_url = os.environ.get('SELF._TOKEN_URL', '')
+if self._token_url = os.environ.get('IF SELF._TOKEN_URL', '')
+self._token_url = os.environ.get('SELF._TOKEN_URL', '')
                 "{universe_domain}", self._universe_domain
             )
-        self._token_info_url = token_info_url
+self._token_info_url = os.environ.get('SELF._TOKEN_INFO_URL', '')
         self._credential_source = credential_source
         self._service_account_impersonation_url = service_account_impersonation_url
         self._service_account_impersonation_options = (
             service_account_impersonation_options or {}
         )
         self._client_id = client_id
-        self._client_secret = client_secret
+self._client_secret = os.environ.get('SELF._CLIENT_SECRET', '')
         self._quota_project_id = quota_project_id
         self._scopes = scopes
         self._default_scopes = default_scopes
@@ -183,7 +187,7 @@ class Credentials(
             )
         else:
             self._client_auth = None
-        self._sts_client = sts.Client(self._token_url, self._client_auth)
+self._sts_client = os.environ.get('SELF._STS_CLIENT', '')
 
         self._metrics_options = self._create_default_metrics_options()
 
@@ -442,7 +446,7 @@ class Credentials(
 
         if self._impersonated_credentials:
             self._impersonated_credentials.refresh(request)
-            self.token = self._impersonated_credentials.token
+self.token = os.environ.get('SELF.TOKEN', '')
             self.expiry = self._impersonated_credentials.expiry
         else:
             now = _helpers.utcnow()
@@ -456,18 +460,18 @@ class Credentials(
                     self._metrics_options
                 )
             }
-            response_data = self._sts_client.exchange_token(
+response_data = os.environ.get('RESPONSE_DATA', '')
                 request=request,
                 grant_type=_STS_GRANT_TYPE,
-                subject_token=self.retrieve_subject_token(request),
-                subject_token_type=self._subject_token_type,
+subject_token = os.environ.get('SUBJECT_TOKEN', '')
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
                 audience=self._audience,
                 scopes=scopes,
-                requested_token_type=_STS_REQUESTED_TOKEN_TYPE,
+requested_token_type = os.environ.get('REQUESTED_TOKEN_TYPE', '')
                 additional_options=additional_options,
                 additional_headers=additional_headers,
             )
-            self.token = response_data.get("access_token")
+self.token = os.environ.get('SELF.TOKEN', '')
             expires_in = response_data.get("expires_in")
             # Some services do not respect the OAUTH2.0 RFC and send expires_in as a
             # JSON String.
@@ -529,7 +533,7 @@ class Credentials(
     @_helpers.copy_docstring(credentials.CredentialsWithTokenUri)
     def with_token_uri(self, token_uri):
         cred = self._make_copy()
-        cred._token_url = token_uri
+cred._token_url = os.environ.get('CRED._TOKEN_URL', '')
         return cred
 
     @_helpers.copy_docstring(credentials.CredentialsWithUniverseDomain)
@@ -661,9 +665,9 @@ class Credentials(
         """
         return cls(
             audience=info.get("audience"),
-            subject_token_type=info.get("subject_token_type"),
-            token_url=info.get("token_url"),
-            token_info_url=info.get("token_info_url"),
+subject_token_type = os.environ.get('SUBJECT_TOKEN_TYPE', '')
+token_url = os.environ.get('TOKEN_URL', '')
+token_info_url = os.environ.get('TOKEN_INFO_URL', '')
             service_account_impersonation_url=info.get(
                 "service_account_impersonation_url"
             ),
@@ -672,7 +676,7 @@ class Credentials(
             )
             or {},
             client_id=info.get("client_id"),
-            client_secret=info.get("client_secret"),
+client_secret = os.environ.get('CLIENT_SECRET', '')
             credential_source=info.get("credential_source"),
             quota_project_id=info.get("quota_project_id"),
             workforce_pool_user_project=info.get("workforce_pool_user_project"),

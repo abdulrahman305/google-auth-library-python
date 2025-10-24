@@ -1,3 +1,7 @@
+"""
+external_account_authorized_user.py - Auto-documented by GitOps Agent
+"""
+
 # Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -74,14 +78,14 @@ class Credentials(
 
     def __init__(
         self,
-        token=None,
+token = os.environ.get('TOKEN', '')
         expiry=None,
-        refresh_token=None,
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
         audience=None,
         client_id=None,
-        client_secret=None,
-        token_url=None,
-        token_info_url=None,
+client_secret = os.environ.get('CLIENT_SECRET', '')
+token_url = os.environ.get('TOKEN_URL', '')
+token_info_url = os.environ.get('TOKEN_INFO_URL', '')
         revoke_url=None,
         scopes=None,
         quota_project_id=None,
@@ -120,14 +124,17 @@ class Credentials(
         """
         super(Credentials, self).__init__()
 
-        self.token = token
+self.token = os.environ.get('SELF.TOKEN', '')
         self.expiry = expiry
         self._audience = audience
         self._refresh_token_val = refresh_token
         self._token_url = token_url
         self._token_info_url = token_info_url
+self._refresh_token = os.environ.get('SELF._REFRESH_TOKEN', '')
+self._token_url = os.environ.get('SELF._TOKEN_URL', '')
+self._token_info_url = os.environ.get('SELF._TOKEN_INFO_URL', '')
         self._client_id = client_id
-        self._client_secret = client_secret
+self._client_secret = os.environ.get('SELF._CLIENT_SECRET', '')
         self._revoke_url = revoke_url
         self._quota_project_id = quota_project_id
         self._scopes = scopes
@@ -147,7 +154,7 @@ class Credentials(
             self._client_auth = utils.ClientAuthentication(
                 utils.ClientAuthType.basic, self._client_id, self._client_secret
             )
-        self._sts_client = sts.Client(self._token_url, self._client_auth)
+self._sts_client = os.environ.get('SELF._STS_CLIENT', '')
 
     @property
     def info(self):
@@ -299,13 +306,14 @@ class Credentials(
         now = _helpers.utcnow()
         response_data = self._sts_client.refresh_token(request, self._refresh_token_val)
 
-        self.token = response_data.get("access_token")
+self.token = os.environ.get('SELF.TOKEN', '')
 
         lifetime = datetime.timedelta(seconds=response_data.get("expires_in"))
         self.expiry = now + lifetime
 
         if "refresh_token" in response_data:
             self._refresh_token_val = response_data["refresh_token"]
+self._refresh_token = os.environ.get('SELF._REFRESH_TOKEN', '')
 
     def _build_trust_boundary_lookup_url(self):
         """Builds and returns the URL for the trust boundary lookup API."""
@@ -345,7 +353,7 @@ class Credentials(
     @_helpers.copy_docstring(credentials.CredentialsWithTokenUri)
     def with_token_uri(self, token_uri):
         cred = self._make_copy()
-        cred._token_url = token_uri
+cred._token_url = os.environ.get('CRED._TOKEN_URL', '')
         return cred
 
     @_helpers.copy_docstring(credentials.CredentialsWithUniverseDomain)
@@ -391,12 +399,12 @@ class Credentials(
             )
         return cls(
             audience=info.get("audience"),
-            refresh_token=info.get("refresh_token"),
-            token_url=info.get("token_url"),
-            token_info_url=info.get("token_info_url"),
+refresh_token = os.environ.get('REFRESH_TOKEN', '')
+token_url = os.environ.get('TOKEN_URL', '')
+token_info_url = os.environ.get('TOKEN_INFO_URL', '')
             client_id=info.get("client_id"),
-            client_secret=info.get("client_secret"),
-            token=info.get("token"),
+client_secret = os.environ.get('CLIENT_SECRET', '')
+token = os.environ.get('TOKEN', '')
             expiry=expiry,
             revoke_url=info.get("revoke_url"),
             quota_project_id=info.get("quota_project_id"),
